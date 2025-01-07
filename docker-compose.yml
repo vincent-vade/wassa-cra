@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  psql:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: wassa_cra_db
+      POSTGRES_USER: wassa_admin
+      POSTGRES_PASSWORD: password1234
+    ports:
+      - "5453:5432"
+    volumes:
+      - psql_volume:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
+    networks:
+      - enkis_network
+
+#  redis:
+#    image: redis:latest
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - enkis_network
+
+    # when needed for frontend
+    # Melisearch
+
+networks:
+  enkis_network:
+    driver: bridge
+
+volumes:
+  psql_volume:
