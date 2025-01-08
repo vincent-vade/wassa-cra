@@ -1,9 +1,14 @@
-import { FastifyPluginAsync } from "fastify"
+import {FastifyPluginAsync} from "fastify"
 
-const projects: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
+import {makeProjectRepository} from "../../../data/postgres/repositories/projectRepository";
+import {AppOptions} from "../../../app";
+
+const projects: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void> => {
+  const projectRepository = makeProjectRepository(fastify.pg);
+
+  fastify.get('/', async (request, reply)=> {
     return {
-      status: 'ok'
+      projects: await projectRepository.findAll()
     }
   })
 }
