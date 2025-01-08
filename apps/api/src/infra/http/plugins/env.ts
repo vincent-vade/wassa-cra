@@ -1,7 +1,7 @@
 import fp from "fastify-plugin";
 import fastifyEnv, {FastifyEnvOptions} from "@fastify/env";
 
-export const schema = {
+const schema = {
   type: 'object',
   required: ['DATABASE_URL'],
   properties: {
