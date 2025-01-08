@@ -1,11 +1,9 @@
-import { FastifyPluginAsync } from "fastify"
+import type { FastifyPluginAsync } from "fastify";
 
 const tasks: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
-    return {
-      status: 'ok'
-    }
-  })
-}
+	fastify.get("/", async (request, reply) => ({
+		status: "ok",
+	}));
+};
 
 export default tasks;

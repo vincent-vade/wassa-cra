@@ -1,11 +1,12 @@
-import { FastifyPluginAsync } from "fastify"
+import type { FastifyPluginAsync } from "fastify";
 
-const healthcheck: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
-    return {
-      status: 'ok'
-    }
-  })
-}
+const healthcheck: FastifyPluginAsync = async (
+	fastify,
+	opts,
+): Promise<void> => {
+	fastify.get("/", async (request, reply) => ({
+		status: "ok",
+	}));
+};
 
 export default healthcheck;

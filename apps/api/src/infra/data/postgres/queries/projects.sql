@@ -13,5 +13,10 @@ SELECT * FROM "projects" WHERE "name" = :projectName;
 */
 INSERT INTO "projects" ("name", "description", "is_active", "type", "organization_id") VALUES :project RETURNING id;
 
+
+/*
+    @name UpdateProject
+*/
+UPDATE "projects" SET "name" = :name, "description" = :description, "is_active" = :is_active, "type" = :type, "organization_id" = :organization_id WHERE "id" = :projectId RETURNING *;
 /* @name DeleteProject */
 DELETE FROM "projects" WHERE "id" = :projectId RETURNING *;
