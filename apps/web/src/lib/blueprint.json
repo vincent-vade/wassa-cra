@@ -1,0 +1,28 @@
+{
+  "projects": [{
+    "name": "web",
+    "description": "web",
+    "id": "1",
+    "cras": [
+      {
+        "id": "1",
+        "number": "1",
+        "project_id": "1",
+        "start_date": "2022-01-01",
+        "end_date": "2022-02-01",
+        "days": [{
+          "id": "1",
+          "date": "2022-01-01",
+          "number": "1",
+          "project_id": "1",
+          "cra_id": "1"
+        }]
+      },
+      {
+        "id": "2",
+        "number": "2",
+        "project_id": "1"
+      }
+    ]
+  }]
+}
