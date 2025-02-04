@@ -1,0 +1,71 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model clients {
+  id         String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime     @default(now()) @db.Timestamp(6)
+  updated_at DateTime?    @db.Timestamp(6)
+  name       String       @unique @db.VarChar(255)
+  email      String       @db.VarChar(255)
+  phone      String       @db.VarChar(20)
+  timesheets timesheets[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model freelances {
+  id         String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime     @default(now()) @db.Timestamp(6)
+  updated_at DateTime?    @db.Timestamp(6)
+  daily_rate Decimal      @db.Decimal(10, 2)
+  email      String?      @db.VarChar
+  timesheets timesheets[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model projects {
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at     DateTime         @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?        @db.Timestamp(6)
+  name           String           @unique @db.VarChar(255)
+  description    String?
+  is_active      Boolean          @default(false)
+  start_date     DateTime?        @db.Timestamp(6)
+  end_date       DateTime?        @db.Timestamp(6)
+  projects_tasks projects_tasks[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model projects_tasks {
+  id               String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at       DateTime     @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?    @db.Timestamp(6)
+  task_description String?
+  date             DateTime?    @db.Timestamp(6)
+  hours_worked     Decimal      @db.Decimal(10, 2)
+  project_id       String       @db.Uuid
+  projects         projects     @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  timesheets       timesheets[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model timesheets {
+  id               String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at       DateTime       @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?      @db.Timestamp(6)
+  client_id        String         @db.Uuid
+  project_task_id  String         @db.Uuid
+  freelance_id     String         @db.Uuid
+  working_date     String
+  working_duration Decimal        @db.Decimal
+  working_unit     String
+  clients          clients        @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  freelances       freelances     @relation(fields: [freelance_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  projects_tasks   projects_tasks @relation(fields: [project_task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}

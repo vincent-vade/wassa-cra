@@ -6,9 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "tsx ./prisma/seeds/seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.3.0",
     "@tailwindcss/postcss": "^4.0.3",
     "dayjs": "^1.11.13",
     "next": "15.1.6",
@@ -20,12 +22,15 @@
     "tailwindcss": "^4.0.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^15.1.6",
+    "prisma": "^6.3.0",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }
