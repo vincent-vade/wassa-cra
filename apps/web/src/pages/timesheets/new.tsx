@@ -24,25 +24,44 @@ function Rows({
 	}, [handleChangeCell, totalDaysWorked]);
 
 	return (
-		<div className="grid grid-flow-col">
-			{days.map((day) => (
-				<div
-					key={day.currDate}
-					className={`${isWeekDay(day.dayOfWeek) ? "bg-gray-300" : "bg-gray-100"}`}
-				>
-					<p className="text-center pt-2">{day.currDate}</p>
-					<NumberInput
-						disabled={isWeekDay(day.dayOfWeek)}
-						handleChange={(value) =>
-							setTotalDaysWorked((totalDaysWorked) =>
-								updateArrayByUniqKey(
-									totalDaysWorked,
-									{ value, currDate: day.currDate },
-									"currDate",
-								),
-							)
-						}
-					/>
+		<div>
+			<div className="grid grid-cols-12">
+				<div className="col-start-2 col-span-11">
+					<div className="grid grid-flow-col gap-2">
+						{days.map((day) => (
+							<div
+								key={day.currDate}
+								className={`text-center  ${isWeekDay(day.dayOfWeek) ? "bg-gray-300" : "bg-gray-100"}`}
+							>
+								<p>{day.currDate}</p>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+			{["headless", "puls"].map((project) => (
+				<div key={project} className="grid grid-cols-12">
+					<p>{project}</p>
+
+					<div className="col-span-11">
+						<div className="grid grid-flow-col">
+							{days.map((day) => (
+								<NumberInput
+									key={day.currDate}
+									disabled={isWeekDay(day.dayOfWeek)}
+									handleChange={(value) =>
+										setTotalDaysWorked((totalDaysWorked) =>
+											updateArrayByUniqKey(
+												totalDaysWorked,
+												{ value, currDate: day.currDate },
+												"currDate",
+											),
+										)
+									}
+								/>
+							))}
+						</div>
+					</div>
 				</div>
 			))}
 		</div>

@@ -26,12 +26,8 @@ export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 		}
 	};
 
-	if (disabled) {
-		return null;
-	}
-
 	return (
-		<div className="flex flex-col p-2">
+		<div className="flex flex-col p-2 mb-4">
 			<button
 				id="increaseButton"
 				className=" p-1.5 border border-transparent text-center text-sm transition-all focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -68,6 +64,7 @@ export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 					fill="currentColor"
 					className="w-4 h-4"
 				>
+					<text>i</text>
 					<path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
 				</svg>
 			</button>

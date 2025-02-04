@@ -4,7 +4,7 @@ export default function FreelancePage({ freelance }: { freelance: Freelance }) {
 	return (
 		<div>
 			<h1>{freelance?.email}</h1>
-			<p>{freelance?.daily_rate}</p>
+			<p>{freelance?.daily_rate as string}</p>
 		</div>
 	);
 }
