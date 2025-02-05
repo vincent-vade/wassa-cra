@@ -7,7 +7,8 @@ import {
 	getCurrentMonth,
 	isWeekDay,
 } from "~/lib/date";
-import {Client, client, Project} from "~/lib/client"
+import { Project } from "~/lib/client"
+import { getProjects } from "~/services/projects";
 
 const days = getAllDaysInCurrentMonth(3);
 
@@ -127,20 +128,16 @@ export default function NewTimesheetPage({ projects } : { projects: Project[] })
 			<hr  className="mb-3" />
 
 			<Project />
+
 			<p className="font-bold text-2xl">Number of days worked: {daysWorked}</p>
 		</div>
 	);
 }
 
 export async function getServerSideProps() {
-	const fetchProjects = async () => {
-		const { data } = await client.GET("/api/rest/projects");
-		return data.projects as Project[];
-	};
-
 	return {
 		props: {
-			projects: await fetchProjects(),
+			projects: await getProjects(),
 		},
 	};
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { type Freelance, client } from "~/lib/client";
+import { type Freelance } from "~/lib/client";
+import { getFreelances } from "~/services/freelances";
 
 export default function Freelances({
 	freelances,
@@ -17,14 +18,9 @@ export default function Freelances({
 }
 
 export async function getServerSideProps() {
-	const fetchFreelances = async () => {
-		const { data } = await client.GET("/api/rest/freelances");
-		return data?.freelances as Freelance[];
-	};
-
 	return {
 		props: {
-			freelances: await fetchFreelances(),
+			freelances: await getFreelances(),
 		},
 	};
 }

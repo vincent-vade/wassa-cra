@@ -1,4 +1,5 @@
-import { type Client, client } from "~/lib/client";
+import { type Client } from "~/lib/client";
+import { getClients } from "~/services/clients";
 
 export default function Clients({ clients }: { clients: Client[] }) {
 	return (
@@ -14,14 +15,9 @@ export default function Clients({ clients }: { clients: Client[] }) {
 }
 
 export async function getServerSideProps() {
-	const fetchClients = async () => {
-		const { data } = await client.GET("/api/rest/clients");
-		return data?.clients as Client[];
-	};
-
 	return {
 		props: {
-			clients: await fetchClients(),
+			clients: await getClients(),
 		},
 	};
 }

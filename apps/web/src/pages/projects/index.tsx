@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { type Project, client } from "~/lib/client";
+import { type Project } from "~/lib/client";
+import { getProjects } from "~/services/projects";
 
 export default function Projects({ projects }: { projects: Project[] }) {
 	return (
@@ -15,14 +16,9 @@ export default function Projects({ projects }: { projects: Project[] }) {
 }
 
 export async function getServerSideProps() {
-	const fetchProjects = async () => {
-		const { data } = await client.GET("/api/rest/projects");
-		return data?.projects as Project[];
-	};
-
 	return {
 		props: {
-			projects: await fetchProjects(),
+			projects: await getProjects(),
 		},
 	};
 }
