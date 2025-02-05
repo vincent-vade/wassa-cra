@@ -24,46 +24,48 @@ function Rows({
 	}, [handleChangeCell, totalDaysWorked]);
 
 	return (
-		<div>
-			<div className="grid grid-cols-12">
-				<div className="col-start-2 col-span-11">
-					<div className="grid grid-flow-col gap-2">
-						{days.map((day) => (
-							<div
-								key={day.currDate}
-								className={`text-center  ${isWeekDay(day.dayOfWeek) ? "bg-gray-300" : "bg-gray-100"}`}
-							>
-								<p>{day.currDate}</p>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-			{["headless", "puls"].map((project) => (
-				<div key={project} className="grid grid-cols-12">
-					<p>{project}</p>
-
-					<div className="col-span-11">
-						<div className="grid grid-flow-col">
-							{days.map((day) => (
-								<NumberInput
-									key={day.currDate}
-									disabled={isWeekDay(day.dayOfWeek)}
-									handleChange={(value) =>
-										setTotalDaysWorked((totalDaysWorked) =>
-											updateArrayByUniqKey(
-												totalDaysWorked,
-												{ value, currDate: day.currDate },
-												"currDate",
-											),
-										)
-									}
-								/>
-							))}
-						</div>
-					</div>
-				</div>
-			))}
+		<div style={{ "overflow-x": "auto" }}>
+			<table>
+				<thead>
+					<tr>
+						<td></td>
+					{
+						days.map((day) => {
+							return (
+								<td key={day.currDate} className={isWeekDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold" }}>
+									<p>{day.currDate}</p>
+								</td>
+							);
+						})
+					}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><p className="p-2">Headless</p></td>
+						{
+							days.map((day) => {
+								return (
+									<td key={day.currDate} className={isWeekDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
+										<NumberInput
+											disabled={isWeekDay(day.dayOfWeek)}
+											handleChange={(value) =>
+												setTotalDaysWorked((totalDaysWorked) =>
+													updateArrayByUniqKey(
+														totalDaysWorked,
+														{value, currDate: day.currDate},
+														"currDate",
+													),
+												)
+											}
+										/>
+									</td>
+								);
+							})
+						}
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	);
 }
@@ -96,6 +98,7 @@ export default function NewTimesheetPage() {
 	return (
 		<div>
 			<h3 className="text-4xl font-bold">{getCurrentMonth(3)}</h3>
+			<hr  className="mb-3" />
 			<Project />
 			<p className="font-bold text-2xl">Number of days worked: {daysWorked}</p>
 		</div>

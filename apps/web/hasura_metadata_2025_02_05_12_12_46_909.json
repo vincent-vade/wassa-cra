@@ -1,0 +1,526 @@
+{
+  "resource_version": 9,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "wassa_cra",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "name": "_prisma_migrations",
+              "schema": "public"
+            }
+          },
+          {
+            "table": {
+              "name": "clients",
+              "schema": "public"
+            }
+          },
+          {
+            "table": {
+              "name": "freelances",
+              "schema": "public"
+            }
+          },
+          {
+            "table": {
+              "name": "projects",
+              "schema": "public"
+            }
+          },
+          {
+            "table": {
+              "name": "projects_tasks",
+              "schema": "public"
+            }
+          },
+          {
+            "table": {
+              "name": "timesheets",
+              "schema": "public"
+            }
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "database_url": "postgres://postgres:postgrespassword@postgres:5432/postgres",
+            "isolation_level": "read-committed",
+            "use_prepared_statements": false
+          }
+        }
+      }
+    ],
+    "query_collections": [
+      {
+        "name": "allowed-queries",
+        "definition": {
+          "queries": [
+            {
+              "name": "clients_by_pk",
+              "query": "query clients_by_pk($id: uuid!) {\n  clients_by_pk(id: $id) {\n    created_at\n    email\n    id\n    name\n    phone\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "clients",
+              "query": "query clients {\n  clients {\n    created_at\n    email\n    id\n    name\n    phone\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "insert_clients_one",
+              "query": "mutation insert_clients_one($object: clients_insert_input!) {\n  insert_clients_one(object: $object) {\n    created_at\n    email\n    id\n    name\n    phone\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "update_clients_by_pk",
+              "query": "mutation update_clients_by_pk($id: uuid!, $object: clients_set_input!) {\n  update_clients_by_pk(pk_columns: {id: $id}, _set: $object) {\n    created_at\n    email\n    id\n    name\n    phone\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "delete_clients_by_pk",
+              "query": "mutation delete_clients_by_pk($id: uuid!) {\n  delete_clients_by_pk(id: $id) {\n    created_at\n    email\n    id\n    name\n    phone\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "freelances_by_pk",
+              "query": "query freelances_by_pk($id: uuid!) {\n  freelances_by_pk(id: $id) {\n    created_at\n    daily_rate\n    email\n    id\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "freelances",
+              "query": "query freelances {\n  freelances {\n    created_at\n    daily_rate\n    email\n    id\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "insert_freelances_one",
+              "query": "mutation insert_freelances_one($object: freelances_insert_input!) {\n  insert_freelances_one(object: $object) {\n    created_at\n    daily_rate\n    email\n    id\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "update_freelances_by_pk",
+              "query": "mutation update_freelances_by_pk($id: uuid!, $object: freelances_set_input!) {\n  update_freelances_by_pk(pk_columns: {id: $id}, _set: $object) {\n    created_at\n    daily_rate\n    email\n    id\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "delete_freelances_by_pk",
+              "query": "mutation delete_freelances_by_pk($id: uuid!) {\n  delete_freelances_by_pk(id: $id) {\n    created_at\n    daily_rate\n    email\n    id\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "projects_by_pk",
+              "query": "query projects_by_pk($id: uuid!) {\n  projects_by_pk(id: $id) {\n    created_at\n    description\n    end_date\n    id\n    is_active\n    name\n    start_date\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "projects",
+              "query": "query projects {\n  projects {\n    created_at\n    description\n    end_date\n    id\n    is_active\n    name\n    start_date\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "insert_projects_one",
+              "query": "mutation insert_projects_one($object: projects_insert_input!) {\n  insert_projects_one(object: $object) {\n    created_at\n    description\n    end_date\n    id\n    is_active\n    name\n    start_date\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "update_projects_by_pk",
+              "query": "mutation update_projects_by_pk($id: uuid!, $object: projects_set_input!) {\n  update_projects_by_pk(pk_columns: {id: $id}, _set: $object) {\n    created_at\n    description\n    end_date\n    id\n    is_active\n    name\n    start_date\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "delete_projects_by_pk",
+              "query": "mutation delete_projects_by_pk($id: uuid!) {\n  delete_projects_by_pk(id: $id) {\n    created_at\n    description\n    end_date\n    id\n    is_active\n    name\n    start_date\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "projects_tasks_by_pk",
+              "query": "query projects_tasks_by_pk($id: uuid!) {\n  projects_tasks_by_pk(id: $id) {\n    created_at\n    date\n    hours_worked\n    id\n    project_id\n    task_description\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "projects_tasks",
+              "query": "query projects_tasks {\n  projects_tasks {\n    created_at\n    date\n    hours_worked\n    id\n    project_id\n    task_description\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "insert_projects_tasks_one",
+              "query": "mutation insert_projects_tasks_one($object: projects_tasks_insert_input!) {\n  insert_projects_tasks_one(object: $object) {\n    created_at\n    date\n    hours_worked\n    id\n    project_id\n    task_description\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "update_projects_tasks_by_pk",
+              "query": "mutation update_projects_tasks_by_pk($id: uuid!, $object: projects_tasks_set_input!) {\n  update_projects_tasks_by_pk(pk_columns: {id: $id}, _set: $object) {\n    created_at\n    date\n    hours_worked\n    id\n    project_id\n    task_description\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "delete_projects_tasks_by_pk",
+              "query": "mutation delete_projects_tasks_by_pk($id: uuid!) {\n  delete_projects_tasks_by_pk(id: $id) {\n    created_at\n    date\n    hours_worked\n    id\n    project_id\n    task_description\n    updated_at\n  }\n}\n"
+            },
+            {
+              "name": "timesheets_by_pk",
+              "query": "query timesheets_by_pk($id: uuid!) {\n  timesheets_by_pk(id: $id) {\n    client_id\n    created_at\n    freelance_id\n    id\n    project_task_id\n    updated_at\n    working_date\n    working_duration\n    working_unit\n  }\n}\n"
+            },
+            {
+              "name": "timesheets",
+              "query": "query timesheets {\n  timesheets {\n    client_id\n    created_at\n    freelance_id\n    id\n    project_task_id\n    updated_at\n    working_date\n    working_duration\n    working_unit\n  }\n}\n"
+            },
+            {
+              "name": "insert_timesheets_one",
+              "query": "mutation insert_timesheets_one($object: timesheets_insert_input!) {\n  insert_timesheets_one(object: $object) {\n    client_id\n    created_at\n    freelance_id\n    id\n    project_task_id\n    updated_at\n    working_date\n    working_duration\n    working_unit\n  }\n}\n"
+            },
+            {
+              "name": "update_timesheets_by_pk",
+              "query": "mutation update_timesheets_by_pk($id: uuid!, $object: timesheets_set_input!) {\n  update_timesheets_by_pk(pk_columns: {id: $id}, _set: $object) {\n    client_id\n    created_at\n    freelance_id\n    id\n    project_task_id\n    updated_at\n    working_date\n    working_duration\n    working_unit\n  }\n}\n"
+            },
+            {
+              "name": "delete_timesheets_by_pk",
+              "query": "mutation delete_timesheets_by_pk($id: uuid!) {\n  delete_timesheets_by_pk(id: $id) {\n    client_id\n    created_at\n    freelance_id\n    id\n    project_task_id\n    updated_at\n    working_date\n    working_duration\n    working_unit\n  }\n}\n"
+            }
+          ]
+        }
+      }
+    ],
+    "allowlist": [
+      {
+        "collection": "allowed-queries",
+        "scope": {
+          "global": true
+        }
+      }
+    ],
+    "rest_endpoints": [
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "clients"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "clients",
+        "url": "clients"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "insert_clients_one"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "insert_clients_one",
+        "url": "clients"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "clients_by_pk"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "clients_by_pk",
+        "url": "clients/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_clients_by_pk"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "update_clients_by_pk",
+        "url": "clients/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "delete_clients_by_pk"
+          }
+        },
+        "methods": [
+          "DELETE"
+        ],
+        "name": "delete_clients_by_pk",
+        "url": "clients/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "freelances"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "freelances",
+        "url": "freelances"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "insert_freelances_one"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "insert_freelances_one",
+        "url": "freelances"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "freelances_by_pk"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "freelances_by_pk",
+        "url": "freelances/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_freelances_by_pk"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "update_freelances_by_pk",
+        "url": "freelances/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "delete_freelances_by_pk"
+          }
+        },
+        "methods": [
+          "DELETE"
+        ],
+        "name": "delete_freelances_by_pk",
+        "url": "freelances/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "projects"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "projects",
+        "url": "projects"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "insert_projects_one"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "insert_projects_one",
+        "url": "projects"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "projects_by_pk"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "projects_by_pk",
+        "url": "projects/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_projects_by_pk"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "update_projects_by_pk",
+        "url": "projects/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "delete_projects_by_pk"
+          }
+        },
+        "methods": [
+          "DELETE"
+        ],
+        "name": "delete_projects_by_pk",
+        "url": "projects/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "projects_tasks"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "projects_tasks",
+        "url": "projects_tasks"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "insert_projects_tasks_one"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "insert_projects_tasks_one",
+        "url": "projects_tasks"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "projects_tasks_by_pk"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "projects_tasks_by_pk",
+        "url": "projects_tasks/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_projects_tasks_by_pk"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "update_projects_tasks_by_pk",
+        "url": "projects_tasks/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "delete_projects_tasks_by_pk"
+          }
+        },
+        "methods": [
+          "DELETE"
+        ],
+        "name": "delete_projects_tasks_by_pk",
+        "url": "projects_tasks/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "timesheets"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "timesheets",
+        "url": "timesheets"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "insert_timesheets_one"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "insert_timesheets_one",
+        "url": "timesheets"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "timesheets_by_pk"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "timesheets_by_pk",
+        "url": "timesheets/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_timesheets_by_pk"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "update_timesheets_by_pk",
+        "url": "timesheets/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "delete_timesheets_by_pk"
+          }
+        },
+        "methods": [
+          "DELETE"
+        ],
+        "name": "delete_timesheets_by_pk",
+        "url": "timesheets/:id"
+      }
+    ]
+  }
+}
