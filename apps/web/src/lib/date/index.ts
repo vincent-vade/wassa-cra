@@ -24,7 +24,7 @@ export function getAllDaysInCurrentMonth(month: number) {
 
 export function getCurrentMonth(number: number) {
 	return dayjs()
-		.month(number - 1)
+		.month(number)
 		.format("MMMM");
 }
 

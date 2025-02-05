@@ -5,7 +5,7 @@ export const getClients = async () => {
     return data?.clients as Client[];
 };
 
-export const getFreelanceById = async (id: string) => {
+export const getClientById = async (id: string) => {
     const { data } = await client.GET(`/api/rest/clients/${id}`);
     return data?.client as Client;
 };

@@ -8,10 +8,14 @@
     "start": "next start",
     "lint": "next lint",
     "generate:sdk": "npx openapi-typescript OpenAPISpec.json -o src/lib/schema.ts",
-    "db:seed": "tsx ./prisma/seeds/clients.ts"
+    "db:seeds": "npm run db:seed:clients && npm run db:seed:freelances && npm run db:seed:projects",
+    "db:seed:clients": "tsx ./prisma/seeds/clients.ts",
+    "db:seed:freelances": "tsx ./prisma/seeds/freelances.ts",
+    "db:seed:projects": "tsx ./prisma/seeds/projects.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.3.0",
+    "@prisma/extension-accelerate": "^1.2.1",
     "@tailwindcss/postcss": "^4.0.3",
     "dayjs": "^1.11.13",
     "next": "15.1.6",

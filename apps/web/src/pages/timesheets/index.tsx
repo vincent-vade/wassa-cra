@@ -7,7 +7,7 @@ export default function Timesheets({
 }: { timesheets: Timesheet[] }) {
 	return (
 		<>
-			<Link href={"/timesheets/new"}>new timesheet</Link>
+			<Link href={"/timesheets/create"}>Create a new timesheet</Link>
 			<h1>Timesheets</h1>
 			{timesheets?.map((timesheet) => (
 				<li key={timesheet?.id}>
