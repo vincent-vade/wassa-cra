@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { NumberInput } from "~/components/InputNumber";
 import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
@@ -7,6 +7,7 @@ import {
 	getCurrentMonth,
 	isWeekDay,
 } from "~/lib/date";
+import {Client, client, Project} from "~/lib/client"
 
 const days = getAllDaysInCurrentMonth(3);
 
@@ -14,6 +15,7 @@ function Rows({
 	handleChangeCell,
 }: {
 	handleChangeCell?: (days: { value: number; currDate: string }[]) => void;
+	projects?: Project[];
 }) {
 	const [totalDaysWorked, setTotalDaysWorked] = useState<
 		{ value: number; currDate: string }[]
@@ -94,13 +96,51 @@ function Project() {
 	);
 }
 
-export default function NewTimesheetPage() {
+export default function NewTimesheetPage({ projects } : { projects: Project[] }) {
+	// const [projects, setProjects] = useState<Project[]>([]);
+	const selectProjectRef = useRef<HTMLSelectElement>(null);
+	console.log(projects);
+
+	const handleClickAdd = () => {
+		const selectedProjectId = selectProjectRef.current?.value;
+		console.log("Selected Project ID:", selectedProjectId);
+	}
+
 	return (
 		<div>
+
 			<h3 className="text-4xl font-bold">{getCurrentMonth(3)}</h3>
 			<hr  className="mb-3" />
+
+			<div className={"mb-3"}>
+				<span>Projects</span>
+				<select ref={selectProjectRef} className="ml-2">
+					<option value="">Select a project</option>
+					{projects.map((project) => (
+						<option key={project.id} value={project.id}>{project.name}</option>
+					))}
+				</select>
+				<button className="button" onClick={handleClickAdd}>ADD</button>
+			</div>
+
+
+			<hr  className="mb-3" />
+
 			<Project />
 			<p className="font-bold text-2xl">Number of days worked: {daysWorked}</p>
 		</div>
 	);
+}
+
+export async function getServerSideProps() {
+	const fetchProjects = async () => {
+		const { data } = await client.GET("/api/rest/projects");
+		return data.projects as Project[];
+	};
+
+	return {
+		props: {
+			projects: await fetchProjects(),
+		},
+	};
 }
