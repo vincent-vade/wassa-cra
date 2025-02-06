@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { NumberInput } from "~/components/InputNumber";
 import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
 import {
+	Days,
 	getAllDaysInCurrentMonth,
 	getCurrentMonth,
 	isWeekendDay,
@@ -12,10 +13,7 @@ import { getProjects } from "~/services/projects";
 import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTasks";
 import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
-
-const currentMonth = 2
-
-const days = getAllDaysInCurrentMonth(currentMonth);
+import dayjs from "dayjs";
 
 const freelance_id = "7db4eb70-6290-4e3c-afa8-8516b8501b99"
 
@@ -23,7 +21,7 @@ const sumTotalDaysWorked = (
 	totalDaysWorked: { value: number; currDate: string }[],
 ) => totalDaysWorked.reduce((acc, curr) => acc + curr.value, 0);
 
-const workingDays = days.reduce(
+const getNbWorkingDays = (days: Days) => days.reduce(
 	(acc, day) => (isWeekendDay(day.dayOfWeek) ? acc : acc + 1),
 	0,
 );
@@ -57,6 +55,7 @@ const EmptyRow = () => {
 }
 
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
+	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
 	const [showTimesheet, setShowTimesheet] = useState<Boolean>(false);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
@@ -64,6 +63,8 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
+
+	const days = getAllDaysInCurrentMonth(month);
 
 	const handleChangeProject = async () => {
 		const [projectId, projectName] = selectProjectRef.current?.value.split('#');
@@ -116,12 +117,12 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		// console.log("Result =>", result);
 	}
 
-	const handleClickPreview = () => {
-		console.log("Select previous month");
+	const handleClickPrevious = () => {
+		setMonth(month - 1);
 	}
 
 	const handleClickNext = () => {
-		console.log("Select next month");
+		setMonth(month + 1);
 	}
 
 	return (
@@ -129,10 +130,11 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			<h2>Create Timesheet</h2>
 
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
-				<button onClick={handleClickPreview}>&lt;</button>
+				<button onClick={handleClickPrevious}>&lt;</button>
+
 				<span  style={{'textAlign': 'center'}}>
-					<span className="text-4xl font-bold">{getCurrentMonth(currentMonth)}</span>
-					<span style={{fontStyle: "italic"}}>(working days: <strong>{workingDays}</strong>)</span>
+					<span className="text-4xl font-bold">{getCurrentMonth(month)}</span>
+					<span style={{fontStyle: "italic"}}>(working days: <strong>{getNbWorkingDays(days)}</strong>)</span>
 				</span>
 
 				<button  onClick={handleClickNext}>&gt;</button>
@@ -141,7 +143,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			<hr  className="mb-3" />
 
 			<div className={"mb-3"}>
-				<span>Projects</span>
+				<span style={{display: "inline-block", minWidth: '100px', fontWeight: 'bold'}}>Projects</span>
 				<select ref={selectProjectRef} className="ml-2" onChange={handleChangeProject}>
 					<option value="">Select a project</option>
 					{projects.map((project: Project) => (
@@ -153,7 +155,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			{
 				projectTasks && (
 					<div className={"mb-3"}>
-						<span>Tasks</span>
+						<span style={{display: "inline-block", minWidth: '100px', fontWeight: 'bold'}}>Tasks</span>
 						<select ref={selectTaskRef} className="ml-2">
 							<option value="">Select a project task</option>
 							{projectTasks.map((projectTask) => (
