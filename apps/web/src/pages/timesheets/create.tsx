@@ -52,7 +52,7 @@ export type ProjectSelection = { projectId: string, projectName: string }
 
 const EmptyRow = () => {
 	return (<tr>
-		<td colSpan={14} align={'center'}>Please select a project and add some task(s)...</td>
+		<td colSpan={9} align={'center'} style={{color: '#CC0000', fontStyle: 'italic'}}>Please select a project and add some task(s)...</td>
 	</tr>)
 }
 
