@@ -12,8 +12,10 @@ export const getTimesheetById = async (id: string) => {
 
 export const createTimesheet = async (timesheet: CreateTimesheet) => {
     try {
-        const { data } = await client.POST("/api/rest/timesheets", timesheet);
-        return data
+        const result = await client.POST("/api/rest/timesheets", {
+            body: timesheet
+        });
+        return result
     } catch (e) {
         throw new Error('Error creating timesheet', e);
 

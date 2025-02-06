@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-
+import { Toaster, useToaster } from '../../components/Toaster';
 import { NumberInput } from "~/components/InputNumber";
 import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
 import {
@@ -15,7 +15,8 @@ import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import dayjs from "dayjs";
 
-const freelance_id = "7db4eb70-6290-4e3c-afa8-8516b8501b99"
+const client_id = "af35fca8-2f16-4f9a-9dfc-ddd6c5678861"
+const freelance_id = "d957ca2a-b92a-44f8-90c6-7c51af980ff2"
 
 const sumTotalDaysWorked = (
 	totalDaysWorked: { value: number; currDate: string }[],
@@ -46,7 +47,9 @@ type Task = {
 	projectTaskId: string
 }
 type Timesheet = Task[]
+
 export type ProjectSelection = { projectId: string, projectName: string }
+export type TaskSelection = { projectTaskId: string, taskTitle: string }
 
 const EmptyRow = () => {
 	return (<tr>
@@ -57,9 +60,12 @@ const EmptyRow = () => {
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
-	const [showTimesheet, setShowTimesheet] = useState<Boolean>(false);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
+
 	const [project, setProject] = useState<ProjectSelection>(null);
+	const [task, setTask] = useState<TaskSelection>(null);
+
+	const toaster = useToaster();
 
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
@@ -85,14 +91,12 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 	}
 
 	const handleClickTaskAdd = async () => {
-		console.log('selectTaskRef.current', selectTaskRef.current.value)
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split('#');
+
 		console.log("Freelance ID =>", freelance_id);
 		console.log("Selected Project ID =>", project.projectId);
 		console.log("Selected Project Name =>", project.projectName);
 		console.log("Selected ProjectTask ID =>", projectTaskId);
-
-		setShowTimesheet(true)
 
 		if (taskTitle) {
 			setTimesheet([
@@ -103,18 +107,14 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 					taskTitle,
 				}
 			])
+
+			setTask({
+				projectTaskId,
+				taskTitle,
+			});
 		} else {
 			alert("Please select a task")
 		}
-		// const result = await createTimesheet({
-		// 	working_duration: 1,
-		// 	working_date: "2025",
-		// 	working_unit: "day",
-		// 	client_id: "1ef26d92-8049-4db3-b637-34a25f786564", // Client 1
-		// 	freelance_id: freelance_id, // Gael Cadoret
-		// 	project_task_id: projectTaskId, // Developpement Javascript
-		// } as CreateTimesheet)
-		// console.log("Result =>", result);
 	}
 
 	const handleClickPrevious = () => {
@@ -125,9 +125,54 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		setMonth(month + 1);
 	}
 
+	const handleClickSave = async () => {
+		if (!project || !task) {
+			alert("Please select a project and a task")
+			return
+		}
+
+		const [projectTaskId] = selectTaskRef?.current?.value.split('#')
+
+		console.log("Freelance ID =>", freelance_id);
+		console.log("Selected Project ID =>", project.projectId);
+		console.log("Selected Project Name =>", project.projectName);
+		console.log("Selected ProjectTask ID =>", projectTaskId);
+
+		const result = await createTimesheet({
+			"object": {
+				"working_duration": 1,
+				"working_date": "2025",
+				"working_unit": "day",
+				"client_id": client_id,
+				"freelance_id": freelance_id,
+				"project_task_id": projectTaskId
+			}
+		} as CreateTimesheet)
+
+		if (result.response.ok) {
+			toaster('Timesheet created successfully!', 'success');
+		} else {
+			toaster('An error occurred while creating the timesheet!', 'error');
+		}
+
+		console.log("Result =>", result);
+	}
+
+	const handleClick = () => {
+		toaster('This is a success message!', 'success');
+	};
+
+	const handleErrorClick = () => {
+		toaster('This is an error message!', 'error');
+	};
+
 	return (
 		<div style={{ "maxWidth": "80%" }}>
 			<h2>Create Timesheet</h2>
+
+			<button onClick={handleClick}>Show Success Toast</button>
+			<button onClick={handleErrorClick}>Show Error Toast</button>
+
 
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
 				<button onClick={handleClickPrevious}>&lt;</button>
@@ -194,6 +239,12 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 					</tbody>
 				</table>
 			</div>
+
+			<div>
+				<button onClick={handleClickSave}>Save timesheet</button>
+			</div>
+
+			<Toaster />
 		</div>
 	);
 }
