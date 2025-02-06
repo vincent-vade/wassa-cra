@@ -26,7 +26,7 @@ export function createDateRange(startDate: Dayjs, endDate: Dayjs) {
 }
 
 export const getAllDaysInCurrentMonth = (month: number): Days => {
-	const now = dayjs().month(month - 2);
+	const now = dayjs().month(month - 1);
 	const startOfMonth = now.startOf("month");
 	const endOfMonth = now.endOf("month");
 
@@ -35,7 +35,7 @@ export const getAllDaysInCurrentMonth = (month: number): Days => {
 
 export function getCurrentMonth(num: number) {
 	return dayjs()
-		.month(num)
+		.month(num - 1)
 		.format("MMMM");
 }
 

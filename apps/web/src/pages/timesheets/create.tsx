@@ -13,7 +13,9 @@ import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTas
 import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 
-const days = getAllDaysInCurrentMonth(1);
+const currentMonth = 2
+
+const days = getAllDaysInCurrentMonth(currentMonth);
 
 const freelance_id = "7db4eb70-6290-4e3c-afa8-8516b8501b99"
 
@@ -129,7 +131,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
 				<button onClick={handleClickPreview}>&lt;</button>
 				<span  style={{'textAlign': 'center'}}>
-					<span className="text-4xl font-bold">{getCurrentMonth(0)}</span>
+					<span className="text-4xl font-bold">{getCurrentMonth(currentMonth)}</span>
 					<span style={{fontStyle: "italic"}}>(working days: <strong>{workingDays}</strong>)</span>
 				</span>
 
