@@ -13,7 +13,7 @@ import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTas
 import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 
-const days = getAllDaysInCurrentMonth(2);
+const days = getAllDaysInCurrentMonth(1);
 
 const freelance_id = "7db4eb70-6290-4e3c-afa8-8516b8501b99"
 
@@ -48,7 +48,13 @@ type Task = {
 type Timesheet = Task[]
 export type ProjectSelection = { projectId: string, projectName: string }
 
-export default function CreateTimesheetPage({ projects } : { projects: Project[] }) {
+const EmptyRow = () => {
+	return (<tr>
+		<td colSpan={14} align={'center'}>Please select a project and add some task(s)...</td>
+	</tr>)
+}
+
+export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
 	const [showTimesheet, setShowTimesheet] = useState<Boolean>(false);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
@@ -122,7 +128,11 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
 				<button onClick={handleClickPreview}>&lt;</button>
-				<span className="text-4xl font-bold" style={{'textAlign': 'center'}}>{getCurrentMonth(0)}</span>
+				<span  style={{'textAlign': 'center'}}>
+					<span className="text-4xl font-bold">{getCurrentMonth(0)}</span>
+					<span style={{fontStyle: "italic"}}>(working days: <strong>{workingDays}</strong>)</span>
+				</span>
+
 				<button  onClick={handleClickNext}>&gt;</button>
 			</div>
 
@@ -159,11 +169,11 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 				<table>
 					<thead>
 					<tr>
-						<td></td>
+						<td style={{minWidth: '110px'}}></td>
 						{
 							days.map((day) => {
 								return (
-									<td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold" }}>
+									<td  key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold", "minWidth": "58px" }}>
 										<p>{day.currDate}</p>
 									</td>
 								);
@@ -173,15 +183,13 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 					</thead>
 					<tbody>
 					{
-						timesheet.map((task) => {
+						timesheet.length === 0 ? <EmptyRow />  : timesheet.map((task) => {
 							return (<TimesheetRow task={task} days={days} />)
 						})
 					}
 					</tbody>
 				</table>
 			</div>
-
-			<p className="font-bold text-2xl">Number of working days: {workingDays}</p>
 		</div>
 	);
 }
