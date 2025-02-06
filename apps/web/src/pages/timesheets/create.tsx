@@ -5,123 +5,73 @@ import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
 import {
 	getAllDaysInCurrentMonth,
 	getCurrentMonth,
-	isWeekDay,
+	isWeekendDay,
 } from "~/lib/date";
 import {CreateTimesheet, Project, ProjectTasks} from "~/lib/client"
 import { getProjects } from "~/services/projects";
-import { getProjectTasks } from "~/services/projectTasks";
+import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTasks";
 import {createTimesheet} from "~/services/timesheets";
+import {TimesheetRow} from "~/components/TimesheetRow";
 
-const days = getAllDaysInCurrentMonth(3);
+const days = getAllDaysInCurrentMonth(2);
 
 const freelance_id = "7db4eb70-6290-4e3c-afa8-8516b8501b99"
-
-function Rows({
-	handleChangeCell,
-	taskTitle,
-}: {
-	handleChangeCell?: (days: { value: number; currDate: string }[]) => void;
-	projects?: Project[];
-	taskTitle?: string;
-}) {
-	const [totalDaysWorked, setTotalDaysWorked] = useState<
-		{ value: number; currDate: string }[]
-	>(days.map((day) => ({ value: 0, currDate: day.currDate })));
-
-	useEffect(() => {
-		handleChangeCell?.(totalDaysWorked);
-	}, [handleChangeCell, totalDaysWorked]);
-
-	return (
-		<div style={{ "overflowX": "auto" }}>
-			<table>
-				<thead>
-					<tr>
-						<td></td>
-					{
-						days.map((day) => {
-							return (
-								<td key={day.currDate} className={isWeekDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold" }}>
-									<p>{day.currDate}</p>
-								</td>
-							);
-						})
-					}
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><p className="p-2">{taskTitle}</p></td>
-						{
-							days.map((day) => {
-								return (
-									<td key={day.currDate} className={isWeekDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
-										<NumberInput
-											disabled={isWeekDay(day.dayOfWeek)}
-											handleChange={(value) =>
-												setTotalDaysWorked((totalDaysWorked) =>
-													updateArrayByUniqKey(
-														totalDaysWorked,
-														{value, currDate: day.currDate},
-														"currDate",
-													),
-												)
-											}
-										/>
-									</td>
-								);
-							})
-						}
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	);
-}
 
 const sumTotalDaysWorked = (
 	totalDaysWorked: { value: number; currDate: string }[],
 ) => totalDaysWorked.reduce((acc, curr) => acc + curr.value, 0);
 
-const daysWorked = days.reduce(
-	(acc, day) => (isWeekDay(day.dayOfWeek) ? acc : acc + 1),
+const workingDays = days.reduce(
+	(acc, day) => (isWeekendDay(day.dayOfWeek) ? acc : acc + 1),
 	0,
 );
 
-function Project() {
-	const [totalDaysWorked, setT] = useState(0);
-	return (
-		<div>
-			<Rows
-				handleChangeCell={(totalDaysWorked) =>
-					setT(sumTotalDaysWorked(totalDaysWorked))
-				}
-			/>
-			<p>{totalDaysWorked}</p>
-		</div>
-	);
+// function Project() {
+// 	const [totalDaysWorked, setT] = useState(0);
+// 	return (
+// 		<div>
+// 			<TimesheetRow
+// 				handleChangeCell={(totalDaysWorked) =>
+// 					setT(sumTotalDaysWorked(totalDaysWorked))
+// 				}
+// 			/>
+// 			<p>{totalDaysWorked}</p>
+// 		</div>
+// 	);
+// }
+
+type Task = {
+	projectName: string
+	taskTitle: string
+	projectTaskId: string
 }
+type Timesheet = Task[]
+export type ProjectSelection = { projectId: string, projectName: string }
 
 export default function CreateTimesheetPage({ projects } : { projects: Project[] }) {
-	const [timesheet, setTimesheet] = useState<CreateTimesheet[]>([]);
+	const [timesheet, setTimesheet] = useState<Timesheet>([]);
 	const [showTimesheet, setShowTimesheet] = useState<Boolean>(false);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
-	const [projectId, setProjectId] = useState<string>(null);
-	const [taskTitle, setTaskTitle] = useState<string>(null);
+	const [project, setProject] = useState<ProjectSelection>(null);
 
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
 
 	const handleChangeProject = async () => {
-		const projectId = selectProjectRef.current?.value;
+		const [projectId, projectName] = selectProjectRef.current?.value.split('#');
 
 		if (!projectId) {
 			setProjectTasks(null)
 			return
 		}
 
-		setProjectId(projectId);
-		const projectTasks = await getProjectTasks()
+		setProject({
+			projectId,
+			projectName,
+		});
+
+		const projectTasks = await getProjectTasksByProjectId(projectId)
+
 		setProjectTasks(projectTasks)
 	}
 
@@ -129,14 +79,17 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 		console.log('selectTaskRef.current', selectTaskRef.current.value)
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split('#');
 		console.log("Freelance ID =>", freelance_id);
-		console.log("Selected Project ID =>", projectId);
+		console.log("Selected Project ID =>", project.projectId);
+		console.log("Selected Project Name =>", project.projectName);
 		console.log("Selected ProjectTask ID =>", projectTaskId);
-		setShowTimesheet(!showTimesheet)
-		// setTaskTitle(taskTitle)
+
+		setShowTimesheet(true)
+
 		if (taskTitle) {
 			setTimesheet([
 				...timesheet,
 				{
+					projectName: project.projectName,
 					projectTaskId,
 					taskTitle,
 				}
@@ -180,7 +133,7 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 				<select ref={selectProjectRef} className="ml-2" onChange={handleChangeProject}>
 					<option value="">Select a project</option>
 					{projects.map((project: Project) => (
-						<option key={project.id} value={project.id}>{project.name}</option>
+						<option key={project.id} value={`${project.id}#${project.name}`}>{project.name}</option>
 					))}
 				</select>
 			</div>
@@ -202,13 +155,33 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 
 			<hr  className="mb-3" />
 
-			{
-				timesheet.map((sheet) => {
-					return (<Rows taskTitle={sheet.taskTitle} />)
-				})
-			}
+			<div style={{ "overflowX": "auto" }}>
+				<table>
+					<thead>
+					<tr>
+						<td></td>
+						{
+							days.map((day) => {
+								return (
+									<td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold" }}>
+										<p>{day.currDate}</p>
+									</td>
+								);
+							})
+						}
+					</tr>
+					</thead>
+					<tbody>
+					{
+						timesheet.map((task) => {
+							return (<TimesheetRow project={project} task={task} days={days} />)
+						})
+					}
+					</tbody>
+				</table>
+			</div>
 
-			<p className="font-bold text-2xl">Number of working days: {daysWorked}</p>
+			<p className="font-bold text-2xl">Number of working days: {workingDays}</p>
 		</div>
 	);
 }
