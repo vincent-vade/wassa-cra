@@ -174,7 +174,7 @@ export default function CreateTimesheetPage({ projects } : { projects: Project[]
 					<tbody>
 					{
 						timesheet.map((task) => {
-							return (<TimesheetRow project={project} task={task} days={days} />)
+							return (<TimesheetRow task={task} days={days} />)
 						})
 					}
 					</tbody>

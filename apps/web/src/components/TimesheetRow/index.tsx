@@ -7,13 +7,11 @@ import { ProjectSelection } from "~/pages/timesheets/create";
 
 export const TimesheetRow = ({
     handleChangeCell,
-    project,
     task,
     days,
   }: {
     handleChangeCell?: (days: { value: number; currDate: string }[]) => void,
-    project: ProjectSelection,
-    task?: { taskTitle: string, projectTaskId: string },
+    task?: { taskTitle: string, projectTaskId: string, projectName: string },
     days: Days,
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<
@@ -26,7 +24,7 @@ export const TimesheetRow = ({
 
     return (
         <tr>
-            <td><p className="p-2">{project.projectName} / {task.taskTitle}</p></td>
+            <td><p className="p-2">{task.projectName} / {task.taskTitle}</p></td>
             {
                 days.map((day) => {
                     return (
