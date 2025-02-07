@@ -12,29 +12,33 @@ export const TimesheetRow = ({
     task?: { taskTitle: string, projectTaskId: string, projectName: string },
     days: Days,
 }) => {
-    // const [totalDaysWorked, setTotalDaysWorked] = useState<
-    //     { value: number; currDate: string }[]
-    // >(days.map((day) => ({ value: 0, currDate: day.currDate })));
-
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
+    const [daysInput, setDaysInput] = useState<number[]>(days.map(() => 0));
 
-    // useEffect(() => {
-    //     handleChangeCell?.(totalDaysWorked);
-    // }, [handleChangeCell, totalDaysWorked]);
+    useEffect(() => {
+        const totalDays = daysInput.reduce((acc, curr) => acc + curr, 0);
+        setTotalDaysWorked(totalDays);
+    }, daysInput)
 
-    const handleChange = (val: number): void => {
-        console.log(val);
+    const handleChange = (val: number, taskId: string, idx: number): void => {
+        const newDaysInput = daysInput.map((input, newIdx) => {
+            return newIdx === idx ? val : input;
+        });
+
+        setDaysInput(newDaysInput);
     }
 
     return (
         <tr>
             <td><p className="p-2">{task.projectName} / {task.taskTitle}</p></td>
             {
-                days.map((day) => {
+                days.map((day, idx) => {
                     return (
                         <td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
                             <NumberInput
-                                disabled={isWeekendDay(day.dayOfWeek)}
+                                idx={idx}
+                                taskId={task.projectTaskId}
+                                disabled={isWeekendDay(day.dayOfWeek) ? 'disabled' : false}
                                 handleChange={handleChange}
                             />
                         </td>

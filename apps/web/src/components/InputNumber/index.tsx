@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 type InputNumberProps = {
+	taskId: string
+	idx: number
 	disabled?: boolean;
 	handleChange?: (value: number) => void;
 };
@@ -11,37 +13,38 @@ const STEP = 0.5
 const increment = (val: number) => val < MAX_VALUE ? val + STEP : MAX_VALUE
 const decrement = (val: number) => val > MIN_VALUE ? val - STEP : MIN_VALUE
 
-export function NumberInput({ disabled, handleChange }: InputNumberProps) {
+export function NumberInput({ taskId, idx, disabled, handleChange }: InputNumberProps) {
 	const [value, setValue] = useState(0);
 
-	const handleAdd = () => {
+	const handleAdd = (taskId, idx) => () => {
 		const newValue = increment(value)
 
 		setValue(newValue);
 
 		if (handleChange) {
-			handleChange(newValue);
+			handleChange(newValue, taskId, idx);
 		}
 	};
 
-	const handleSubtract = () => {
+	const handleSubtract = (taskId, idx) => () => {
 		const newValue = decrement(value)
 
 		setValue(newValue);
 
 		if (handleChange) {
-			handleChange(newValue);
+			handleChange(newValue, taskId, idx);
 		}
 	};
 
 	return (
 		<div className="p-1 mr-2" style={{display: "flex", "minWidth": "50px"}}>
 			<input
-				id="amountInput"
+				key={`amountInput-${taskId}-${idx}`}
 				type="number"
 				min="0"
 				max="1"
 				step="0.5"
+				disabled={disabled}
 				value={value}
 				style={{ width: "20px" }}
 				className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border-none rounded-md py-2  text-center transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -51,7 +54,8 @@ export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 					id="increaseButton"
 					className=" border border-transparent text-center text-sm transition-all focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
 					type="button"
-					onClick={handleAdd}
+					disabled={disabled}
+					onClick={handleAdd(taskId, idx)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +70,8 @@ export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 				<button
 					className="border border-transparent text-center transition-allfocus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
 					type="button"
-					onClick={handleSubtract}
+					disabled={disabled}
+					onClick={handleSubtract(taskId, idx)}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
