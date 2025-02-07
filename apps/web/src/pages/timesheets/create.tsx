@@ -254,6 +254,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 								);
 							})
 						}
+						<td style={{ "textAlign": "center", "fontWeight": "bold", "minWidth": "110px" }}>Total</td>
 					</tr>
 					</thead>
 					<tbody>

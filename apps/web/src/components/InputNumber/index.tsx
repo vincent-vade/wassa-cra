@@ -5,22 +5,30 @@ type InputNumberProps = {
 	handleChange?: (value: number) => void;
 };
 
+const MIN_VALUE = 0
+const MAX_VALUE = 1
+const STEP = 0.5
+const increment = (val: number) => val < MAX_VALUE ? val + STEP : MAX_VALUE
+const decrement = (val: number) => val > MIN_VALUE ? val - STEP : MIN_VALUE
+
 export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 	const [value, setValue] = useState(0);
 
 	const handleAdd = () => {
-		const newValue = +value + 0.5;
-		if (newValue > 1) return;
+		const newValue = increment(value)
+
 		setValue(newValue);
+
 		if (handleChange) {
 			handleChange(newValue);
 		}
 	};
 
 	const handleSubtract = () => {
-		if (value > 1 || value === 0) return;
-		const newValue = +value - 0.5;
+		const newValue = decrement(value)
+
 		setValue(newValue);
+
 		if (handleChange) {
 			handleChange(newValue);
 		}
@@ -34,7 +42,7 @@ export function NumberInput({ disabled, handleChange }: InputNumberProps) {
 				min="0"
 				max="1"
 				step="0.5"
-				defaultValue={value}
+				value={value}
 				style={{ width: "20px" }}
 				className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border-none rounded-md py-2  text-center transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 			/>

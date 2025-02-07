@@ -6,21 +6,25 @@ import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
 import { ProjectSelection } from "~/pages/timesheets/create";
 
 export const TimesheetRow = ({
-    handleChangeCell,
     task,
     days,
   }: {
-    handleChangeCell?: (days: { value: number; currDate: string }[]) => void,
     task?: { taskTitle: string, projectTaskId: string, projectName: string },
     days: Days,
 }) => {
-    const [totalDaysWorked, setTotalDaysWorked] = useState<
-        { value: number; currDate: string }[]
-    >(days.map((day) => ({ value: 0, currDate: day.currDate })));
+    // const [totalDaysWorked, setTotalDaysWorked] = useState<
+    //     { value: number; currDate: string }[]
+    // >(days.map((day) => ({ value: 0, currDate: day.currDate })));
 
-    useEffect(() => {
-        handleChangeCell?.(totalDaysWorked);
-    }, [handleChangeCell, totalDaysWorked]);
+    const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
+
+    // useEffect(() => {
+    //     handleChangeCell?.(totalDaysWorked);
+    // }, [handleChangeCell, totalDaysWorked]);
+
+    const handleChange = (val: number): void => {
+        console.log(val);
+    }
 
     return (
         <tr>
@@ -31,20 +35,13 @@ export const TimesheetRow = ({
                         <td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
                             <NumberInput
                                 disabled={isWeekendDay(day.dayOfWeek)}
-                                handleChange={(value) =>
-                                    setTotalDaysWorked((totalDaysWorked) =>
-                                        updateArrayByUniqKey(
-                                            totalDaysWorked,
-                                            {value, currDate: day.currDate},
-                                            "currDate",
-                                        ),
-                                    )
-                                }
+                                handleChange={handleChange}
                             />
                         </td>
                     );
                 })
             }
+            <td><p style={{ "textAlign": "center", "fontWeight": "bold" }}>{totalDaysWorked}</p></td>
         </tr>
     );
 }
