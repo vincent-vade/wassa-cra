@@ -1,8 +1,9 @@
 import {client, CreateTimesheet, Timesheet} from "~/lib/client";
 
 export const getTimesheets = async () => {
-    const { data } = await client.GET("/api/rest/timesheets");
-    return data?.timesheets as Timesheet[];
+    const response = await client.GET("/api/rest/timesheets");
+    console.log(response);
+    return response.data?.timesheets as Timesheet[];
 };
 
 export const getTimesheetById = async (id: string) => {

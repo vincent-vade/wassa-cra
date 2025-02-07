@@ -31,17 +31,14 @@ async function addProjects() {
 				{
 					task_description: "JavaScript development",
 					project_id: project1.id,
-					hours_worked: 0,
 				},
 				{
 					task_description: "Devops (Infra/Maintenance)",
 					project_id: project1.id,
-					hours_worked: 0,
 				},
 				{
 					task_description: "JavaScript development",
 					project_id: project2.id,
-					hours_worked: 0,
 				},
 			],
 		});

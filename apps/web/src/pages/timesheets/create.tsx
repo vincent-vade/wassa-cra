@@ -15,8 +15,9 @@ import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import dayjs from "dayjs";
 
-const client_id = "af35fca8-2f16-4f9a-9dfc-ddd6c5678861"
-const freelance_id = "d957ca2a-b92a-44f8-90c6-7c51af980ff2"
+const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a"
+const client_id = "c27563bd-e1ee-4b20-8bab-fbc970a72178"
+const freelance_id = "dec52fe8-0b27-41f7-94e3-b9eb04fab852"
 
 const sumTotalDaysWorked = (
 	totalDaysWorked: { value: number; currDate: string }[],
@@ -57,10 +58,15 @@ const EmptyRow = () => {
 	</tr>)
 }
 
+const buildTimesheetDate = (month) => {
+	return dayjs().month(month - 1).format('YYYY-MM')
+}
+
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
+	const [timesheetDate, setTimesheetDate] = useState<string>(buildTimesheetDate(month));
 
 	const [project, setProject] = useState<ProjectSelection>(null);
 	const [task, setTask] = useState<TaskSelection>(null);
@@ -121,6 +127,10 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		setMonth(month - 1);
 	}
 
+	useEffect(() => {
+		setTimesheetDate(buildTimesheetDate(month))
+	}, [month])
+
 	const handleClickNext = () => {
 		setMonth(month + 1);
 	}
@@ -139,13 +149,41 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		console.log("Selected ProjectTask ID =>", projectTaskId);
 
 		const result = await createTimesheet({
-			"object": {
-				"working_duration": 1,
-				"working_date": "2025",
-				"working_unit": "day",
-				"client_id": client_id,
-				"freelance_id": freelance_id,
-				"project_task_id": projectTaskId
+			object: {
+				working_durations: [
+					{day: 1, duration: 0, unit: "day"},
+					{day: 2, duration: 0, unit: "day"},
+					{day: 3, duration: 1, unit: "day"},
+					{day: 4, duration: 1, unit: "day"},
+					{day: 5, duration: 1, unit: "day"},
+					{day: 6, duration: 1, unit: "day"},
+					{day: 7, duration: 1, unit: "day"},
+					{day: 8, duration: 0, unit: "day"},
+					{day: 9, duration: 0, unit: "day"},
+					{day: 10, duration: 1, unit: "day"},
+					{day: 11, duration: 1, unit: "day"},
+					{day: 12, duration: 1, unit: "day"},
+					{day: 13, duration: 1, unit: "day"},
+					{day: 14, duration: 1, unit: "day"},
+					{day: 15, duration: 0, unit: "day"},
+					{day: 16, duration: 0, unit: "day"},
+					{day: 17, duration: 1, unit: "day"},
+					{day: 18, duration: 1, unit: "day"},
+					{day: 19, duration: 1, unit: "day"},
+					{day: 20, duration: 1, unit: "day"},
+					{day: 21, duration: 1, unit: "day"},
+					{day: 22, duration: 0, unit: "day"},
+					{day: 23, duration: 0, unit: "day"},
+					{day: 24, duration: 1, unit: "day"},
+					{day: 25, duration: 1, unit: "day"},
+					{day: 26, duration: 1, unit: "day"},
+					{day: 27, duration: 1, unit: "day"},
+					{day: 28, duration: 1, unit: "day"},
+				],
+				working_date: timesheetDate,
+				client_id: client_id,
+				freelance_id: freelance_id,
+				project_task_id: projectTaskId
 			}
 		} as CreateTimesheet)
 
@@ -158,21 +196,9 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		console.log("Result =>", result);
 	}
 
-	const handleClick = () => {
-		toaster('This is a success message!', 'success');
-	};
-
-	const handleErrorClick = () => {
-		toaster('This is an error message!', 'error');
-	};
-
 	return (
 		<div style={{ "maxWidth": "80%" }}>
 			<h2>Create Timesheet</h2>
-
-			<button onClick={handleClick}>Show Success Toast</button>
-			<button onClick={handleErrorClick}>Show Error Toast</button>
-
 
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
 				<button onClick={handleClickPrevious}>&lt;</button>
