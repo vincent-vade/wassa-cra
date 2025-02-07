@@ -14,33 +14,17 @@ import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTas
 import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import dayjs from "dayjs";
+import localFont from "next/dist/compiled/@next/font/dist/local";
+import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
 
 const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a"
 const client_id = "c27563bd-e1ee-4b20-8bab-fbc970a72178"
 const freelance_id = "dec52fe8-0b27-41f7-94e3-b9eb04fab852"
 
-const sumTotalDaysWorked = (
-	totalDaysWorked: { value: number; currDate: string }[],
-) => totalDaysWorked.reduce((acc, curr) => acc + curr.value, 0);
-
 const getNbWorkingDays = (days: Days) => days.reduce(
 	(acc, day) => (isWeekendDay(day.dayOfWeek) ? acc : acc + 1),
 	0,
 );
-
-// function Project() {
-// 	const [totalDaysWorked, setT] = useState(0);
-// 	return (
-// 		<div>
-// 			<TimesheetRow
-// 				handleChangeCell={(totalDaysWorked) =>
-// 					setT(sumTotalDaysWorked(totalDaysWorked))
-// 				}
-// 			/>
-// 			<p>{totalDaysWorked}</p>
-// 		</div>
-// 	);
-// }
 
 type Task = {
 	projectName: string
@@ -62,9 +46,25 @@ const buildTimesheetDate = (month) => {
 	return dayjs().month(month - 1).format('YYYY-MM')
 }
 
+const add = (a, b) => a + b
+const arraySum = (arr: number[]) => Array.isArray(arr) ? arr.reduce(add, 0) : 0
+
+const calculateRowTotal = (timesheets: {[key: string]: number[]}): number[] => {
+	if (Object.values(timesheets).length === 0) return [0]
+
+	return Object.values(timesheets).reduce((acc, el) => {
+		return acc.map((a, idx) => {
+			return a + el[idx]
+		})
+	})
+}
+
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
+	const [timesheets, setTimesheets] = useState<{[key: string]: number[]}>({});
+	const [timesheetTotalDays, setTimesheetTotalDays] = useState(0);
+	const [timesheetTotalRow, setTimesheetTotalRow] = useState<number[]>([0]);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
 	const [timesheetDate, setTimesheetDate] = useState<string>(buildTimesheetDate(month));
 
@@ -127,12 +127,17 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		setMonth(month - 1);
 	}
 
-	useEffect(() => {
-		setTimesheetDate(buildTimesheetDate(month))
-	}, [month])
-
 	const handleClickNext = () => {
 		setMonth(month + 1);
+	}
+
+	const handleUpdateTimesheet = (projectTaskId: string, days: number[]) => {
+		const newTimesheets = {
+			...timesheets,
+			[projectTaskId]: days,
+		}
+
+		setTimesheets(newTimesheets)
 	}
 
 	const handleClickSave = async () => {
@@ -195,6 +200,18 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 		console.log("Result =>", result);
 	}
+
+	useEffect(() => {
+		setTimesheetDate(buildTimesheetDate(month))
+	}, [month])
+
+	useEffect(() => {
+		const rowTotal = calculateRowTotal(timesheets)
+		const total = arraySum(rowTotal)
+
+		setTimesheetTotalRow(rowTotal)
+		setTimesheetTotalDays(total as number)
+	}, [timesheets])
 
 	return (
 		<div style={{ "maxWidth": "80%" }}>
@@ -260,9 +277,18 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 					<tbody>
 					{
 						timesheet.length === 0 ? <EmptyRow />  : timesheet.map((task) => {
-							return (<TimesheetRow task={task} days={days} />)
+							return (<TimesheetRow task={task} days={days} handleUpdateTimesheet={handleUpdateTimesheet} />)
 						})
 					}
+
+					{
+						timesheet.length > 0 && <TimesheetRowTotal
+							days={days}
+							timesheetTotalRow={timesheetTotalRow}
+							timesheetTotalDays={timesheetTotalDays}
+						/>
+					}
+
 					</tbody>
 				</table>
 			</div>

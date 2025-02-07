@@ -10,6 +10,7 @@ type InputNumberProps = {
 const MIN_VALUE = 0
 const MAX_VALUE = 1
 const STEP = 0.5
+
 const increment = (val: number) => val < MAX_VALUE ? val + STEP : MAX_VALUE
 const decrement = (val: number) => val > MIN_VALUE ? val - STEP : MIN_VALUE
 

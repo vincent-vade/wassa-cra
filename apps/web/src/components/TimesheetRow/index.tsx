@@ -1,16 +1,15 @@
-import {Project} from "~/lib/client";
 import {useEffect, useState} from "react";
 import { Days, isWeekendDay } from "~/lib/date";
 import { NumberInput } from "~/components/InputNumber";
-import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
-import { ProjectSelection } from "~/pages/timesheets/create";
 
 export const TimesheetRow = ({
-    task,
-    days,
-  }: {
+                                 task,
+                                 days,
+                                 handleUpdateTimesheet
+}: {
     task?: { taskTitle: string, projectTaskId: string, projectName: string },
     days: Days,
+    handleUpdateTimesheet: (taskId: string, days: number[]) => void
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
     const [daysInput, setDaysInput] = useState<number[]>(days.map(() => 0));
@@ -26,6 +25,8 @@ export const TimesheetRow = ({
         });
 
         setDaysInput(newDaysInput);
+
+        handleUpdateTimesheet(taskId, newDaysInput);
     }
 
     return (
@@ -38,7 +39,7 @@ export const TimesheetRow = ({
                             <NumberInput
                                 idx={idx}
                                 taskId={task.projectTaskId}
-                                disabled={isWeekendDay(day.dayOfWeek) ? 'disabled' : false}
+                                disabled={isWeekendDay(day.dayOfWeek)}
                                 handleChange={handleChange}
                             />
                         </td>
