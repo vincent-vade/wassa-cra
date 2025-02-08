@@ -2,7 +2,6 @@ import {client, CreateTimesheet, Timesheet} from "~/lib/client";
 
 export const getTimesheets = async () => {
     const response = await client.GET("/api/rest/timesheets");
-    console.log(response);
     return response.data?.timesheets as Timesheet[];
 };
 

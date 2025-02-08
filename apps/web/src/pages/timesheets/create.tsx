@@ -59,6 +59,12 @@ const calculateRowTotal = (timesheets: {[key: string]: number[]}): number[] => {
 	})
 }
 
+const isStatusFullfilled = ({status}: {status: string}) => status === "fulfilled"
+
+const isAllPromiseSettled = (promises: PromiseSettledResult<any>[]) => {
+	return promises.every(isStatusFullfilled)
+}
+
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
 	const [timesheet, setTimesheet] = useState<Timesheet>([]);
@@ -99,10 +105,10 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 	const handleClickTaskAdd = async () => {
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split('#');
 
-		console.log("Freelance ID =>", freelance_id);
-		console.log("Selected Project ID =>", project.projectId);
-		console.log("Selected Project Name =>", project.projectName);
-		console.log("Selected ProjectTask ID =>", projectTaskId);
+		// console.log("Freelance ID =>", freelance_id);
+		// console.log("Selected Project ID =>", project.projectId);
+		// console.log("Selected Project Name =>", project.projectName);
+		// console.log("Selected ProjectTask ID =>", projectTaskId);
 
 		if (taskTitle) {
 			setTimesheet([
@@ -148,57 +154,32 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 		const [projectTaskId] = selectTaskRef?.current?.value.split('#')
 
-		console.log("Freelance ID =>", freelance_id);
-		console.log("Selected Project ID =>", project.projectId);
-		console.log("Selected Project Name =>", project.projectName);
-		console.log("Selected ProjectTask ID =>", projectTaskId);
+		// console.log("Freelance ID =>", freelance_id);
+		// console.log("Selected Project ID =>", project.projectId);
+		// console.log("Selected Project Name =>", project.projectName);
+		// console.log("Selected ProjectTask ID =>", projectTaskId);
+		//
+		// console.log('timesheets =>', timesheets)
 
-		const result = await createTimesheet({
-			object: {
-				working_durations: [
-					{day: 1, duration: 0, unit: "day"},
-					{day: 2, duration: 0, unit: "day"},
-					{day: 3, duration: 1, unit: "day"},
-					{day: 4, duration: 1, unit: "day"},
-					{day: 5, duration: 1, unit: "day"},
-					{day: 6, duration: 1, unit: "day"},
-					{day: 7, duration: 1, unit: "day"},
-					{day: 8, duration: 0, unit: "day"},
-					{day: 9, duration: 0, unit: "day"},
-					{day: 10, duration: 1, unit: "day"},
-					{day: 11, duration: 1, unit: "day"},
-					{day: 12, duration: 1, unit: "day"},
-					{day: 13, duration: 1, unit: "day"},
-					{day: 14, duration: 1, unit: "day"},
-					{day: 15, duration: 0, unit: "day"},
-					{day: 16, duration: 0, unit: "day"},
-					{day: 17, duration: 1, unit: "day"},
-					{day: 18, duration: 1, unit: "day"},
-					{day: 19, duration: 1, unit: "day"},
-					{day: 20, duration: 1, unit: "day"},
-					{day: 21, duration: 1, unit: "day"},
-					{day: 22, duration: 0, unit: "day"},
-					{day: 23, duration: 0, unit: "day"},
-					{day: 24, duration: 1, unit: "day"},
-					{day: 25, duration: 1, unit: "day"},
-					{day: 26, duration: 1, unit: "day"},
-					{day: 27, duration: 1, unit: "day"},
-					{day: 28, duration: 1, unit: "day"},
-				],
-				working_date: timesheetDate,
-				client_id: client_id,
-				freelance_id: freelance_id,
-				project_task_id: projectTaskId
-			}
-		} as CreateTimesheet)
+		const promises = Object.entries(timesheets).map(async ([key, timesheet]) => {
+			return await createTimesheet({
+				object: {
+					working_durations: timesheet,
+					working_date: timesheetDate,
+					client_id: client_id,
+					freelance_id: freelance_id,
+					project_task_id: key
+				}
+			} as CreateTimesheet)
+		})
 
-		if (result.response.ok) {
+		const results = await Promise.allSettled(promises)
+
+		if ( isAllPromiseSettled(results)) {
 			toaster('Timesheet created successfully!', 'success');
 		} else {
 			toaster('An error occurred while creating the timesheet!', 'error');
 		}
-
-		console.log("Result =>", result);
 	}
 
 	useEffect(() => {
