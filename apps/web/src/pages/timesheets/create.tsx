@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Toaster, useToaster } from '../../components/Toaster';
-import { NumberInput } from "~/components/InputNumber";
-import { updateArrayByUniqKey } from "~/lib/array/updateArrayByUniqKey";
+import { useToaster } from '~/components/Toaster';
 import {
 	Days,
 	getAllDaysInCurrentMonth,
@@ -10,12 +8,13 @@ import {
 } from "~/lib/date";
 import {CreateTimesheet, Project, ProjectTasks} from "~/lib/client"
 import { getProjects } from "~/services/projects";
-import {getProjectTasks, getProjectTasksByProjectId} from "~/services/projectTasks";
+import { getProjectTasksByProjectId} from "~/services/projectTasks";
 import {createTimesheet} from "~/services/timesheets";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import dayjs from "dayjs";
-import localFont from "next/dist/compiled/@next/font/dist/local";
 import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
+import Link from "next/link";
+import {useAuth} from "~/context/AuthContext";
 
 const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a"
 const client_id = "c27563bd-e1ee-4b20-8bab-fbc970a72178"
@@ -76,6 +75,9 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 	const [project, setProject] = useState<ProjectSelection>(null);
 	const [task, setTask] = useState<TaskSelection>(null);
+
+	const { user } = useAuth();
+	console.log('[CreateTimesheetPage] user', user)
 
 	const toaster = useToaster();
 
@@ -196,7 +198,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 	return (
 		<div style={{ "maxWidth": "80%" }}>
-			<h2>Create Timesheet</h2>
+			<h2><Link href={`/timesheets`}>&lt;</Link> Create Timesheet</h2>
 
 			<div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
 				<button onClick={handleClickPrevious}>&lt;</button>
@@ -277,8 +279,6 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			<div>
 				<button onClick={handleClickSave}>Save timesheet</button>
 			</div>
-
-			<Toaster />
 		</div>
 	);
 }

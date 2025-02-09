@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { getTimesheets } from "~/services/timesheets";
 
-import '../../styles/table.css'
+import {useAuth} from "~/context/AuthContext";
 
 const add = (a, b) => a + b
 
 export default function Timesheets({
 	timesheets,
 }: { timesheets: Record<string, unknown> }) {
+	const { user } = useAuth();
+	console.log('[Timesheets] user', user)
+
 	return (
 		<>
 			<Link href={"/timesheets/create"}>Create a new timesheet</Link>
@@ -19,7 +22,7 @@ export default function Timesheets({
 						<th>Period</th>
 						<th>Created at</th>
 						<th>Project / task</th>
-						<th>Duration</th>
+						<th>Duration (day(s))</th>
 					</tr>
 				</thead>
 				<tbody>
