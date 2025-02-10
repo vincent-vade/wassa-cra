@@ -156,13 +156,6 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 		const [projectTaskId] = selectTaskRef?.current?.value.split('#')
 
-		// console.log("Freelance ID =>", freelance_id);
-		// console.log("Selected Project ID =>", project.projectId);
-		// console.log("Selected Project Name =>", project.projectName);
-		// console.log("Selected ProjectTask ID =>", projectTaskId);
-		//
-		// console.log('timesheets =>', timesheets)
-
 		const promises = Object.entries(timesheets).map(async ([key, timesheet]) => {
 			return await createTimesheet({
 				object: {

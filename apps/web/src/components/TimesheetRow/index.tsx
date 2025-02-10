@@ -12,12 +12,14 @@ export const TimesheetRow = ({
     handleUpdateTimesheet: (taskId: string, days: number[]) => void
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
-    const [daysInput, setDaysInput] = useState<number[]>(days.map(() => 0));
+    const [daysInput, setDaysInput] = useState<number[]>(days);
+
+    console.log('days', days)
 
     useEffect(() => {
         const totalDays = daysInput.reduce((acc, curr) => acc + curr, 0);
         setTotalDaysWorked(totalDays);
-    }, daysInput)
+    }, [daysInput])
 
     const handleChange = (val: number, taskId: string, idx: number): void => {
         const newDaysInput = daysInput.map((input, newIdx) => {
@@ -41,6 +43,7 @@ export const TimesheetRow = ({
                                 taskId={task.projectTaskId}
                                 disabled={isWeekendDay(day.dayOfWeek)}
                                 handleChange={handleChange}
+                                val={day}
                             />
                         </td>
                     );

@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "update:schemas": "prisma db pull",
-    "update:types": "prisma generate",
     "generate:sdk": "npx openapi-typescript OpenAPISpec.json -o src/lib/schema.ts",
     "db:seeds": "npm run db:seed:clients && npm run db:seed:freelances && npm run db:seed:projects",
     "db:seed:clients": "tsx ./prisma/seeds/clients.ts",

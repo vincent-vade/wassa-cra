@@ -100,9 +100,8 @@ export interface paths {
          *         project_task_id
          *         updated_at
          *         working_date
-         *         working_duration
-         *         working_unit
-         *       }
+         *         working_durations
+         *         }
          *     }
          *
          *     ```
@@ -135,6 +134,7 @@ export interface paths {
                                 updated_at?: components["schemas"]["timestamp"];
                                 /** String */
                                 working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
                             }[];
                         };
                     };
@@ -156,9 +156,8 @@ export interface paths {
          *         project_task_id
          *         updated_at
          *         working_date
-         *         working_duration
-         *         working_unit
-         *       }
+         *         working_durations
+         *         }
          *     }
          *
          *     ```
@@ -202,12 +201,121 @@ export interface paths {
                                 updated_at?: components["schemas"]["timestamp"];
                                 /** String */
                                 working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
                             } | null;
                         };
                     };
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/timesheets/period/{period}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * timesheets_by_period
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query timesheets_by_period($period: String) {
+         *       timesheets(where: { working_date: { _eq: $period } }) {
+         *         client_id
+         *         created_at
+         *         freelance_id
+         *         id
+         *         project_task_id
+         *         updated_at
+         *         working_date
+         *         working_durations
+         *         projects_task {
+         *           id
+         *           project_id
+         *           task_description
+         *           project {
+         *           	id
+         *             name
+         *         	}
+         *         }
+         *       }
+         *
+         *     }
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    period: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        period?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/timesheets/period/{period} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            timesheets?: {
+                                client_id?: components["schemas"]["uuid!"];
+                                created_at?: components["schemas"]["timestamp!"];
+                                freelance_id?: components["schemas"]["uuid!"];
+                                id?: components["schemas"]["uuid!"];
+                                project_task_id?: components["schemas"]["uuid!"];
+                                /**
+                                 * projects_tasks
+                                 * @description columns and relationships of "projects_tasks"
+                                 */
+                                projects_task?: {
+                                    id?: components["schemas"]["uuid!"];
+                                    /**
+                                     * projects
+                                     * @description columns and relationships of "projects"
+                                     */
+                                    project?: {
+                                        id?: components["schemas"]["uuid!"];
+                                        /** String */
+                                        name?: string;
+                                    };
+                                    project_id?: components["schemas"]["uuid!"];
+                                    /** String */
+                                    task_description?: string | null;
+                                };
+                                updated_at?: components["schemas"]["timestamp"];
+                                /** String */
+                                working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -235,9 +343,8 @@ export interface paths {
          *         project_task_id
          *         updated_at
          *         working_date
-         *         working_duration
-         *         working_unit
-         *       }
+         *         working_durations
+         *      }
          *     }
          *
          *     ```
@@ -284,6 +391,7 @@ export interface paths {
                                 updated_at?: components["schemas"]["timestamp"];
                                 /** String */
                                 working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
                             } | null;
                         };
                     };
@@ -305,9 +413,8 @@ export interface paths {
          *         project_task_id
          *         updated_at
          *         working_date
-         *         working_duration
-         *         working_unit
-         *       }
+         *         working_durations
+         *      }
          *     }
          *
          *     ```
@@ -355,6 +462,7 @@ export interface paths {
                                 updated_at?: components["schemas"]["timestamp"];
                                 /** String */
                                 working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
                             } | null;
                         };
                     };
@@ -375,9 +483,8 @@ export interface paths {
          *         project_task_id
          *         updated_at
          *         working_date
-         *         working_duration
-         *         working_unit
-         *       }
+         *         working_durations
+         *      }
          *     }
          *
          *     ```
@@ -424,6 +531,7 @@ export interface paths {
                                 updated_at?: components["schemas"]["timestamp"];
                                 /** String */
                                 working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
                             } | null;
                         };
                     };
@@ -1489,7 +1597,6 @@ export interface paths {
          *       projects_tasks {
          *         created_at
          *         date
-         *         hours_worked
          *         id
          *         project_id
          *         task_description
@@ -1521,7 +1628,6 @@ export interface paths {
                             projects_tasks?: {
                                 created_at?: components["schemas"]["timestamp!"];
                                 date?: components["schemas"]["timestamp"];
-                                hours_worked?: components["schemas"]["numeric!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_id?: components["schemas"]["uuid!"];
                                 /** String */
@@ -1543,8 +1649,7 @@ export interface paths {
          *       insert_projects_tasks_one(object: $object) {
          *         created_at
          *         date
-         *         hours_worked
-         *         id
+         *        id
          *         project_id
          *         task_description
          *         updated_at
@@ -1586,7 +1691,6 @@ export interface paths {
                             insert_projects_tasks_one?: {
                                 created_at?: components["schemas"]["timestamp!"];
                                 date?: components["schemas"]["timestamp"];
-                                hours_worked?: components["schemas"]["numeric!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_id?: components["schemas"]["uuid!"];
                                 /** String */
@@ -1620,8 +1724,7 @@ export interface paths {
          *       projects_tasks_by_pk(id: $id) {
          *         created_at
          *         date
-         *         hours_worked
-         *         id
+         *          id
          *         project_id
          *         task_description
          *         updated_at
@@ -1666,7 +1769,6 @@ export interface paths {
                             projects_tasks_by_pk?: {
                                 created_at?: components["schemas"]["timestamp!"];
                                 date?: components["schemas"]["timestamp"];
-                                hours_worked?: components["schemas"]["numeric!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_id?: components["schemas"]["uuid!"];
                                 /** String */
@@ -1688,8 +1790,7 @@ export interface paths {
          *       update_projects_tasks_by_pk(pk_columns: {id: $id}, _set: $object) {
          *         created_at
          *         date
-         *         hours_worked
-         *         id
+         *          id
          *         project_id
          *         task_description
          *         updated_at
@@ -1735,7 +1836,6 @@ export interface paths {
                             update_projects_tasks_by_pk?: {
                                 created_at?: components["schemas"]["timestamp!"];
                                 date?: components["schemas"]["timestamp"];
-                                hours_worked?: components["schemas"]["numeric!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_id?: components["schemas"]["uuid!"];
                                 /** String */
@@ -1756,8 +1856,7 @@ export interface paths {
          *       delete_projects_tasks_by_pk(id: $id) {
          *         created_at
          *         date
-         *         hours_worked
-         *         id
+         *          id
          *         project_id
          *         task_description
          *         updated_at
@@ -1802,7 +1901,6 @@ export interface paths {
                             delete_projects_tasks_by_pk?: {
                                 created_at?: components["schemas"]["timestamp!"];
                                 date?: components["schemas"]["timestamp"];
-                                hours_worked?: components["schemas"]["numeric!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_id?: components["schemas"]["uuid!"];
                                 /** String */
@@ -1829,20 +1927,437 @@ export interface components {
         "timestamp!": unknown;
         /** timestamp */
         timestamp: unknown;
-        /** uuid */
-        uuid: string | null;
         /** jsonb */
         jsonb: unknown;
+        /** uuid */
+        uuid: string | null;
+        /**
+         * projects_insert_input
+         * @description input type for inserting data into table "projects"
+         */
+        "projects_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            end_date?: components["schemas"]["timestamp"];
+            id?: components["schemas"]["uuid"];
+            /** Boolean */
+            is_active?: boolean | null;
+            /** String */
+            name?: string | null;
+            start_date?: components["schemas"]["timestamp"];
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * projects_update_column
+         * @description update columns of table "projects"
+         * @enum {unknown}
+         */
+        "projects_update_column!": "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
+        /**
+         * timestamp_comparison_exp
+         * @description Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+         */
+        timestamp_comparison_exp: {
+            _eq?: components["schemas"]["timestamp"];
+            _gt?: components["schemas"]["timestamp"];
+            _gte?: components["schemas"]["timestamp"];
+            _in?: components["schemas"]["timestamp!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["timestamp"];
+            _lte?: components["schemas"]["timestamp"];
+            _neq?: components["schemas"]["timestamp"];
+            _nin?: components["schemas"]["timestamp!"][] | null;
+        } | null;
+        /**
+         * uuid_comparison_exp
+         * @description Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
+         */
+        uuid_comparison_exp: {
+            _eq?: components["schemas"]["uuid"];
+            _gt?: components["schemas"]["uuid"];
+            _gte?: components["schemas"]["uuid"];
+            _in?: components["schemas"]["uuid!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["uuid"];
+            _lte?: components["schemas"]["uuid"];
+            _neq?: components["schemas"]["uuid"];
+            _nin?: components["schemas"]["uuid!"][] | null;
+        } | null;
+        /**
+         * String_comparison_exp
+         * @description Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+         */
+        String_comparison_exp: {
+            /** String */
+            _eq?: string | null;
+            /** String */
+            _gt?: string | null;
+            /** String */
+            _gte?: string | null;
+            /** String */
+            _ilike?: string | null;
+            _in?: string[] | null;
+            /** String */
+            _iregex?: string | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** String */
+            _like?: string | null;
+            /** String */
+            _lt?: string | null;
+            /** String */
+            _lte?: string | null;
+            /** String */
+            _neq?: string | null;
+            /** String */
+            _nilike?: string | null;
+            _nin?: string[] | null;
+            /** String */
+            _niregex?: string | null;
+            /** String */
+            _nlike?: string | null;
+            /** String */
+            _nregex?: string | null;
+            /** String */
+            _nsimilar?: string | null;
+            /** String */
+            _regex?: string | null;
+            /** String */
+            _similar?: string | null;
+        } | null;
+        /**
+         * Boolean_comparison_exp
+         * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+         */
+        Boolean_comparison_exp: {
+            /** Boolean */
+            _eq?: boolean | null;
+            /** Boolean */
+            _gt?: boolean | null;
+            /** Boolean */
+            _gte?: boolean | null;
+            _in?: boolean[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Boolean */
+            _lt?: boolean | null;
+            /** Boolean */
+            _lte?: boolean | null;
+            /** Boolean */
+            _neq?: boolean | null;
+            _nin?: boolean[] | null;
+        } | null;
+        /**
+         * projects_bool_exp
+         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+         */
+        "projects_bool_exp!": {
+            _and?: components["schemas"]["projects_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_bool_exp"];
+            _or?: components["schemas"]["projects_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            end_date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            is_active?: components["schemas"]["Boolean_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            start_date?: components["schemas"]["timestamp_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * projects_bool_exp
+         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+         */
+        projects_bool_exp: {
+            _and?: components["schemas"]["projects_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_bool_exp"];
+            _or?: components["schemas"]["projects_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            end_date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            is_active?: components["schemas"]["Boolean_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            start_date?: components["schemas"]["timestamp_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * projects_constraint
+         * @description unique or primary key constraints on table "projects"
+         * @enum {unknown}
+         */
+        "projects_constraint!": "projects_pkey";
+        /**
+         * projects_on_conflict
+         * @description on_conflict condition type for table "projects"
+         */
+        projects_on_conflict: {
+            constraint?: components["schemas"]["projects_constraint!"];
+            update_columns?: components["schemas"]["projects_update_column!"][];
+            where?: components["schemas"]["projects_bool_exp"];
+        } | null;
+        /**
+         * projects_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "projects"
+         */
+        projects_obj_rel_insert_input: {
+            data?: components["schemas"]["projects_insert_input!"];
+            on_conflict?: components["schemas"]["projects_on_conflict"];
+        } | null;
+        /**
+         * projects_tasks_insert_input
+         * @description input type for inserting data into table "projects_tasks"
+         */
+        "projects_tasks_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            date?: components["schemas"]["timestamp"];
+            id?: components["schemas"]["uuid"];
+            project?: components["schemas"]["projects_obj_rel_insert_input"];
+            project_id?: components["schemas"]["uuid"];
+            /** String */
+            task_description?: string | null;
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * projects_tasks_update_column
+         * @description update columns of table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_update_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
+        /**
+         * projects_tasks_bool_exp
+         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
+         */
+        "projects_tasks_bool_exp!": {
+            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_tasks_bool_exp"];
+            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project?: components["schemas"]["projects_bool_exp"];
+            project_id?: components["schemas"]["uuid_comparison_exp"];
+            task_description?: components["schemas"]["String_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * projects_tasks_bool_exp
+         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
+         */
+        projects_tasks_bool_exp: {
+            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_tasks_bool_exp"];
+            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project?: components["schemas"]["projects_bool_exp"];
+            project_id?: components["schemas"]["uuid_comparison_exp"];
+            task_description?: components["schemas"]["String_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * projects_tasks_constraint
+         * @description unique or primary key constraints on table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_constraint!": "projects_tasks_pkey";
+        /**
+         * projects_tasks_on_conflict
+         * @description on_conflict condition type for table "projects_tasks"
+         */
+        projects_tasks_on_conflict: {
+            constraint?: components["schemas"]["projects_tasks_constraint!"];
+            update_columns?: components["schemas"]["projects_tasks_update_column!"][];
+            where?: components["schemas"]["projects_tasks_bool_exp"];
+        } | null;
+        /**
+         * projects_tasks_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "projects_tasks"
+         */
+        projects_tasks_obj_rel_insert_input: {
+            data?: components["schemas"]["projects_tasks_insert_input!"];
+            on_conflict?: components["schemas"]["projects_tasks_on_conflict"];
+        } | null;
+        /**
+         * clients_insert_input
+         * @description input type for inserting data into table "clients"
+         */
+        "clients_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            /** String */
+            email?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            /** String */
+            phone?: string | null;
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * clients_update_column
+         * @description update columns of table "clients"
+         * @enum {unknown}
+         */
+        "clients_update_column!": "created_at" | "email" | "id" | "name" | "phone" | "updated_at";
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        "clients_bool_exp!": {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        clients_bool_exp: {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * clients_constraint
+         * @description unique or primary key constraints on table "clients"
+         * @enum {unknown}
+         */
+        "clients_constraint!": "clients_pkey";
+        /**
+         * clients_on_conflict
+         * @description on_conflict condition type for table "clients"
+         */
+        clients_on_conflict: {
+            constraint?: components["schemas"]["clients_constraint!"];
+            update_columns?: components["schemas"]["clients_update_column!"][];
+            where?: components["schemas"]["clients_bool_exp"];
+        } | null;
+        /**
+         * clients_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "clients"
+         */
+        clients_obj_rel_insert_input: {
+            data?: components["schemas"]["clients_insert_input!"];
+            on_conflict?: components["schemas"]["clients_on_conflict"];
+        } | null;
+        /** numeric */
+        numeric: unknown;
+        /**
+         * freelances_insert_input
+         * @description input type for inserting data into table "freelances"
+         */
+        "freelances_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            daily_rate?: components["schemas"]["numeric"];
+            /** String */
+            email?: string | null;
+            id?: components["schemas"]["uuid"];
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * freelances_update_column
+         * @description update columns of table "freelances"
+         * @enum {unknown}
+         */
+        "freelances_update_column!": "created_at" | "daily_rate" | "email" | "id" | "updated_at";
+        /** numeric */
+        "numeric!": unknown;
+        /**
+         * numeric_comparison_exp
+         * @description Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+         */
+        numeric_comparison_exp: {
+            _eq?: components["schemas"]["numeric"];
+            _gt?: components["schemas"]["numeric"];
+            _gte?: components["schemas"]["numeric"];
+            _in?: components["schemas"]["numeric!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["numeric"];
+            _lte?: components["schemas"]["numeric"];
+            _neq?: components["schemas"]["numeric"];
+            _nin?: components["schemas"]["numeric!"][] | null;
+        } | null;
+        /**
+         * freelances_bool_exp
+         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
+         */
+        "freelances_bool_exp!": {
+            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
+            _not?: components["schemas"]["freelances_bool_exp"];
+            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            daily_rate?: components["schemas"]["numeric_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * freelances_bool_exp
+         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
+         */
+        freelances_bool_exp: {
+            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
+            _not?: components["schemas"]["freelances_bool_exp"];
+            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            daily_rate?: components["schemas"]["numeric_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * freelances_constraint
+         * @description unique or primary key constraints on table "freelances"
+         * @enum {unknown}
+         */
+        "freelances_constraint!": "freelances_pkey";
+        /**
+         * freelances_on_conflict
+         * @description on_conflict condition type for table "freelances"
+         */
+        freelances_on_conflict: {
+            constraint?: components["schemas"]["freelances_constraint!"];
+            update_columns?: components["schemas"]["freelances_update_column!"][];
+            where?: components["schemas"]["freelances_bool_exp"];
+        } | null;
+        /**
+         * freelances_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "freelances"
+         */
+        freelances_obj_rel_insert_input: {
+            data?: components["schemas"]["freelances_insert_input!"];
+            on_conflict?: components["schemas"]["freelances_on_conflict"];
+        } | null;
         /**
          * timesheets_insert_input
          * @description input type for inserting data into table "timesheets"
          */
         "timesheets_insert_input!": {
+            client?: components["schemas"]["clients_obj_rel_insert_input"];
             client_id?: components["schemas"]["uuid"];
             created_at?: components["schemas"]["timestamp"];
+            freelance?: components["schemas"]["freelances_obj_rel_insert_input"];
             freelance_id?: components["schemas"]["uuid"];
             id?: components["schemas"]["uuid"];
             project_task_id?: components["schemas"]["uuid"];
+            projects_task?: components["schemas"]["projects_tasks_obj_rel_insert_input"];
             updated_at?: components["schemas"]["timestamp"];
             /** String */
             working_date?: string | null;
@@ -1863,22 +2378,6 @@ export interface components {
             working_date?: string | null;
             working_durations?: components["schemas"]["jsonb"];
         };
-        /** numeric */
-        "numeric!": unknown;
-        /** numeric */
-        numeric: unknown;
-        /**
-         * freelances_insert_input
-         * @description input type for inserting data into table "freelances"
-         */
-        "freelances_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            daily_rate?: components["schemas"]["numeric"];
-            /** String */
-            email?: string | null;
-            id?: components["schemas"]["uuid"];
-            updated_at?: components["schemas"]["timestamp"];
-        };
         /**
          * freelances_set_input
          * @description input type for updating data in table "freelances"
@@ -1889,21 +2388,6 @@ export interface components {
             /** String */
             email?: string | null;
             id?: components["schemas"]["uuid"];
-            updated_at?: components["schemas"]["timestamp"];
-        };
-        /**
-         * clients_insert_input
-         * @description input type for inserting data into table "clients"
-         */
-        "clients_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            /** String */
-            email?: string | null;
-            id?: components["schemas"]["uuid"];
-            /** String */
-            name?: string | null;
-            /** String */
-            phone?: string | null;
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
@@ -1919,23 +2403,6 @@ export interface components {
             name?: string | null;
             /** String */
             phone?: string | null;
-            updated_at?: components["schemas"]["timestamp"];
-        };
-        /**
-         * projects_insert_input
-         * @description input type for inserting data into table "projects"
-         */
-        "projects_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            /** String */
-            description?: string | null;
-            end_date?: components["schemas"]["timestamp"];
-            id?: components["schemas"]["uuid"];
-            /** Boolean */
-            is_active?: boolean | null;
-            /** String */
-            name?: string | null;
-            start_date?: components["schemas"]["timestamp"];
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
@@ -1956,27 +2423,12 @@ export interface components {
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
-         * projects_tasks_insert_input
-         * @description input type for inserting data into table "projects_tasks"
-         */
-        "projects_tasks_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            date?: components["schemas"]["timestamp"];
-            hours_worked?: components["schemas"]["numeric"];
-            id?: components["schemas"]["uuid"];
-            project_id?: components["schemas"]["uuid"];
-            /** String */
-            task_description?: string | null;
-            updated_at?: components["schemas"]["timestamp"];
-        };
-        /**
          * projects_tasks_set_input
          * @description input type for updating data in table "projects_tasks"
          */
         "projects_tasks_set_input!": {
             created_at?: components["schemas"]["timestamp"];
             date?: components["schemas"]["timestamp"];
-            hours_worked?: components["schemas"]["numeric"];
             id?: components["schemas"]["uuid"];
             project_id?: components["schemas"]["uuid"];
             /** String */

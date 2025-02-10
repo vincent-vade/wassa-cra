@@ -29,7 +29,7 @@ export default function Timesheets({
 					{Object.entries(timesheets).length > 0 && Object.entries(timesheets).map(([period, timesheet]) => (
 						<tr key={timesheet?.ids[0]}>
 							<td width="70px">
-								<Link href={`/timesheets/${timesheet?.ids[0]}`}>{period}</Link>
+								<Link href={`/timesheets/${period}`}>{period}</Link>
 							</td>
 							<td>
 								{timesheet?.created_at}
