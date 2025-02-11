@@ -3,21 +3,24 @@ import { Days, isWeekendDay } from "~/lib/date";
 import { NumberInput } from "~/components/InputNumber";
 
 export const TimesheetRow = ({
-                                 task,
-                                 days,
-                                 handleUpdateTimesheet
+     task,
+     days,
+     handleUpdateTimesheet
 }: {
     task?: { taskTitle: string, projectTaskId: string, projectName: string },
-    days: Days,
+    days: number[],
     handleUpdateTimesheet: (taskId: string, days: number[]) => void
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
-    const [daysInput, setDaysInput] = useState<number[]>(days);
-
-    console.log('days', days)
+    const [daysInput, setDaysInput] = useState<number[]>(days );
 
     useEffect(() => {
-        const totalDays = daysInput.reduce((acc, curr) => acc + curr, 0);
+        const totalDays = daysInput.reduce((acc, curr) => {
+            console.log('acc', acc)
+            console.log('curr', curr)
+            return acc + curr
+        }, 0);
+        console.log('totalDays', totalDays)
         setTotalDaysWorked(totalDays);
     }, [daysInput])
 

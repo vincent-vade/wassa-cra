@@ -1,5 +1,5 @@
 {
-  "resource_version": 29,
+  "resource_version": 48,
   "metadata": {
     "version": 3,
     "sources": [
@@ -35,13 +35,41 @@
             "table": {
               "name": "projects_tasks",
               "schema": "public"
-            }
+            },
+            "object_relationships": [
+              {
+                "name": "project",
+                "using": {
+                  "foreign_key_constraint_on": "project_id"
+                }
+              }
+            ]
           },
           {
             "table": {
               "name": "timesheets",
               "schema": "public"
-            }
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              },
+              {
+                "name": "freelance",
+                "using": {
+                  "foreign_key_constraint_on": "freelance_id"
+                }
+              },
+              {
+                "name": "projects_task",
+                "using": {
+                  "foreign_key_constraint_on": "project_task_id"
+                }
+              }
+            ]
           }
         ],
         "configuration": {
@@ -161,6 +189,10 @@
             {
               "name": "projects_tasks_by_project_id",
               "query": "query projects_tasks_by_project_id($id: uuid!) {\r\n  projects_tasks(where: {project_id: {_eq: $id}}) {\r\n    id\r\n    project_id\r\n    task_description\r\n    updated_at\r\n    date\r\n    created_at\r\n  }\r\n}"
+            },
+            {
+              "name": "timesheets_by_period",
+              "query": "query timesheets_by_period($period: String) {\r\n  timesheets(where: { working_date: { _eq: $period } }) {\r\n    client_id\r\n    created_at\r\n    freelance_id\r\n    id\r\n    project_task_id\r\n    updated_at\r\n    working_date\r\n    working_durations\r\n    projects_task {\r\n      id\r\n      project_id\r\n      task_description\r\n      project {\r\n      \tid\r\n        name\r\n    \t}\r\n    }\r\n  }\r\n  \r\n}"
             }
           ]
         }
@@ -538,6 +570,20 @@
         ],
         "name": "delete_timesheets_by_pk",
         "url": "timesheets/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "timesheets_by_period"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "timesheets_by_period",
+        "url": "timesheets/period/:period"
       }
     ],
     "backend_configs": {
