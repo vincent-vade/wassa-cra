@@ -7,17 +7,15 @@ export const TimesheetRow = ({
      days,
      handleUpdateTimesheet
 }: {
-    task?: { taskTitle: string, projectTaskId: string, projectName: string },
-    days: number[],
+    task: { taskTitle: string, projectTaskId: string, projectName: string, row: number[] },
+    days: Days,
     handleUpdateTimesheet: (taskId: string, days: number[]) => void
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
-    const [daysInput, setDaysInput] = useState<number[]>(days );
+    const [daysInput, setDaysInput] = useState<number[]>(task.row || []);
 
     useEffect(() => {
         const totalDays = daysInput.reduce((acc, curr) => {
-            console.log('acc', acc)
-            console.log('curr', curr)
             return acc + curr
         }, 0);
         console.log('totalDays', totalDays)

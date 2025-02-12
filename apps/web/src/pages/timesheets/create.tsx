@@ -18,7 +18,7 @@ const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a"
 const client_id = "c27563bd-e1ee-4b20-8bab-fbc970a72178"
 const freelance_id = "dec52fe8-0b27-41f7-94e3-b9eb04fab852"
 
-type Task = {
+export type Task = {
 	projectName: string
 	taskTitle: string
 	projectTaskId: string
@@ -41,7 +41,7 @@ const isAllPromiseSettled = (promises: PromiseSettledResult<any>[]) => {
 
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
-	const [timesheet, setTimesheet] = useState<Tasks>([]);
+	const [tasks, setTasks] = useState<Tasks>([]);
 
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
 	const [timesheetDate, setTimesheetDate] = useState<string>(buildTimesheetDate(month));
@@ -74,9 +74,9 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 	const handleClickTaskAdd = () => {
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split('#');
 
-		if (taskTitle) {
-			setTimesheet([
-				...timesheet,
+		if (projectTaskId && taskTitle) {
+			setTasks([
+				...tasks,
 				{
 					projectName: project.projectName,
 					projectTaskId,
@@ -105,14 +105,16 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			return
 		}
 
-		const promises = Object.entries(timesheets).map(async ([key, timesheet]) => {
+		console.log('tasks', tasks)
+
+		const promises = tasks.map(async (task) => {
 			return await createTimesheet({
 				object: {
-					working_durations: timesheet,
+					working_durations: task.row,
 					working_date: timesheetDate,
 					client_id: client_id,
 					freelance_id: freelance_id,
-					project_task_id: key
+					project_task_id: task.projectTaskId
 				}
 			} as CreateTimesheet)
 		})
@@ -124,6 +126,25 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		} else {
 			toaster('An error occurred while creating the timesheet!', 'error');
 		}
+	}
+	const updateTaskById = (task: Task) => {
+		const newTasks = tasks.map((currTask) => {
+			if (currTask.projectTaskId === task.projectTaskId) {
+				return {
+					...currTask,
+					row: task.row
+				}
+			}
+
+			return currTask
+		})
+
+		setTasks(newTasks)
+	}
+	const handleUpdateTasks = (task: Task) => {
+		console.log('[handleUpdateTasks] task =>', task)
+		console.log('tasks', tasks)
+		updateTaskById(task)
 	}
 
 	useEffect(() => {
@@ -146,7 +167,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 				projectTasks={projectTasks}
 			/>
 
-			<Timesheet month={month} timesheet={timesheet} handleClickSave={handleClickSave} />
+			<Timesheet month={month} tasks={tasks}  handleUpdateTasks={handleUpdateTasks} handleClickSave={handleClickSave} />
 		</div>
 	);
 }

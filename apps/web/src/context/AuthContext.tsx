@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             // Fetch user data with token
             setUser({ token });
         } else {
-            router.push('/login');
+            // router.push('/login');
         }
     }, []);
 

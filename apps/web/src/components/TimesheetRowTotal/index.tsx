@@ -1,6 +1,7 @@
 import {Days, isWeekendDay} from "~/lib/date";
+import {Tasks} from "~/pages/timesheets/create";
 
-export const TimesheetRowTotal = ({days, timesheetTotalDays, timesheetTotalRow}: {days: Days, timesheetTotalDays: number, timesheetTotalRow: number[]}) => {
+export const TimesheetRowTotal = ({days, tasks, timesheetTotalDays, timesheetTotalRow}: {days: Days, tasks: Tasks, timesheetTotalDays: number, timesheetTotalRow: number[]}) => {
     return (
         <tr>
             <td><p className="p-2" style={{'fontWeight': 'bold', textAlign: 'right'}}>Total</p></td>
