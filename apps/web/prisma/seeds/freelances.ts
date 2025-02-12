@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
+import argon2 from "argon2";
 
 const prisma = new PrismaClient({
 	log: ["query"],
-}).$extends(withAccelerate());;
+}).$extends(withAccelerate());
 
 async function addFreelances() {
 	console.log("begin seed => freelances");
@@ -16,15 +17,17 @@ async function addFreelances() {
 				{
 					email: "gaelcadoret21@gmail.com",
 					daily_rate: 750,
+					password: await argon2.hash("password1234!"),
 				},
 				{
 					email: "vincent.vade@gmail.com",
 					daily_rate: 530,
-				}
+					password: await argon2.hash("password56789!"),
+				},
 			],
 		});
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 	}
 
 	await prisma.$disconnect();
