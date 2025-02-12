@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { type Freelance } from "~/lib/client";
-import { getFreelances } from "~/services/freelances";
 import dayjs from "dayjs";
-import {useAuth} from "~/context/AuthContext";
+
+import { Layout } from "~/components/layout";
+import { useAuth } from "~/context/AuthContext";
+import type { Freelance } from "~/lib/client";
+import { getFreelances } from "~/services/freelances";
 
 export default function Freelances({
 	freelances,
 }: { freelances: Freelance[] }) {
 	const { user } = useAuth();
-	console.log(user);
 
 	return (
-		<>
+		<Layout>
 			<h1>Freelances</h1>
 			<table>
 				<thead>
@@ -29,14 +29,16 @@ export default function Freelances({
 							<td>{freelance?.id}</td>
 							<td>{freelance?.email}</td>
 							<td>{freelance?.daily_rate}</td>
-							<td>{dayjs(freelance.created_at).format('DD-MM-YYYY')}</td>
-							<td>{freelance.updated_at && dayjs(freelance.updated_at).format('DD-MM-YYYY')}</td>
+							<td>{dayjs(freelance.created_at).format("DD-MM-YYYY")}</td>
+							<td>
+								{freelance.updated_at &&
+									dayjs(freelance.updated_at).format("DD-MM-YYYY")}
+							</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
-
-		</>
+		</Layout>
 	);
 }
 
