@@ -5,7 +5,7 @@ import { useAuth } from "~/context/AuthContext";
 import { useToaster } from "~/context/ToastContext";
 
 export const Layout = ({ children }: PropsWithChildren) => {
-	const { logout } = useAuth();
+	const auth = useAuth();
 	const { addToast } = useToaster();
 
 	return (
@@ -30,7 +30,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
 			</aside>
 			<main className="w-full">
 				<nav>
-					<button type="button" onClick={() => logout()}>
+					<button type="button" onClick={() => auth?.logout()}>
 						Logout
 					</button>
 					<button type="button" onClick={() => addToast("Success", "success")}>

@@ -1,10 +1,14 @@
 import dayjs from "dayjs";
 import Link from "next/link";
 import { Layout } from "~/components/layout";
+import { useAuth } from "~/context/AuthContext";
 import type { Project } from "~/lib/client";
 import { getProjects } from "~/services/projects";
 
 export default function Projects({ projects }: { projects: Project[] }) {
+	const { user } = useAuth();
+	console.log(user);
+
 	return (
 		<Layout>
 			<h1>Projects</h1>
@@ -39,7 +43,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
 	);
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			projects: await getProjects(),

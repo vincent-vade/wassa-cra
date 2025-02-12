@@ -2,10 +2,11 @@ import "~/styles/globals.css";
 import type { AppProps } from "next/app";
 
 import { AuthProvider } from "~/context/AuthContext";
+import { ToasterProvider } from "~/context/ToastContext";
+
+import Toaster from "~/components/Toaster";
 
 import "../styles/table.css";
-import Toaster from "~/components/Toaster";
-import { ToasterProvider } from "~/context/ToastContext";
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
