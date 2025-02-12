@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "073b5b96-602d-464e-8537-ac804c9b4d1c",
+		"name": "CRA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1458733"
+	},
+	"item": [
+		{
+			"name": "timesheets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/rest/timesheets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"timesheets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "timesheets",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"object\": {\r\n        \"working_duration\": 1,\r\n        \"working_date\": \"2025\",\r\n        \"working_unit\": \"day\",\r\n        \"created_at\": \"2025-02-05T21:38:57.661366\",  \r\n        \"client_id\": \"af35fca8-2f16-4f9a-9dfc-ddd6c5678861\",\r\n        \"freelance_id\": \"d957ca2a-b92a-44f8-90c6-7c51af980ff2\",\r\n        \"project_task_id\": \"9966e568-c4f2-47e0-9067-1b9ce2669593\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/rest/timesheets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"timesheets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "projects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/rest/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "project-tasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/rest/projects_tasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"projects_tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "project-tasks/project/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/rest/projects-tasks/project/:projectId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"projects-tasks",
+						"project",
+						":projectId"
+					],
+					"variable": [
+						{
+							"key": "projectId",
+							"value": "d9c32b35-a9a9-4883-a0d7-24834dffa1ec"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clients",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"object\": {\r\n        \"email\": \"stenie.cadoret@gmail.com\",\r\n        \"name\": \"Stéphanie Cadoret\",\r\n        \"phone\": \"+33645781245\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/rest/clients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clients",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/rest/clients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rest",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
