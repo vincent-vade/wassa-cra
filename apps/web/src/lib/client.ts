@@ -14,17 +14,19 @@ export type CreateTimesheet =
 export type Timesheet =
 	paths["/api/rest/timesheets/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["timesheets_by_pk"];
 export type Timesheets =
-	paths['/api/rest/timesheets']["get"]["responses"]["200"]["content"]["application/json"]["timesheets"];
+	paths["/api/rest/timesheets"]["get"]["responses"]["200"]["content"]["application/json"]["timesheets"];
 
 export type TimesheetsByPeriod =
-	paths['/api/rest/timesheets/period/{period}']["get"]["responses"]["200"]["content"]["application/json"]["timesheets"];
+	paths["/api/rest/timesheets/period/{period}"]["get"]["responses"]["200"]["content"]["application/json"]["timesheets"];
 
 export type Project =
 	paths["/api/rest/projects/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["projects_by_pk"];
 export type Projects =
-	paths['/api/rest/projects']["get"]["responses"]["200"]["content"]["application/json"]["projects"];
+	paths["/api/rest/projects"]["get"]["responses"]["200"]["content"]["application/json"]["projects"];
 
 export type ProjetTask =
 	paths["/api/rest/projects_tasks/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["projects_tasks_by_pk"];
 export type ProjectTasks =
-	paths['/api/rest/projects_tasks']["get"]["responses"]["200"]["content"]["application/json"]["projects_tasks"];
+	paths["/api/rest/projects_tasks"]["get"]["responses"]["200"]["content"]["application/json"]["projects_tasks"];
+export type User =
+	paths["/api/rest/User"]["get"]["responses"]["200"]["content"]["application/json"]["User"];

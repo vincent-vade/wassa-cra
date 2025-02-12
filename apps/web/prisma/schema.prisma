@@ -20,11 +20,13 @@ model clients {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model freelances {
-  id         String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at DateTime     @default(now()) @db.Timestamp(6)
-  updated_at DateTime?    @db.Timestamp(6)
-  daily_rate Decimal      @db.Decimal(10, 2)
-  email      String?      @db.VarChar
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+  daily_rate Decimal   @db.Decimal(10, 2)
+  email      String    @db.VarChar
+  password   String    @db.VarChar()
+
   timesheets timesheets[]
 }
 
@@ -66,4 +68,110 @@ model timesheets {
   clients           clients        @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   freelances        freelances     @relation(fields: [freelance_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   projects_tasks    projects_tasks @relation(fields: [project_task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model User {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  accounts      Account[]
+  Authenticator Authenticator[]
+  sessions      Session[]
+  UserRole      UserRole[]
+  roles         Role[]          @relation("RoleToUser")
+}
+
+model Role {
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name           String
+  description    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  RolePermission RolePermission[]
+  UserRole       UserRole[]
+  permissions    Permission[]     @relation("PermissionToRole")
+  users          User[]           @relation("RoleToUser")
+}
+
+model Permission {
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name           String
+  description    String?
+  code           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  RolePermission RolePermission[]
+  roles          Role[]           @relation("PermissionToRole")
+}
+
+model UserRole {
+  userId String @db.Uuid
+  roleId String @db.Uuid
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RolePermission {
+  roleId       String     @db.Uuid
+  permissionId String     @db.Uuid
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Account {
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String   @db.Uuid
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  userId               String  @db.Uuid
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }

@@ -214,114 +214,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/rest/timesheets/period/{period}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * timesheets_by_period
-         * @description ***
-         *     The GraphQl query for this endpoint is:
-         *     ``` graphql
-         *     query timesheets_by_period($period: String) {
-         *       timesheets(where: { working_date: { _eq: $period } }) {
-         *         client_id
-         *         created_at
-         *         freelance_id
-         *         id
-         *         project_task_id
-         *         updated_at
-         *         working_date
-         *         working_durations
-         *         projects_task {
-         *           id
-         *           project_id
-         *           task_description
-         *           project {
-         *           	id
-         *             name
-         *         	}
-         *         }
-         *       }
-         *
-         *     }
-         *     ```
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
-                    "x-hasura-admin-secret"?: string;
-                };
-                path: {
-                    period: string;
-                };
-                cookie?: never;
-            };
-            /** @description Query parameters can also be provided in the request body as a JSON object */
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        /** String */
-                        period?: string | null;
-                    };
-                };
-            };
-            responses: {
-                /** @description Responses for GET /api/rest/timesheets/period/{period} */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            timesheets?: {
-                                client_id?: components["schemas"]["uuid!"];
-                                created_at?: components["schemas"]["timestamp!"];
-                                freelance_id?: components["schemas"]["uuid!"];
-                                id?: components["schemas"]["uuid!"];
-                                project_task_id?: components["schemas"]["uuid!"];
-                                /**
-                                 * projects_tasks
-                                 * @description columns and relationships of "projects_tasks"
-                                 */
-                                projects_task?: {
-                                    id?: components["schemas"]["uuid!"];
-                                    /**
-                                     * projects
-                                     * @description columns and relationships of "projects"
-                                     */
-                                    project?: {
-                                        id?: components["schemas"]["uuid!"];
-                                        /** String */
-                                        name?: string;
-                                    };
-                                    project_id?: components["schemas"]["uuid!"];
-                                    /** String */
-                                    task_description?: string | null;
-                                };
-                                updated_at?: components["schemas"]["timestamp"];
-                                /** String */
-                                working_date?: string;
-                                working_durations?: components["schemas"]["jsonb"];
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/rest/timesheets/{id}": {
         parameters: {
             query?: never;
@@ -538,6 +430,129 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Session
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Session {
+         *       Session {
+         *         createdAt
+         *         expires
+         *         sessionToken
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/Session */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            Session?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                expires?: components["schemas"]["timestamp!"];
+                                /** String */
+                                sessionToken?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_Session_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_Session_one($object: Session_insert_input!) {
+         *       insert_Session_one(object: $object) {
+         *         createdAt
+         *         expires
+         *         sessionToken
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Session_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Session */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Session
+                             * @description columns and relationships of "Session"
+                             */
+                            insert_Session_one?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                expires?: components["schemas"]["timestamp!"];
+                                /** String */
+                                sessionToken?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1917,6 +1932,2212 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/rest/Role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Role
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Role {
+         *       Role {
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/Role */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            Role?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_Role_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_Role_one($object: Role_insert_input!) {
+         *       insert_Role_one(object: $object) {
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Role_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Role */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Role
+                             * @description columns and relationships of "Role"
+                             */
+                            insert_Role_one?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Role/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Role_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Role_by_pk($id: uuid!) {
+         *       Role_by_pk(id: $id) {
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/Role/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Role
+                             * @description columns and relationships of "Role"
+                             */
+                            Role_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_Role_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_Role_by_pk($id: uuid!, $object: Role_set_input!) {
+         *       update_Role_by_pk(pk_columns: {id: $id}, _set: $object) {
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                        object?: components["schemas"]["Role_set_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Role/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Role
+                             * @description columns and relationships of "Role"
+                             */
+                            update_Role_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_Role_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_Role_by_pk($id: uuid!) {
+         *       delete_Role_by_pk(id: $id) {
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/Role/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Role
+                             * @description columns and relationships of "Role"
+                             */
+                            delete_Role_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Permission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Permission
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Permission {
+         *       Permission {
+         *         code
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/Permission */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            Permission?: {
+                                /** String */
+                                code?: string;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_Permission_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_Permission_one($object: Permission_insert_input!) {
+         *       insert_Permission_one(object: $object) {
+         *         code
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Permission_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Permission */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Permission
+                             * @description columns and relationships of "Permission"
+                             */
+                            insert_Permission_one?: {
+                                /** String */
+                                code?: string;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Permission/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Permission_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Permission_by_pk($id: uuid!) {
+         *       Permission_by_pk(id: $id) {
+         *         code
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/Permission/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Permission
+                             * @description columns and relationships of "Permission"
+                             */
+                            Permission_by_pk?: {
+                                /** String */
+                                code?: string;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_Permission_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_Permission_by_pk($id: uuid!, $object: Permission_set_input!) {
+         *       update_Permission_by_pk(pk_columns: {id: $id}, _set: $object) {
+         *         code
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                        object?: components["schemas"]["Permission_set_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Permission/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Permission
+                             * @description columns and relationships of "Permission"
+                             */
+                            update_Permission_by_pk?: {
+                                /** String */
+                                code?: string;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_Permission_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_Permission_by_pk($id: uuid!) {
+         *       delete_Permission_by_pk(id: $id) {
+         *         code
+         *         createdAt
+         *         description
+         *         id
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/Permission/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Permission
+                             * @description columns and relationships of "Permission"
+                             */
+                            delete_Permission_by_pk?: {
+                                /** String */
+                                code?: string;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                description?: string | null;
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                name?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/User": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * User
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query User {
+         *       User {
+         *         createdAt
+         *         email
+         *         emailVerified
+         *         id
+         *         image
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/User */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            User?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                email?: string;
+                                emailVerified?: components["schemas"]["timestamp"];
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                image?: string | null;
+                                /** String */
+                                name?: string | null;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_User_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_User_one($object: User_insert_input!) {
+         *       insert_User_one(object: $object) {
+         *         createdAt
+         *         email
+         *         emailVerified
+         *         id
+         *         image
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["User_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/User */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * User
+                             * @description columns and relationships of "User"
+                             */
+                            insert_User_one?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                email?: string;
+                                emailVerified?: components["schemas"]["timestamp"];
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                image?: string | null;
+                                /** String */
+                                name?: string | null;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/User/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * User_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query User_by_pk($id: uuid!) {
+         *       User_by_pk(id: $id) {
+         *         createdAt
+         *         email
+         *         emailVerified
+         *         id
+         *         image
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/User/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * User
+                             * @description columns and relationships of "User"
+                             */
+                            User_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                email?: string;
+                                emailVerified?: components["schemas"]["timestamp"];
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                image?: string | null;
+                                /** String */
+                                name?: string | null;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_User_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_User_by_pk($id: uuid!, $object: User_set_input!) {
+         *       update_User_by_pk(pk_columns: {id: $id}, _set: $object) {
+         *         createdAt
+         *         email
+         *         emailVerified
+         *         id
+         *         image
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                        object?: components["schemas"]["User_set_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/User/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * User
+                             * @description columns and relationships of "User"
+                             */
+                            update_User_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                email?: string;
+                                emailVerified?: components["schemas"]["timestamp"];
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                image?: string | null;
+                                /** String */
+                                name?: string | null;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_User_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_User_by_pk($id: uuid!) {
+         *       delete_User_by_pk(id: $id) {
+         *         createdAt
+         *         email
+         *         emailVerified
+         *         id
+         *         image
+         *         name
+         *         updatedAt
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"id" is required (enter it either in parameters or request body)_ */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/User/{id} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * User
+                             * @description columns and relationships of "User"
+                             */
+                            delete_User_by_pk?: {
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** String */
+                                email?: string;
+                                emailVerified?: components["schemas"]["timestamp"];
+                                id?: components["schemas"]["uuid!"];
+                                /** String */
+                                image?: string | null;
+                                /** String */
+                                name?: string | null;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Account
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Account {
+         *       Account {
+         *         access_token
+         *         createdAt
+         *         expires_at
+         *         id_token
+         *         provider
+         *         providerAccountId
+         *         refresh_token
+         *         scope
+         *         session_state
+         *         token_type
+         *         type
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/Account */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            Account?: {
+                                /** String */
+                                access_token?: string | null;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** Int */
+                                expires_at?: number | null;
+                                /** String */
+                                id_token?: string | null;
+                                /** String */
+                                provider?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                refresh_token?: string | null;
+                                /** String */
+                                scope?: string | null;
+                                /** String */
+                                session_state?: string | null;
+                                /** String */
+                                token_type?: string | null;
+                                /** String */
+                                type?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_Account_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_Account_one($object: Account_insert_input!) {
+         *       insert_Account_one(object: $object) {
+         *         access_token
+         *         createdAt
+         *         expires_at
+         *         id_token
+         *         provider
+         *         providerAccountId
+         *         refresh_token
+         *         scope
+         *         session_state
+         *         token_type
+         *         type
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Account_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Account */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Account
+                             * @description columns and relationships of "Account"
+                             */
+                            insert_Account_one?: {
+                                /** String */
+                                access_token?: string | null;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** Int */
+                                expires_at?: number | null;
+                                /** String */
+                                id_token?: string | null;
+                                /** String */
+                                provider?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                refresh_token?: string | null;
+                                /** String */
+                                scope?: string | null;
+                                /** String */
+                                session_state?: string | null;
+                                /** String */
+                                token_type?: string | null;
+                                /** String */
+                                type?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Account/{provider}/{providerAccountId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Account_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Account_by_pk($provider: String!, $providerAccountId: String!) {
+         *       Account_by_pk(provider: $provider, providerAccountId: $providerAccountId) {
+         *         access_token
+         *         createdAt
+         *         expires_at
+         *         id_token
+         *         provider
+         *         providerAccountId
+         *         refresh_token
+         *         scope
+         *         session_state
+         *         token_type
+         *         type
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"provider" is required (enter it either in parameters or request body)_ */
+                    provider: string;
+                    /** @description _"providerAccountId" is required (enter it either in parameters or request body)_ */
+                    providerAccountId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        provider?: string;
+                        /** String */
+                        providerAccountId?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/Account/{provider}/{providerAccountId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Account
+                             * @description columns and relationships of "Account"
+                             */
+                            Account_by_pk?: {
+                                /** String */
+                                access_token?: string | null;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** Int */
+                                expires_at?: number | null;
+                                /** String */
+                                id_token?: string | null;
+                                /** String */
+                                provider?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                refresh_token?: string | null;
+                                /** String */
+                                scope?: string | null;
+                                /** String */
+                                session_state?: string | null;
+                                /** String */
+                                token_type?: string | null;
+                                /** String */
+                                type?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_Account_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_Account_by_pk($provider: String!, $providerAccountId: String!, $object: Account_set_input!) {
+         *       update_Account_by_pk(
+         *         pk_columns: {provider: $provider, providerAccountId: $providerAccountId}
+         *         _set: $object
+         *       ) {
+         *         access_token
+         *         createdAt
+         *         expires_at
+         *         id_token
+         *         provider
+         *         providerAccountId
+         *         refresh_token
+         *         scope
+         *         session_state
+         *         token_type
+         *         type
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"provider" is required (enter it either in parameters or request body)_ */
+                    provider: string;
+                    /** @description _"providerAccountId" is required (enter it either in parameters or request body)_ */
+                    providerAccountId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Account_set_input!"];
+                        /** String */
+                        provider?: string;
+                        /** String */
+                        providerAccountId?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Account/{provider}/{providerAccountId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Account
+                             * @description columns and relationships of "Account"
+                             */
+                            update_Account_by_pk?: {
+                                /** String */
+                                access_token?: string | null;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** Int */
+                                expires_at?: number | null;
+                                /** String */
+                                id_token?: string | null;
+                                /** String */
+                                provider?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                refresh_token?: string | null;
+                                /** String */
+                                scope?: string | null;
+                                /** String */
+                                session_state?: string | null;
+                                /** String */
+                                token_type?: string | null;
+                                /** String */
+                                type?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_Account_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_Account_by_pk($provider: String!, $providerAccountId: String!) {
+         *       delete_Account_by_pk(provider: $provider, providerAccountId: $providerAccountId) {
+         *         access_token
+         *         createdAt
+         *         expires_at
+         *         id_token
+         *         provider
+         *         providerAccountId
+         *         refresh_token
+         *         scope
+         *         session_state
+         *         token_type
+         *         type
+         *         updatedAt
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"provider" is required (enter it either in parameters or request body)_ */
+                    provider: string;
+                    /** @description _"providerAccountId" is required (enter it either in parameters or request body)_ */
+                    providerAccountId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        provider?: string;
+                        /** String */
+                        providerAccountId?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/Account/{provider}/{providerAccountId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Account
+                             * @description columns and relationships of "Account"
+                             */
+                            delete_Account_by_pk?: {
+                                /** String */
+                                access_token?: string | null;
+                                createdAt?: components["schemas"]["timestamp!"];
+                                /** Int */
+                                expires_at?: number | null;
+                                /** String */
+                                id_token?: string | null;
+                                /** String */
+                                provider?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                refresh_token?: string | null;
+                                /** String */
+                                scope?: string | null;
+                                /** String */
+                                session_state?: string | null;
+                                /** String */
+                                token_type?: string | null;
+                                /** String */
+                                type?: string;
+                                updatedAt?: components["schemas"]["timestamp!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/UserRole": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * UserRole
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query UserRole {
+         *       UserRole {
+         *         roleId
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/UserRole */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            UserRole?: {
+                                roleId?: components["schemas"]["uuid!"];
+                                userId?: components["schemas"]["uuid!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_UserRole_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_UserRole_one($object: UserRole_insert_input!) {
+         *       insert_UserRole_one(object: $object) {
+         *         roleId
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["UserRole_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/UserRole */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * UserRole
+                             * @description columns and relationships of "UserRole"
+                             */
+                            insert_UserRole_one?: {
+                                roleId?: components["schemas"]["uuid!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/UserRole/{roleId}/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * UserRole_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query UserRole_by_pk($roleId: uuid!, $userId: uuid!) {
+         *       UserRole_by_pk(roleId: $roleId, userId: $userId) {
+         *         roleId
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"roleId" is required (enter it either in parameters or request body)_ */
+                    roleId: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        roleId?: components["schemas"]["uuid!"];
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/UserRole/{roleId}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * UserRole
+                             * @description columns and relationships of "UserRole"
+                             */
+                            UserRole_by_pk?: {
+                                roleId?: components["schemas"]["uuid!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_UserRole_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_UserRole_by_pk($roleId: uuid!, $userId: uuid!, $object: UserRole_set_input!) {
+         *       update_UserRole_by_pk(
+         *         pk_columns: {roleId: $roleId, userId: $userId}
+         *         _set: $object
+         *       ) {
+         *         roleId
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"roleId" is required (enter it either in parameters or request body)_ */
+                    roleId: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["UserRole_set_input!"];
+                        roleId?: components["schemas"]["uuid!"];
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/UserRole/{roleId}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * UserRole
+                             * @description columns and relationships of "UserRole"
+                             */
+                            update_UserRole_by_pk?: {
+                                roleId?: components["schemas"]["uuid!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_UserRole_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_UserRole_by_pk($roleId: uuid!, $userId: uuid!) {
+         *       delete_UserRole_by_pk(roleId: $roleId, userId: $userId) {
+         *         roleId
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"roleId" is required (enter it either in parameters or request body)_ */
+                    roleId: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        roleId?: components["schemas"]["uuid!"];
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/UserRole/{roleId}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * UserRole
+                             * @description columns and relationships of "UserRole"
+                             */
+                            delete_UserRole_by_pk?: {
+                                roleId?: components["schemas"]["uuid!"];
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Authenticator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Authenticator
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Authenticator {
+         *       Authenticator {
+         *         counter
+         *         credentialBackedUp
+         *         credentialDeviceType
+         *         credentialID
+         *         credentialPublicKey
+         *         providerAccountId
+         *         transports
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Responses for GET /api/rest/Authenticator */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            Authenticator?: {
+                                /** Int */
+                                counter?: number;
+                                /** Boolean */
+                                credentialBackedUp?: boolean;
+                                /** String */
+                                credentialDeviceType?: string;
+                                /** String */
+                                credentialID?: string;
+                                /** String */
+                                credentialPublicKey?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                transports?: string | null;
+                                userId?: components["schemas"]["uuid!"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * insert_Authenticator_one
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation insert_Authenticator_one($object: Authenticator_insert_input!) {
+         *       insert_Authenticator_one(object: $object) {
+         *         counter
+         *         credentialBackedUp
+         *         credentialDeviceType
+         *         credentialID
+         *         credentialPublicKey
+         *         providerAccountId
+         *         transports
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        object?: components["schemas"]["Authenticator_insert_input!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Authenticator */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Authenticator
+                             * @description columns and relationships of "Authenticator"
+                             */
+                            insert_Authenticator_one?: {
+                                /** Int */
+                                counter?: number;
+                                /** Boolean */
+                                credentialBackedUp?: boolean;
+                                /** String */
+                                credentialDeviceType?: string;
+                                /** String */
+                                credentialID?: string;
+                                /** String */
+                                credentialPublicKey?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                transports?: string | null;
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/Authenticator/{credentialID}/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Authenticator_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query Authenticator_by_pk($credentialID: String!, $userId: uuid!) {
+         *       Authenticator_by_pk(credentialID: $credentialID, userId: $userId) {
+         *         counter
+         *         credentialBackedUp
+         *         credentialDeviceType
+         *         credentialID
+         *         credentialPublicKey
+         *         providerAccountId
+         *         transports
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"credentialID" is required (enter it either in parameters or request body)_ */
+                    credentialID: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        credentialID?: string;
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/Authenticator/{credentialID}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Authenticator
+                             * @description columns and relationships of "Authenticator"
+                             */
+                            Authenticator_by_pk?: {
+                                /** Int */
+                                counter?: number;
+                                /** Boolean */
+                                credentialBackedUp?: boolean;
+                                /** String */
+                                credentialDeviceType?: string;
+                                /** String */
+                                credentialID?: string;
+                                /** String */
+                                credentialPublicKey?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                transports?: string | null;
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * update_Authenticator_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation update_Authenticator_by_pk($credentialID: String!, $userId: uuid!, $object: Authenticator_set_input!) {
+         *       update_Authenticator_by_pk(
+         *         pk_columns: {credentialID: $credentialID, userId: $userId}
+         *         _set: $object
+         *       ) {
+         *         counter
+         *         credentialBackedUp
+         *         credentialDeviceType
+         *         credentialID
+         *         credentialPublicKey
+         *         providerAccountId
+         *         transports
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"credentialID" is required (enter it either in parameters or request body)_ */
+                    credentialID: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        credentialID?: string;
+                        object?: components["schemas"]["Authenticator_set_input!"];
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for POST /api/rest/Authenticator/{credentialID}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Authenticator
+                             * @description columns and relationships of "Authenticator"
+                             */
+                            update_Authenticator_by_pk?: {
+                                /** Int */
+                                counter?: number;
+                                /** Boolean */
+                                credentialBackedUp?: boolean;
+                                /** String */
+                                credentialDeviceType?: string;
+                                /** String */
+                                credentialID?: string;
+                                /** String */
+                                credentialPublicKey?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                transports?: string | null;
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * delete_Authenticator_by_pk
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation delete_Authenticator_by_pk($credentialID: String!, $userId: uuid!) {
+         *       delete_Authenticator_by_pk(credentialID: $credentialID, userId: $userId) {
+         *         counter
+         *         credentialBackedUp
+         *         credentialDeviceType
+         *         credentialID
+         *         credentialPublicKey
+         *         providerAccountId
+         *         transports
+         *         userId
+         *       }
+         *     }
+         *
+         *     ```
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"credentialID" is required (enter it either in parameters or request body)_ */
+                    credentialID: string;
+                    /** @description _"userId" is required (enter it either in parameters or request body)_ */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        credentialID?: string;
+                        userId?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for DELETE /api/rest/Authenticator/{credentialID}/{userId} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * Authenticator
+                             * @description columns and relationships of "Authenticator"
+                             */
+                            delete_Authenticator_by_pk?: {
+                                /** Int */
+                                counter?: number;
+                                /** Boolean */
+                                credentialBackedUp?: boolean;
+                                /** String */
+                                credentialDeviceType?: string;
+                                /** String */
+                                credentialID?: string;
+                                /** String */
+                                credentialPublicKey?: string;
+                                /** String */
+                                providerAccountId?: string;
+                                /** String */
+                                transports?: string | null;
+                                userId?: components["schemas"]["uuid!"];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1932,44 +4153,11 @@ export interface components {
         /** uuid */
         uuid: string | null;
         /**
-         * projects_insert_input
-         * @description input type for inserting data into table "projects"
-         */
-        "projects_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            /** String */
-            description?: string | null;
-            end_date?: components["schemas"]["timestamp"];
-            id?: components["schemas"]["uuid"];
-            /** Boolean */
-            is_active?: boolean | null;
-            /** String */
-            name?: string | null;
-            start_date?: components["schemas"]["timestamp"];
-            updated_at?: components["schemas"]["timestamp"];
-        };
-        /**
-         * projects_update_column
-         * @description update columns of table "projects"
+         * projects_tasks_update_column
+         * @description update columns of table "projects_tasks"
          * @enum {unknown}
          */
-        "projects_update_column!": "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
-        /**
-         * timestamp_comparison_exp
-         * @description Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
-         */
-        timestamp_comparison_exp: {
-            _eq?: components["schemas"]["timestamp"];
-            _gt?: components["schemas"]["timestamp"];
-            _gte?: components["schemas"]["timestamp"];
-            _in?: components["schemas"]["timestamp!"][] | null;
-            /** Boolean */
-            _is_null?: boolean | null;
-            _lt?: components["schemas"]["timestamp"];
-            _lte?: components["schemas"]["timestamp"];
-            _neq?: components["schemas"]["timestamp"];
-            _nin?: components["schemas"]["timestamp!"][] | null;
-        } | null;
+        "projects_tasks_update_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
         /**
          * uuid_comparison_exp
          * @description Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
@@ -1986,6 +4174,24 @@ export interface components {
             _neq?: components["schemas"]["uuid"];
             _nin?: components["schemas"]["uuid!"][] | null;
         } | null;
+        /**
+         * timestamp_comparison_exp
+         * @description Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+         */
+        timestamp_comparison_exp: {
+            _eq?: components["schemas"]["timestamp"];
+            _gt?: components["schemas"]["timestamp"];
+            _gte?: components["schemas"]["timestamp"];
+            _in?: components["schemas"]["timestamp!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["timestamp"];
+            _lte?: components["schemas"]["timestamp"];
+            _neq?: components["schemas"]["timestamp"];
+            _nin?: components["schemas"]["timestamp!"][] | null;
+        } | null;
+        /** jsonb */
+        "jsonb!": unknown;
         /**
          * String_comparison_exp
          * @description Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
@@ -2028,6 +4234,217 @@ export interface components {
             /** String */
             _similar?: string | null;
         } | null;
+        /** jsonb_cast_exp */
+        jsonb_cast_exp: {
+            String?: components["schemas"]["String_comparison_exp"];
+        } | null;
+        /**
+         * jsonb_comparison_exp
+         * @description Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'.
+         */
+        jsonb_comparison_exp: {
+            _cast?: components["schemas"]["jsonb_cast_exp"];
+            _contained_in?: components["schemas"]["jsonb"];
+            _contains?: components["schemas"]["jsonb"];
+            _eq?: components["schemas"]["jsonb"];
+            _gt?: components["schemas"]["jsonb"];
+            _gte?: components["schemas"]["jsonb"];
+            /** String */
+            _has_key?: string | null;
+            _has_keys_all?: string[] | null;
+            _has_keys_any?: string[] | null;
+            _in?: components["schemas"]["jsonb!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["jsonb"];
+            _lte?: components["schemas"]["jsonb"];
+            _neq?: components["schemas"]["jsonb"];
+            _nin?: components["schemas"]["jsonb!"][] | null;
+        } | null;
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        "clients_bool_exp!": {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        clients_bool_exp: {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /** numeric */
+        "numeric!": unknown;
+        /** numeric */
+        numeric: unknown;
+        /**
+         * numeric_comparison_exp
+         * @description Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+         */
+        numeric_comparison_exp: {
+            _eq?: components["schemas"]["numeric"];
+            _gt?: components["schemas"]["numeric"];
+            _gte?: components["schemas"]["numeric"];
+            _in?: components["schemas"]["numeric!"][] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            _lt?: components["schemas"]["numeric"];
+            _lte?: components["schemas"]["numeric"];
+            _neq?: components["schemas"]["numeric"];
+            _nin?: components["schemas"]["numeric!"][] | null;
+        } | null;
+        /**
+         * freelances_bool_exp
+         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
+         */
+        "freelances_bool_exp!": {
+            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
+            _not?: components["schemas"]["freelances_bool_exp"];
+            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            daily_rate?: components["schemas"]["numeric_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * freelances_bool_exp
+         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
+         */
+        freelances_bool_exp: {
+            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
+            _not?: components["schemas"]["freelances_bool_exp"];
+            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            daily_rate?: components["schemas"]["numeric_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * timesheets_bool_exp
+         * @description Boolean expression to filter rows from the table "timesheets". All fields are combined with a logical 'AND'.
+         */
+        "timesheets_bool_exp!": {
+            _and?: components["schemas"]["timesheets_bool_exp!"][] | null;
+            _not?: components["schemas"]["timesheets_bool_exp"];
+            _or?: components["schemas"]["timesheets_bool_exp!"][] | null;
+            client?: components["schemas"]["clients_bool_exp"];
+            client_id?: components["schemas"]["uuid_comparison_exp"];
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            freelance?: components["schemas"]["freelances_bool_exp"];
+            freelance_id?: components["schemas"]["uuid_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project_task_id?: components["schemas"]["uuid_comparison_exp"];
+            projects_task?: components["schemas"]["projects_tasks_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+            working_date?: components["schemas"]["String_comparison_exp"];
+            working_durations?: components["schemas"]["jsonb_comparison_exp"];
+        };
+        /**
+         * timesheets_bool_exp
+         * @description Boolean expression to filter rows from the table "timesheets". All fields are combined with a logical 'AND'.
+         */
+        timesheets_bool_exp: {
+            _and?: components["schemas"]["timesheets_bool_exp!"][] | null;
+            _not?: components["schemas"]["timesheets_bool_exp"];
+            _or?: components["schemas"]["timesheets_bool_exp!"][] | null;
+            client?: components["schemas"]["clients_bool_exp"];
+            client_id?: components["schemas"]["uuid_comparison_exp"];
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            freelance?: components["schemas"]["freelances_bool_exp"];
+            freelance_id?: components["schemas"]["uuid_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project_task_id?: components["schemas"]["uuid_comparison_exp"];
+            projects_task?: components["schemas"]["projects_tasks_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+            working_date?: components["schemas"]["String_comparison_exp"];
+            working_durations?: components["schemas"]["jsonb_comparison_exp"];
+        } | null;
+        /**
+         * timesheets_select_column
+         * @description select columns of table "timesheets"
+         * @enum {unknown}
+         */
+        "timesheets_select_column!": "client_id" | "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
+        /**
+         * Int_comparison_exp
+         * @description Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+         */
+        "Int_comparison_exp!": {
+            /** Int */
+            _eq?: number | null;
+            /** Int */
+            _gt?: number | null;
+            /** Int */
+            _gte?: number | null;
+            _in?: number[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Int */
+            _lt?: number | null;
+            /** Int */
+            _lte?: number | null;
+            /** Int */
+            _neq?: number | null;
+            _nin?: number[] | null;
+        };
+        /** timesheets_aggregate_bool_exp_count */
+        timesheets_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["timesheets_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["timesheets_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** timesheets_aggregate_bool_exp */
+        timesheets_aggregate_bool_exp: {
+            count?: components["schemas"]["timesheets_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * projects_tasks_select_column
+         * @description select columns of table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_select_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
+        /** projects_tasks_aggregate_bool_exp_count */
+        projects_tasks_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["projects_tasks_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["projects_tasks_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** projects_tasks_aggregate_bool_exp */
+        projects_tasks_aggregate_bool_exp: {
+            count?: components["schemas"]["projects_tasks_aggregate_bool_exp_count"];
+        } | null;
         /**
          * Boolean_comparison_exp
          * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
@@ -2064,6 +4481,8 @@ export interface components {
             id?: components["schemas"]["uuid_comparison_exp"];
             is_active?: components["schemas"]["Boolean_comparison_exp"];
             name?: components["schemas"]["String_comparison_exp"];
+            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
+            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
             start_date?: components["schemas"]["timestamp_comparison_exp"];
             updated_at?: components["schemas"]["timestamp_comparison_exp"];
         };
@@ -2081,9 +4500,94 @@ export interface components {
             id?: components["schemas"]["uuid_comparison_exp"];
             is_active?: components["schemas"]["Boolean_comparison_exp"];
             name?: components["schemas"]["String_comparison_exp"];
+            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
+            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
             start_date?: components["schemas"]["timestamp_comparison_exp"];
             updated_at?: components["schemas"]["timestamp_comparison_exp"];
         } | null;
+        /**
+         * projects_tasks_bool_exp
+         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
+         */
+        "projects_tasks_bool_exp!": {
+            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_tasks_bool_exp"];
+            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project?: components["schemas"]["projects_bool_exp"];
+            project_id?: components["schemas"]["uuid_comparison_exp"];
+            task_description?: components["schemas"]["String_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * projects_tasks_bool_exp
+         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
+         */
+        projects_tasks_bool_exp: {
+            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_tasks_bool_exp"];
+            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            project?: components["schemas"]["projects_bool_exp"];
+            project_id?: components["schemas"]["uuid_comparison_exp"];
+            task_description?: components["schemas"]["String_comparison_exp"];
+            timesheets?: components["schemas"]["timesheets_bool_exp"];
+            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * projects_tasks_constraint
+         * @description unique or primary key constraints on table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_constraint!": "projects_tasks_pkey";
+        /**
+         * projects_tasks_on_conflict
+         * @description on_conflict condition type for table "projects_tasks"
+         */
+        projects_tasks_on_conflict: {
+            constraint?: components["schemas"]["projects_tasks_constraint!"];
+            update_columns?: components["schemas"]["projects_tasks_update_column!"][];
+            where?: components["schemas"]["projects_tasks_bool_exp"];
+        } | null;
+        /**
+         * projects_tasks_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "projects_tasks"
+         */
+        projects_tasks_arr_rel_insert_input: {
+            data?: components["schemas"]["projects_tasks_insert_input!"][];
+            on_conflict?: components["schemas"]["projects_tasks_on_conflict"];
+        } | null;
+        /**
+         * projects_insert_input
+         * @description input type for inserting data into table "projects"
+         */
+        "projects_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            end_date?: components["schemas"]["timestamp"];
+            id?: components["schemas"]["uuid"];
+            /** Boolean */
+            is_active?: boolean | null;
+            /** String */
+            name?: string | null;
+            projects_tasks?: components["schemas"]["projects_tasks_arr_rel_insert_input"];
+            start_date?: components["schemas"]["timestamp"];
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * projects_update_column
+         * @description update columns of table "projects"
+         * @enum {unknown}
+         */
+        "projects_update_column!": "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
         /**
          * projects_constraint
          * @description unique or primary key constraints on table "projects"
@@ -2108,6 +4612,35 @@ export interface components {
             on_conflict?: components["schemas"]["projects_on_conflict"];
         } | null;
         /**
+         * timesheets_update_column
+         * @description update columns of table "timesheets"
+         * @enum {unknown}
+         */
+        "timesheets_update_column!": "client_id" | "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
+        /**
+         * timesheets_constraint
+         * @description unique or primary key constraints on table "timesheets"
+         * @enum {unknown}
+         */
+        "timesheets_constraint!": "timesheets_pkey";
+        /**
+         * timesheets_on_conflict
+         * @description on_conflict condition type for table "timesheets"
+         */
+        timesheets_on_conflict: {
+            constraint?: components["schemas"]["timesheets_constraint!"];
+            update_columns?: components["schemas"]["timesheets_update_column!"][];
+            where?: components["schemas"]["timesheets_bool_exp"];
+        } | null;
+        /**
+         * timesheets_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "timesheets"
+         */
+        timesheets_arr_rel_insert_input: {
+            data?: components["schemas"]["timesheets_insert_input!"][];
+            on_conflict?: components["schemas"]["timesheets_on_conflict"];
+        } | null;
+        /**
          * projects_tasks_insert_input
          * @description input type for inserting data into table "projects_tasks"
          */
@@ -2119,61 +4652,9 @@ export interface components {
             project_id?: components["schemas"]["uuid"];
             /** String */
             task_description?: string | null;
+            timesheets?: components["schemas"]["timesheets_arr_rel_insert_input"];
             updated_at?: components["schemas"]["timestamp"];
         };
-        /**
-         * projects_tasks_update_column
-         * @description update columns of table "projects_tasks"
-         * @enum {unknown}
-         */
-        "projects_tasks_update_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
-        /**
-         * projects_tasks_bool_exp
-         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
-         */
-        "projects_tasks_bool_exp!": {
-            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
-            _not?: components["schemas"]["projects_tasks_bool_exp"];
-            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            date?: components["schemas"]["timestamp_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            project?: components["schemas"]["projects_bool_exp"];
-            project_id?: components["schemas"]["uuid_comparison_exp"];
-            task_description?: components["schemas"]["String_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        };
-        /**
-         * projects_tasks_bool_exp
-         * @description Boolean expression to filter rows from the table "projects_tasks". All fields are combined with a logical 'AND'.
-         */
-        projects_tasks_bool_exp: {
-            _and?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
-            _not?: components["schemas"]["projects_tasks_bool_exp"];
-            _or?: components["schemas"]["projects_tasks_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            date?: components["schemas"]["timestamp_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            project?: components["schemas"]["projects_bool_exp"];
-            project_id?: components["schemas"]["uuid_comparison_exp"];
-            task_description?: components["schemas"]["String_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        } | null;
-        /**
-         * projects_tasks_constraint
-         * @description unique or primary key constraints on table "projects_tasks"
-         * @enum {unknown}
-         */
-        "projects_tasks_constraint!": "projects_tasks_pkey";
-        /**
-         * projects_tasks_on_conflict
-         * @description on_conflict condition type for table "projects_tasks"
-         */
-        projects_tasks_on_conflict: {
-            constraint?: components["schemas"]["projects_tasks_constraint!"];
-            update_columns?: components["schemas"]["projects_tasks_update_column!"][];
-            where?: components["schemas"]["projects_tasks_bool_exp"];
-        } | null;
         /**
          * projects_tasks_obj_rel_insert_input
          * @description input type for inserting object relation for remote table "projects_tasks"
@@ -2195,6 +4676,7 @@ export interface components {
             name?: string | null;
             /** String */
             phone?: string | null;
+            timesheets?: components["schemas"]["timesheets_arr_rel_insert_input"];
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
@@ -2203,36 +4685,6 @@ export interface components {
          * @enum {unknown}
          */
         "clients_update_column!": "created_at" | "email" | "id" | "name" | "phone" | "updated_at";
-        /**
-         * clients_bool_exp
-         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
-         */
-        "clients_bool_exp!": {
-            _and?: components["schemas"]["clients_bool_exp!"][] | null;
-            _not?: components["schemas"]["clients_bool_exp"];
-            _or?: components["schemas"]["clients_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            phone?: components["schemas"]["String_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        };
-        /**
-         * clients_bool_exp
-         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
-         */
-        clients_bool_exp: {
-            _and?: components["schemas"]["clients_bool_exp!"][] | null;
-            _not?: components["schemas"]["clients_bool_exp"];
-            _or?: components["schemas"]["clients_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            phone?: components["schemas"]["String_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        } | null;
         /**
          * clients_constraint
          * @description unique or primary key constraints on table "clients"
@@ -2256,8 +4708,6 @@ export interface components {
             data?: components["schemas"]["clients_insert_input!"];
             on_conflict?: components["schemas"]["clients_on_conflict"];
         } | null;
-        /** numeric */
-        numeric: unknown;
         /**
          * freelances_insert_input
          * @description input type for inserting data into table "freelances"
@@ -2268,6 +4718,7 @@ export interface components {
             /** String */
             email?: string | null;
             id?: components["schemas"]["uuid"];
+            timesheets?: components["schemas"]["timesheets_arr_rel_insert_input"];
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
@@ -2276,52 +4727,6 @@ export interface components {
          * @enum {unknown}
          */
         "freelances_update_column!": "created_at" | "daily_rate" | "email" | "id" | "updated_at";
-        /** numeric */
-        "numeric!": unknown;
-        /**
-         * numeric_comparison_exp
-         * @description Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
-         */
-        numeric_comparison_exp: {
-            _eq?: components["schemas"]["numeric"];
-            _gt?: components["schemas"]["numeric"];
-            _gte?: components["schemas"]["numeric"];
-            _in?: components["schemas"]["numeric!"][] | null;
-            /** Boolean */
-            _is_null?: boolean | null;
-            _lt?: components["schemas"]["numeric"];
-            _lte?: components["schemas"]["numeric"];
-            _neq?: components["schemas"]["numeric"];
-            _nin?: components["schemas"]["numeric!"][] | null;
-        } | null;
-        /**
-         * freelances_bool_exp
-         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
-         */
-        "freelances_bool_exp!": {
-            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
-            _not?: components["schemas"]["freelances_bool_exp"];
-            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            daily_rate?: components["schemas"]["numeric_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        };
-        /**
-         * freelances_bool_exp
-         * @description Boolean expression to filter rows from the table "freelances". All fields are combined with a logical 'AND'.
-         */
-        freelances_bool_exp: {
-            _and?: components["schemas"]["freelances_bool_exp!"][] | null;
-            _not?: components["schemas"]["freelances_bool_exp"];
-            _or?: components["schemas"]["freelances_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            daily_rate?: components["schemas"]["numeric_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        } | null;
         /**
          * freelances_constraint
          * @description unique or primary key constraints on table "freelances"
@@ -2379,6 +4784,1006 @@ export interface components {
             working_durations?: components["schemas"]["jsonb"];
         };
         /**
+         * _PermissionToRole_insert_input
+         * @description input type for inserting data into table "_PermissionToRole"
+         */
+        "_PermissionToRole_insert_input!": {
+            A?: components["schemas"]["uuid"];
+            B?: components["schemas"]["uuid"];
+            Permission?: components["schemas"]["Permission_obj_rel_insert_input"];
+            Role?: components["schemas"]["Role_obj_rel_insert_input"];
+        };
+        /**
+         * _PermissionToRole_update_column
+         * @description update columns of table "_PermissionToRole"
+         * @enum {unknown}
+         */
+        "_PermissionToRole_update_column!": "A" | "B";
+        /**
+         * Int_comparison_exp
+         * @description Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+         */
+        Int_comparison_exp: {
+            /** Int */
+            _eq?: number | null;
+            /** Int */
+            _gt?: number | null;
+            /** Int */
+            _gte?: number | null;
+            _in?: number[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Int */
+            _lt?: number | null;
+            /** Int */
+            _lte?: number | null;
+            /** Int */
+            _neq?: number | null;
+            _nin?: number[] | null;
+        } | null;
+        /**
+         * Authenticator_bool_exp
+         * @description Boolean expression to filter rows from the table "Authenticator". All fields are combined with a logical 'AND'.
+         */
+        "Authenticator_bool_exp!": {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Authenticator_bool_exp!"][] | null;
+            _not?: components["schemas"]["Authenticator_bool_exp"];
+            _or?: components["schemas"]["Authenticator_bool_exp!"][] | null;
+            counter?: components["schemas"]["Int_comparison_exp"];
+            credentialBackedUp?: components["schemas"]["Boolean_comparison_exp"];
+            credentialDeviceType?: components["schemas"]["String_comparison_exp"];
+            credentialID?: components["schemas"]["String_comparison_exp"];
+            credentialPublicKey?: components["schemas"]["String_comparison_exp"];
+            providerAccountId?: components["schemas"]["String_comparison_exp"];
+            transports?: components["schemas"]["String_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        };
+        /**
+         * Authenticator_bool_exp
+         * @description Boolean expression to filter rows from the table "Authenticator". All fields are combined with a logical 'AND'.
+         */
+        Authenticator_bool_exp: {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Authenticator_bool_exp!"][] | null;
+            _not?: components["schemas"]["Authenticator_bool_exp"];
+            _or?: components["schemas"]["Authenticator_bool_exp!"][] | null;
+            counter?: components["schemas"]["Int_comparison_exp"];
+            credentialBackedUp?: components["schemas"]["Boolean_comparison_exp"];
+            credentialDeviceType?: components["schemas"]["String_comparison_exp"];
+            credentialID?: components["schemas"]["String_comparison_exp"];
+            credentialPublicKey?: components["schemas"]["String_comparison_exp"];
+            providerAccountId?: components["schemas"]["String_comparison_exp"];
+            transports?: components["schemas"]["String_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        } | null;
+        /**
+         * Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_and_arguments_columns
+         * @description select "Authenticator_aggregate_bool_exp_bool_and_arguments_columns" columns of table "Authenticator"
+         * @enum {unknown}
+         */
+        "Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_and_arguments_columns!": "credentialBackedUp";
+        /**
+         * Boolean_comparison_exp
+         * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+         */
+        "Boolean_comparison_exp!": {
+            /** Boolean */
+            _eq?: boolean | null;
+            /** Boolean */
+            _gt?: boolean | null;
+            /** Boolean */
+            _gte?: boolean | null;
+            _in?: boolean[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Boolean */
+            _lt?: boolean | null;
+            /** Boolean */
+            _lte?: boolean | null;
+            /** Boolean */
+            _neq?: boolean | null;
+            _nin?: boolean[] | null;
+        };
+        /** Authenticator_aggregate_bool_exp_bool_and */
+        Authenticator_aggregate_bool_exp_bool_and: {
+            arguments?: components["schemas"]["Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_and_arguments_columns!"];
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["Authenticator_bool_exp"];
+            predicate?: components["schemas"]["Boolean_comparison_exp!"];
+        } | null;
+        /**
+         * Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_or_arguments_columns
+         * @description select "Authenticator_aggregate_bool_exp_bool_or_arguments_columns" columns of table "Authenticator"
+         * @enum {unknown}
+         */
+        "Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_or_arguments_columns!": "credentialBackedUp";
+        /** Authenticator_aggregate_bool_exp_bool_or */
+        Authenticator_aggregate_bool_exp_bool_or: {
+            arguments?: components["schemas"]["Authenticator_select_column_Authenticator_aggregate_bool_exp_bool_or_arguments_columns!"];
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["Authenticator_bool_exp"];
+            predicate?: components["schemas"]["Boolean_comparison_exp!"];
+        } | null;
+        /**
+         * Authenticator_select_column
+         * @description select columns of table "Authenticator"
+         * @enum {unknown}
+         */
+        "Authenticator_select_column!": "counter" | "credentialBackedUp" | "credentialDeviceType" | "credentialID" | "credentialPublicKey" | "providerAccountId" | "transports" | "userId";
+        /** Authenticator_aggregate_bool_exp_count */
+        Authenticator_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["Authenticator_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["Authenticator_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** Authenticator_aggregate_bool_exp */
+        Authenticator_aggregate_bool_exp: {
+            bool_and?: components["schemas"]["Authenticator_aggregate_bool_exp_bool_and"];
+            bool_or?: components["schemas"]["Authenticator_aggregate_bool_exp_bool_or"];
+            count?: components["schemas"]["Authenticator_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * Account_bool_exp
+         * @description Boolean expression to filter rows from the table "Account". All fields are combined with a logical 'AND'.
+         */
+        "Account_bool_exp!": {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Account_bool_exp!"][] | null;
+            _not?: components["schemas"]["Account_bool_exp"];
+            _or?: components["schemas"]["Account_bool_exp!"][] | null;
+            access_token?: components["schemas"]["String_comparison_exp"];
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            expires_at?: components["schemas"]["Int_comparison_exp"];
+            id_token?: components["schemas"]["String_comparison_exp"];
+            provider?: components["schemas"]["String_comparison_exp"];
+            providerAccountId?: components["schemas"]["String_comparison_exp"];
+            refresh_token?: components["schemas"]["String_comparison_exp"];
+            scope?: components["schemas"]["String_comparison_exp"];
+            session_state?: components["schemas"]["String_comparison_exp"];
+            token_type?: components["schemas"]["String_comparison_exp"];
+            type?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        };
+        /**
+         * Account_bool_exp
+         * @description Boolean expression to filter rows from the table "Account". All fields are combined with a logical 'AND'.
+         */
+        Account_bool_exp: {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Account_bool_exp!"][] | null;
+            _not?: components["schemas"]["Account_bool_exp"];
+            _or?: components["schemas"]["Account_bool_exp!"][] | null;
+            access_token?: components["schemas"]["String_comparison_exp"];
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            expires_at?: components["schemas"]["Int_comparison_exp"];
+            id_token?: components["schemas"]["String_comparison_exp"];
+            provider?: components["schemas"]["String_comparison_exp"];
+            providerAccountId?: components["schemas"]["String_comparison_exp"];
+            refresh_token?: components["schemas"]["String_comparison_exp"];
+            scope?: components["schemas"]["String_comparison_exp"];
+            session_state?: components["schemas"]["String_comparison_exp"];
+            token_type?: components["schemas"]["String_comparison_exp"];
+            type?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        } | null;
+        /**
+         * Account_select_column
+         * @description select columns of table "Account"
+         * @enum {unknown}
+         */
+        "Account_select_column!": "access_token" | "createdAt" | "expires_at" | "id_token" | "provider" | "providerAccountId" | "refresh_token" | "scope" | "session_state" | "token_type" | "type" | "updatedAt" | "userId";
+        /** Account_aggregate_bool_exp_count */
+        Account_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["Account_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["Account_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** Account_aggregate_bool_exp */
+        Account_aggregate_bool_exp: {
+            count?: components["schemas"]["Account_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * Session_bool_exp
+         * @description Boolean expression to filter rows from the table "Session". All fields are combined with a logical 'AND'.
+         */
+        "Session_bool_exp!": {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Session_bool_exp!"][] | null;
+            _not?: components["schemas"]["Session_bool_exp"];
+            _or?: components["schemas"]["Session_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            expires?: components["schemas"]["timestamp_comparison_exp"];
+            sessionToken?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        };
+        /**
+         * Session_bool_exp
+         * @description Boolean expression to filter rows from the table "Session". All fields are combined with a logical 'AND'.
+         */
+        Session_bool_exp: {
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["Session_bool_exp!"][] | null;
+            _not?: components["schemas"]["Session_bool_exp"];
+            _or?: components["schemas"]["Session_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            expires?: components["schemas"]["timestamp_comparison_exp"];
+            sessionToken?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        } | null;
+        /**
+         * Session_select_column
+         * @description select columns of table "Session"
+         * @enum {unknown}
+         */
+        "Session_select_column!": "createdAt" | "expires" | "sessionToken" | "updatedAt" | "userId";
+        /** Session_aggregate_bool_exp_count */
+        Session_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["Session_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["Session_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** Session_aggregate_bool_exp */
+        Session_aggregate_bool_exp: {
+            count?: components["schemas"]["Session_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * _RoleToUser_bool_exp
+         * @description Boolean expression to filter rows from the table "_RoleToUser". All fields are combined with a logical 'AND'.
+         */
+        "_RoleToUser_bool_exp!": {
+            A?: components["schemas"]["uuid_comparison_exp"];
+            B?: components["schemas"]["uuid_comparison_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["_RoleToUser_bool_exp!"][] | null;
+            _not?: components["schemas"]["_RoleToUser_bool_exp"];
+            _or?: components["schemas"]["_RoleToUser_bool_exp!"][] | null;
+        };
+        /**
+         * _RoleToUser_bool_exp
+         * @description Boolean expression to filter rows from the table "_RoleToUser". All fields are combined with a logical 'AND'.
+         */
+        _RoleToUser_bool_exp: {
+            A?: components["schemas"]["uuid_comparison_exp"];
+            B?: components["schemas"]["uuid_comparison_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["_RoleToUser_bool_exp!"][] | null;
+            _not?: components["schemas"]["_RoleToUser_bool_exp"];
+            _or?: components["schemas"]["_RoleToUser_bool_exp!"][] | null;
+        } | null;
+        /**
+         * _RoleToUser_select_column
+         * @description select columns of table "_RoleToUser"
+         * @enum {unknown}
+         */
+        "_RoleToUser_select_column!": "A" | "B";
+        /** _RoleToUser_aggregate_bool_exp_count */
+        _RoleToUser_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["_RoleToUser_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["_RoleToUser_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** _RoleToUser_aggregate_bool_exp */
+        _RoleToUser_aggregate_bool_exp: {
+            count?: components["schemas"]["_RoleToUser_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * User_bool_exp
+         * @description Boolean expression to filter rows from the table "User". All fields are combined with a logical 'AND'.
+         */
+        "User_bool_exp!": {
+            Accounts?: components["schemas"]["Account_bool_exp"];
+            Accounts_aggregate?: components["schemas"]["Account_aggregate_bool_exp"];
+            Authenticators?: components["schemas"]["Authenticator_bool_exp"];
+            Authenticators_aggregate?: components["schemas"]["Authenticator_aggregate_bool_exp"];
+            Sessions?: components["schemas"]["Session_bool_exp"];
+            Sessions_aggregate?: components["schemas"]["Session_aggregate_bool_exp"];
+            UserRoles?: components["schemas"]["UserRole_bool_exp"];
+            UserRoles_aggregate?: components["schemas"]["UserRole_aggregate_bool_exp"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_bool_exp"];
+            _RoleToUsers_aggregate?: components["schemas"]["_RoleToUser_aggregate_bool_exp"];
+            _and?: components["schemas"]["User_bool_exp!"][] | null;
+            _not?: components["schemas"]["User_bool_exp"];
+            _or?: components["schemas"]["User_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            emailVerified?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            image?: components["schemas"]["String_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * User_bool_exp
+         * @description Boolean expression to filter rows from the table "User". All fields are combined with a logical 'AND'.
+         */
+        User_bool_exp: {
+            Accounts?: components["schemas"]["Account_bool_exp"];
+            Accounts_aggregate?: components["schemas"]["Account_aggregate_bool_exp"];
+            Authenticators?: components["schemas"]["Authenticator_bool_exp"];
+            Authenticators_aggregate?: components["schemas"]["Authenticator_aggregate_bool_exp"];
+            Sessions?: components["schemas"]["Session_bool_exp"];
+            Sessions_aggregate?: components["schemas"]["Session_aggregate_bool_exp"];
+            UserRoles?: components["schemas"]["UserRole_bool_exp"];
+            UserRoles_aggregate?: components["schemas"]["UserRole_aggregate_bool_exp"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_bool_exp"];
+            _RoleToUsers_aggregate?: components["schemas"]["_RoleToUser_aggregate_bool_exp"];
+            _and?: components["schemas"]["User_bool_exp!"][] | null;
+            _not?: components["schemas"]["User_bool_exp"];
+            _or?: components["schemas"]["User_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            emailVerified?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            image?: components["schemas"]["String_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * UserRole_bool_exp
+         * @description Boolean expression to filter rows from the table "UserRole". All fields are combined with a logical 'AND'.
+         */
+        "UserRole_bool_exp!": {
+            Role?: components["schemas"]["Role_bool_exp"];
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["UserRole_bool_exp!"][] | null;
+            _not?: components["schemas"]["UserRole_bool_exp"];
+            _or?: components["schemas"]["UserRole_bool_exp!"][] | null;
+            roleId?: components["schemas"]["uuid_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        };
+        /**
+         * UserRole_bool_exp
+         * @description Boolean expression to filter rows from the table "UserRole". All fields are combined with a logical 'AND'.
+         */
+        UserRole_bool_exp: {
+            Role?: components["schemas"]["Role_bool_exp"];
+            User?: components["schemas"]["User_bool_exp"];
+            _and?: components["schemas"]["UserRole_bool_exp!"][] | null;
+            _not?: components["schemas"]["UserRole_bool_exp"];
+            _or?: components["schemas"]["UserRole_bool_exp!"][] | null;
+            roleId?: components["schemas"]["uuid_comparison_exp"];
+            userId?: components["schemas"]["uuid_comparison_exp"];
+        } | null;
+        /**
+         * UserRole_select_column
+         * @description select columns of table "UserRole"
+         * @enum {unknown}
+         */
+        "UserRole_select_column!": "roleId" | "userId";
+        /** UserRole_aggregate_bool_exp_count */
+        UserRole_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["UserRole_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["UserRole_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** UserRole_aggregate_bool_exp */
+        UserRole_aggregate_bool_exp: {
+            count?: components["schemas"]["UserRole_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * _PermissionToRole_select_column
+         * @description select columns of table "_PermissionToRole"
+         * @enum {unknown}
+         */
+        "_PermissionToRole_select_column!": "A" | "B";
+        /** _PermissionToRole_aggregate_bool_exp_count */
+        _PermissionToRole_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["_PermissionToRole_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["_PermissionToRole_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** _PermissionToRole_aggregate_bool_exp */
+        _PermissionToRole_aggregate_bool_exp: {
+            count?: components["schemas"]["_PermissionToRole_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * Role_bool_exp
+         * @description Boolean expression to filter rows from the table "Role". All fields are combined with a logical 'AND'.
+         */
+        "Role_bool_exp!": {
+            RolePermissions?: components["schemas"]["RolePermission_bool_exp"];
+            RolePermissions_aggregate?: components["schemas"]["RolePermission_aggregate_bool_exp"];
+            UserRoles?: components["schemas"]["UserRole_bool_exp"];
+            UserRoles_aggregate?: components["schemas"]["UserRole_aggregate_bool_exp"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _PermissionToRoles_aggregate?: components["schemas"]["_PermissionToRole_aggregate_bool_exp"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_bool_exp"];
+            _RoleToUsers_aggregate?: components["schemas"]["_RoleToUser_aggregate_bool_exp"];
+            _and?: components["schemas"]["Role_bool_exp!"][] | null;
+            _not?: components["schemas"]["Role_bool_exp"];
+            _or?: components["schemas"]["Role_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * Role_bool_exp
+         * @description Boolean expression to filter rows from the table "Role". All fields are combined with a logical 'AND'.
+         */
+        Role_bool_exp: {
+            RolePermissions?: components["schemas"]["RolePermission_bool_exp"];
+            RolePermissions_aggregate?: components["schemas"]["RolePermission_aggregate_bool_exp"];
+            UserRoles?: components["schemas"]["UserRole_bool_exp"];
+            UserRoles_aggregate?: components["schemas"]["UserRole_aggregate_bool_exp"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _PermissionToRoles_aggregate?: components["schemas"]["_PermissionToRole_aggregate_bool_exp"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_bool_exp"];
+            _RoleToUsers_aggregate?: components["schemas"]["_RoleToUser_aggregate_bool_exp"];
+            _and?: components["schemas"]["Role_bool_exp!"][] | null;
+            _not?: components["schemas"]["Role_bool_exp"];
+            _or?: components["schemas"]["Role_bool_exp!"][] | null;
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * RolePermission_bool_exp
+         * @description Boolean expression to filter rows from the table "RolePermission". All fields are combined with a logical 'AND'.
+         */
+        "RolePermission_bool_exp!": {
+            Permission?: components["schemas"]["Permission_bool_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            _and?: components["schemas"]["RolePermission_bool_exp!"][] | null;
+            _not?: components["schemas"]["RolePermission_bool_exp"];
+            _or?: components["schemas"]["RolePermission_bool_exp!"][] | null;
+            permissionId?: components["schemas"]["uuid_comparison_exp"];
+            roleId?: components["schemas"]["uuid_comparison_exp"];
+        };
+        /**
+         * RolePermission_bool_exp
+         * @description Boolean expression to filter rows from the table "RolePermission". All fields are combined with a logical 'AND'.
+         */
+        RolePermission_bool_exp: {
+            Permission?: components["schemas"]["Permission_bool_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            _and?: components["schemas"]["RolePermission_bool_exp!"][] | null;
+            _not?: components["schemas"]["RolePermission_bool_exp"];
+            _or?: components["schemas"]["RolePermission_bool_exp!"][] | null;
+            permissionId?: components["schemas"]["uuid_comparison_exp"];
+            roleId?: components["schemas"]["uuid_comparison_exp"];
+        } | null;
+        /**
+         * RolePermission_select_column
+         * @description select columns of table "RolePermission"
+         * @enum {unknown}
+         */
+        "RolePermission_select_column!": "permissionId" | "roleId";
+        /** RolePermission_aggregate_bool_exp_count */
+        RolePermission_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["RolePermission_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["RolePermission_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** RolePermission_aggregate_bool_exp */
+        RolePermission_aggregate_bool_exp: {
+            count?: components["schemas"]["RolePermission_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * Permission_bool_exp
+         * @description Boolean expression to filter rows from the table "Permission". All fields are combined with a logical 'AND'.
+         */
+        "Permission_bool_exp!": {
+            RolePermissions?: components["schemas"]["RolePermission_bool_exp"];
+            RolePermissions_aggregate?: components["schemas"]["RolePermission_aggregate_bool_exp"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _PermissionToRoles_aggregate?: components["schemas"]["_PermissionToRole_aggregate_bool_exp"];
+            _and?: components["schemas"]["Permission_bool_exp!"][] | null;
+            _not?: components["schemas"]["Permission_bool_exp"];
+            _or?: components["schemas"]["Permission_bool_exp!"][] | null;
+            code?: components["schemas"]["String_comparison_exp"];
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * Permission_bool_exp
+         * @description Boolean expression to filter rows from the table "Permission". All fields are combined with a logical 'AND'.
+         */
+        Permission_bool_exp: {
+            RolePermissions?: components["schemas"]["RolePermission_bool_exp"];
+            RolePermissions_aggregate?: components["schemas"]["RolePermission_aggregate_bool_exp"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _PermissionToRoles_aggregate?: components["schemas"]["_PermissionToRole_aggregate_bool_exp"];
+            _and?: components["schemas"]["Permission_bool_exp!"][] | null;
+            _not?: components["schemas"]["Permission_bool_exp"];
+            _or?: components["schemas"]["Permission_bool_exp!"][] | null;
+            code?: components["schemas"]["String_comparison_exp"];
+            createdAt?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            updatedAt?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * _PermissionToRole_bool_exp
+         * @description Boolean expression to filter rows from the table "_PermissionToRole". All fields are combined with a logical 'AND'.
+         */
+        "_PermissionToRole_bool_exp!": {
+            A?: components["schemas"]["uuid_comparison_exp"];
+            B?: components["schemas"]["uuid_comparison_exp"];
+            Permission?: components["schemas"]["Permission_bool_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            _and?: components["schemas"]["_PermissionToRole_bool_exp!"][] | null;
+            _not?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _or?: components["schemas"]["_PermissionToRole_bool_exp!"][] | null;
+        };
+        /**
+         * _PermissionToRole_bool_exp
+         * @description Boolean expression to filter rows from the table "_PermissionToRole". All fields are combined with a logical 'AND'.
+         */
+        _PermissionToRole_bool_exp: {
+            A?: components["schemas"]["uuid_comparison_exp"];
+            B?: components["schemas"]["uuid_comparison_exp"];
+            Permission?: components["schemas"]["Permission_bool_exp"];
+            Role?: components["schemas"]["Role_bool_exp"];
+            _and?: components["schemas"]["_PermissionToRole_bool_exp!"][] | null;
+            _not?: components["schemas"]["_PermissionToRole_bool_exp"];
+            _or?: components["schemas"]["_PermissionToRole_bool_exp!"][] | null;
+        } | null;
+        /**
+         * _PermissionToRole_constraint
+         * @description unique or primary key constraints on table "_PermissionToRole"
+         * @enum {unknown}
+         */
+        "_PermissionToRole_constraint!": "_PermissionToRole_AB_pkey";
+        /**
+         * _PermissionToRole_on_conflict
+         * @description on_conflict condition type for table "_PermissionToRole"
+         */
+        _PermissionToRole_on_conflict: {
+            constraint?: components["schemas"]["_PermissionToRole_constraint!"];
+            update_columns?: components["schemas"]["_PermissionToRole_update_column!"][];
+            where?: components["schemas"]["_PermissionToRole_bool_exp"];
+        } | null;
+        /**
+         * _PermissionToRole_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "_PermissionToRole"
+         */
+        _PermissionToRole_arr_rel_insert_input: {
+            data?: components["schemas"]["_PermissionToRole_insert_input!"][];
+            on_conflict?: components["schemas"]["_PermissionToRole_on_conflict"];
+        } | null;
+        /**
+         * Permission_insert_input
+         * @description input type for inserting data into table "Permission"
+         */
+        "Permission_insert_input!": {
+            RolePermissions?: components["schemas"]["RolePermission_arr_rel_insert_input"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_arr_rel_insert_input"];
+            /** String */
+            code?: string | null;
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * Permission_update_column
+         * @description update columns of table "Permission"
+         * @enum {unknown}
+         */
+        "Permission_update_column!": "code" | "createdAt" | "description" | "id" | "name" | "updatedAt";
+        /**
+         * Permission_constraint
+         * @description unique or primary key constraints on table "Permission"
+         * @enum {unknown}
+         */
+        "Permission_constraint!": "Permission_code_key" | "Permission_pkey";
+        /**
+         * Permission_on_conflict
+         * @description on_conflict condition type for table "Permission"
+         */
+        Permission_on_conflict: {
+            constraint?: components["schemas"]["Permission_constraint!"];
+            update_columns?: components["schemas"]["Permission_update_column!"][];
+            where?: components["schemas"]["Permission_bool_exp"];
+        } | null;
+        /**
+         * Permission_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "Permission"
+         */
+        Permission_obj_rel_insert_input: {
+            data?: components["schemas"]["Permission_insert_input!"];
+            on_conflict?: components["schemas"]["Permission_on_conflict"];
+        } | null;
+        /**
+         * RolePermission_insert_input
+         * @description input type for inserting data into table "RolePermission"
+         */
+        "RolePermission_insert_input!": {
+            Permission?: components["schemas"]["Permission_obj_rel_insert_input"];
+            Role?: components["schemas"]["Role_obj_rel_insert_input"];
+            permissionId?: components["schemas"]["uuid"];
+            roleId?: components["schemas"]["uuid"];
+        };
+        /**
+         * RolePermission_update_column
+         * @description update columns of table "RolePermission"
+         * @enum {unknown}
+         */
+        "RolePermission_update_column!": "permissionId" | "roleId";
+        /**
+         * RolePermission_constraint
+         * @description unique or primary key constraints on table "RolePermission"
+         * @enum {unknown}
+         */
+        "RolePermission_constraint!": "RolePermission_pkey";
+        /**
+         * RolePermission_on_conflict
+         * @description on_conflict condition type for table "RolePermission"
+         */
+        RolePermission_on_conflict: {
+            constraint?: components["schemas"]["RolePermission_constraint!"];
+            update_columns?: components["schemas"]["RolePermission_update_column!"][];
+            where?: components["schemas"]["RolePermission_bool_exp"];
+        } | null;
+        /**
+         * RolePermission_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "RolePermission"
+         */
+        RolePermission_arr_rel_insert_input: {
+            data?: components["schemas"]["RolePermission_insert_input!"][];
+            on_conflict?: components["schemas"]["RolePermission_on_conflict"];
+        } | null;
+        /**
+         * _RoleToUser_insert_input
+         * @description input type for inserting data into table "_RoleToUser"
+         */
+        "_RoleToUser_insert_input!": {
+            A?: components["schemas"]["uuid"];
+            B?: components["schemas"]["uuid"];
+            Role?: components["schemas"]["Role_obj_rel_insert_input"];
+            User?: components["schemas"]["User_obj_rel_insert_input"];
+        };
+        /**
+         * _RoleToUser_update_column
+         * @description update columns of table "_RoleToUser"
+         * @enum {unknown}
+         */
+        "_RoleToUser_update_column!": "A" | "B";
+        /**
+         * _RoleToUser_constraint
+         * @description unique or primary key constraints on table "_RoleToUser"
+         * @enum {unknown}
+         */
+        "_RoleToUser_constraint!": "_RoleToUser_AB_pkey";
+        /**
+         * _RoleToUser_on_conflict
+         * @description on_conflict condition type for table "_RoleToUser"
+         */
+        _RoleToUser_on_conflict: {
+            constraint?: components["schemas"]["_RoleToUser_constraint!"];
+            update_columns?: components["schemas"]["_RoleToUser_update_column!"][];
+            where?: components["schemas"]["_RoleToUser_bool_exp"];
+        } | null;
+        /**
+         * _RoleToUser_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "_RoleToUser"
+         */
+        _RoleToUser_arr_rel_insert_input: {
+            data?: components["schemas"]["_RoleToUser_insert_input!"][];
+            on_conflict?: components["schemas"]["_RoleToUser_on_conflict"];
+        } | null;
+        /**
+         * Role_insert_input
+         * @description input type for inserting data into table "Role"
+         */
+        "Role_insert_input!": {
+            RolePermissions?: components["schemas"]["RolePermission_arr_rel_insert_input"];
+            UserRoles?: components["schemas"]["UserRole_arr_rel_insert_input"];
+            _PermissionToRoles?: components["schemas"]["_PermissionToRole_arr_rel_insert_input"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_arr_rel_insert_input"];
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * Role_update_column
+         * @description update columns of table "Role"
+         * @enum {unknown}
+         */
+        "Role_update_column!": "createdAt" | "description" | "id" | "name" | "updatedAt";
+        /**
+         * Role_constraint
+         * @description unique or primary key constraints on table "Role"
+         * @enum {unknown}
+         */
+        "Role_constraint!": "Role_pkey";
+        /**
+         * Role_on_conflict
+         * @description on_conflict condition type for table "Role"
+         */
+        Role_on_conflict: {
+            constraint?: components["schemas"]["Role_constraint!"];
+            update_columns?: components["schemas"]["Role_update_column!"][];
+            where?: components["schemas"]["Role_bool_exp"];
+        } | null;
+        /**
+         * Role_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "Role"
+         */
+        Role_obj_rel_insert_input: {
+            data?: components["schemas"]["Role_insert_input!"];
+            on_conflict?: components["schemas"]["Role_on_conflict"];
+        } | null;
+        /**
+         * UserRole_insert_input
+         * @description input type for inserting data into table "UserRole"
+         */
+        "UserRole_insert_input!": {
+            Role?: components["schemas"]["Role_obj_rel_insert_input"];
+            User?: components["schemas"]["User_obj_rel_insert_input"];
+            roleId?: components["schemas"]["uuid"];
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
+         * UserRole_update_column
+         * @description update columns of table "UserRole"
+         * @enum {unknown}
+         */
+        "UserRole_update_column!": "roleId" | "userId";
+        /**
+         * UserRole_constraint
+         * @description unique or primary key constraints on table "UserRole"
+         * @enum {unknown}
+         */
+        "UserRole_constraint!": "UserRole_pkey";
+        /**
+         * UserRole_on_conflict
+         * @description on_conflict condition type for table "UserRole"
+         */
+        UserRole_on_conflict: {
+            constraint?: components["schemas"]["UserRole_constraint!"];
+            update_columns?: components["schemas"]["UserRole_update_column!"][];
+            where?: components["schemas"]["UserRole_bool_exp"];
+        } | null;
+        /**
+         * UserRole_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "UserRole"
+         */
+        UserRole_arr_rel_insert_input: {
+            data?: components["schemas"]["UserRole_insert_input!"][];
+            on_conflict?: components["schemas"]["UserRole_on_conflict"];
+        } | null;
+        /**
+         * Authenticator_insert_input
+         * @description input type for inserting data into table "Authenticator"
+         */
+        "Authenticator_insert_input!": {
+            User?: components["schemas"]["User_obj_rel_insert_input"];
+            /** Int */
+            counter?: number | null;
+            /** Boolean */
+            credentialBackedUp?: boolean | null;
+            /** String */
+            credentialDeviceType?: string | null;
+            /** String */
+            credentialID?: string | null;
+            /** String */
+            credentialPublicKey?: string | null;
+            /** String */
+            providerAccountId?: string | null;
+            /** String */
+            transports?: string | null;
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
+         * Authenticator_update_column
+         * @description update columns of table "Authenticator"
+         * @enum {unknown}
+         */
+        "Authenticator_update_column!": "counter" | "credentialBackedUp" | "credentialDeviceType" | "credentialID" | "credentialPublicKey" | "providerAccountId" | "transports" | "userId";
+        /**
+         * Authenticator_constraint
+         * @description unique or primary key constraints on table "Authenticator"
+         * @enum {unknown}
+         */
+        "Authenticator_constraint!": "Authenticator_credentialID_key" | "Authenticator_pkey";
+        /**
+         * Authenticator_on_conflict
+         * @description on_conflict condition type for table "Authenticator"
+         */
+        Authenticator_on_conflict: {
+            constraint?: components["schemas"]["Authenticator_constraint!"];
+            update_columns?: components["schemas"]["Authenticator_update_column!"][];
+            where?: components["schemas"]["Authenticator_bool_exp"];
+        } | null;
+        /**
+         * Authenticator_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "Authenticator"
+         */
+        Authenticator_arr_rel_insert_input: {
+            data?: components["schemas"]["Authenticator_insert_input!"][];
+            on_conflict?: components["schemas"]["Authenticator_on_conflict"];
+        } | null;
+        /**
+         * Session_update_column
+         * @description update columns of table "Session"
+         * @enum {unknown}
+         */
+        "Session_update_column!": "createdAt" | "expires" | "sessionToken" | "updatedAt" | "userId";
+        /**
+         * Session_constraint
+         * @description unique or primary key constraints on table "Session"
+         * @enum {unknown}
+         */
+        "Session_constraint!": "Session_sessionToken_key";
+        /**
+         * Session_on_conflict
+         * @description on_conflict condition type for table "Session"
+         */
+        Session_on_conflict: {
+            constraint?: components["schemas"]["Session_constraint!"];
+            update_columns?: components["schemas"]["Session_update_column!"][];
+            where?: components["schemas"]["Session_bool_exp"];
+        } | null;
+        /**
+         * Session_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "Session"
+         */
+        Session_arr_rel_insert_input: {
+            data?: components["schemas"]["Session_insert_input!"][];
+            on_conflict?: components["schemas"]["Session_on_conflict"];
+        } | null;
+        /**
+         * Account_insert_input
+         * @description input type for inserting data into table "Account"
+         */
+        "Account_insert_input!": {
+            User?: components["schemas"]["User_obj_rel_insert_input"];
+            /** String */
+            access_token?: string | null;
+            createdAt?: components["schemas"]["timestamp"];
+            /** Int */
+            expires_at?: number | null;
+            /** String */
+            id_token?: string | null;
+            /** String */
+            provider?: string | null;
+            /** String */
+            providerAccountId?: string | null;
+            /** String */
+            refresh_token?: string | null;
+            /** String */
+            scope?: string | null;
+            /** String */
+            session_state?: string | null;
+            /** String */
+            token_type?: string | null;
+            /** String */
+            type?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
+         * Account_update_column
+         * @description update columns of table "Account"
+         * @enum {unknown}
+         */
+        "Account_update_column!": "access_token" | "createdAt" | "expires_at" | "id_token" | "provider" | "providerAccountId" | "refresh_token" | "scope" | "session_state" | "token_type" | "type" | "updatedAt" | "userId";
+        /**
+         * Account_constraint
+         * @description unique or primary key constraints on table "Account"
+         * @enum {unknown}
+         */
+        "Account_constraint!": "Account_pkey";
+        /**
+         * Account_on_conflict
+         * @description on_conflict condition type for table "Account"
+         */
+        Account_on_conflict: {
+            constraint?: components["schemas"]["Account_constraint!"];
+            update_columns?: components["schemas"]["Account_update_column!"][];
+            where?: components["schemas"]["Account_bool_exp"];
+        } | null;
+        /**
+         * Account_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "Account"
+         */
+        Account_arr_rel_insert_input: {
+            data?: components["schemas"]["Account_insert_input!"][];
+            on_conflict?: components["schemas"]["Account_on_conflict"];
+        } | null;
+        /**
+         * User_insert_input
+         * @description input type for inserting data into table "User"
+         */
+        "User_insert_input!": {
+            Accounts?: components["schemas"]["Account_arr_rel_insert_input"];
+            Authenticators?: components["schemas"]["Authenticator_arr_rel_insert_input"];
+            Sessions?: components["schemas"]["Session_arr_rel_insert_input"];
+            UserRoles?: components["schemas"]["UserRole_arr_rel_insert_input"];
+            _RoleToUsers?: components["schemas"]["_RoleToUser_arr_rel_insert_input"];
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            email?: string | null;
+            emailVerified?: components["schemas"]["timestamp"];
+            id?: components["schemas"]["uuid"];
+            /** String */
+            image?: string | null;
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * User_update_column
+         * @description update columns of table "User"
+         * @enum {unknown}
+         */
+        "User_update_column!": "createdAt" | "email" | "emailVerified" | "id" | "image" | "name" | "updatedAt";
+        /**
+         * User_constraint
+         * @description unique or primary key constraints on table "User"
+         * @enum {unknown}
+         */
+        "User_constraint!": "User_email_key" | "User_pkey";
+        /**
+         * User_on_conflict
+         * @description on_conflict condition type for table "User"
+         */
+        User_on_conflict: {
+            constraint?: components["schemas"]["User_constraint!"];
+            update_columns?: components["schemas"]["User_update_column!"][];
+            where?: components["schemas"]["User_bool_exp"];
+        } | null;
+        /**
+         * User_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "User"
+         */
+        User_obj_rel_insert_input: {
+            data?: components["schemas"]["User_insert_input!"];
+            on_conflict?: components["schemas"]["User_on_conflict"];
+        } | null;
+        /**
+         * Session_insert_input
+         * @description input type for inserting data into table "Session"
+         */
+        "Session_insert_input!": {
+            User?: components["schemas"]["User_obj_rel_insert_input"];
+            createdAt?: components["schemas"]["timestamp"];
+            expires?: components["schemas"]["timestamp"];
+            /** String */
+            sessionToken?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
          * freelances_set_input
          * @description input type for updating data in table "freelances"
          */
@@ -2434,6 +5839,108 @@ export interface components {
             /** String */
             task_description?: string | null;
             updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * Role_set_input
+         * @description input type for updating data in table "Role"
+         */
+        "Role_set_input!": {
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * Permission_set_input
+         * @description input type for updating data in table "Permission"
+         */
+        "Permission_set_input!": {
+            /** String */
+            code?: string | null;
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            description?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * User_set_input
+         * @description input type for updating data in table "User"
+         */
+        "User_set_input!": {
+            createdAt?: components["schemas"]["timestamp"];
+            /** String */
+            email?: string | null;
+            emailVerified?: components["schemas"]["timestamp"];
+            id?: components["schemas"]["uuid"];
+            /** String */
+            image?: string | null;
+            /** String */
+            name?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+        };
+        /**
+         * Account_set_input
+         * @description input type for updating data in table "Account"
+         */
+        "Account_set_input!": {
+            /** String */
+            access_token?: string | null;
+            createdAt?: components["schemas"]["timestamp"];
+            /** Int */
+            expires_at?: number | null;
+            /** String */
+            id_token?: string | null;
+            /** String */
+            provider?: string | null;
+            /** String */
+            providerAccountId?: string | null;
+            /** String */
+            refresh_token?: string | null;
+            /** String */
+            scope?: string | null;
+            /** String */
+            session_state?: string | null;
+            /** String */
+            token_type?: string | null;
+            /** String */
+            type?: string | null;
+            updatedAt?: components["schemas"]["timestamp"];
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
+         * UserRole_set_input
+         * @description input type for updating data in table "UserRole"
+         */
+        "UserRole_set_input!": {
+            roleId?: components["schemas"]["uuid"];
+            userId?: components["schemas"]["uuid"];
+        };
+        /**
+         * Authenticator_set_input
+         * @description input type for updating data in table "Authenticator"
+         */
+        "Authenticator_set_input!": {
+            /** Int */
+            counter?: number | null;
+            /** Boolean */
+            credentialBackedUp?: boolean | null;
+            /** String */
+            credentialDeviceType?: string | null;
+            /** String */
+            credentialID?: string | null;
+            /** String */
+            credentialPublicKey?: string | null;
+            /** String */
+            providerAccountId?: string | null;
+            /** String */
+            transports?: string | null;
+            userId?: components["schemas"]["uuid"];
         };
     };
     responses: never;
