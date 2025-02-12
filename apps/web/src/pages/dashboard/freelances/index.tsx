@@ -1,15 +1,12 @@
 import dayjs from "dayjs";
 
 import { Layout } from "~/components/layout";
-import { useAuth } from "~/context/AuthContext";
 import type { Freelance } from "~/lib/client";
 import { getFreelances } from "~/services/freelances";
 
 export default function Freelances({
 	freelances,
 }: { freelances: Freelance[] }) {
-	const { user } = useAuth();
-
 	return (
 		<Layout>
 			<h1>Freelances</h1>

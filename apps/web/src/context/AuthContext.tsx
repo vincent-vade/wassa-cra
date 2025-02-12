@@ -6,8 +6,10 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from "react";
+import { useToaster } from "~/context/ToastContext";
 import type { Freelance } from "~/lib/client";
 import { auth } from "~/services/auth";
 import { getFreelanceById } from "~/services/freelances";
@@ -18,21 +20,17 @@ type AuthContext = {
 	logout: () => void;
 };
 
-const AuthContext = createContext<AuthContext>({
-	user: null,
-	login: () => {},
-	logout: () => {},
-});
+const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
 	const [user, setUser] = useState<Freelance | null>(null);
 
 	const router = useRouter();
 	const getCookies = useGetCookies();
+	const toaster = useToaster();
 
 	useEffect(() => {
 		const cookies = getCookies();
-
 		if (cookies?.token) {
 			getFreelanceById(cookies?.token).then((freelance) => {
 				if (freelance?.id) {
@@ -50,21 +48,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 		router.push("/login");
 	}, [router]);
 
-	const login = useCallback(
-		async (email: string, password: string) => {
-			const response = await auth.login(email, password);
-			if (response.ok) {
-				setTimeout(() => {
-					router.push("/dashboard");
-				}, 3000);
-				// 	toaster("Logged. You will be redirected soon...", "success");
-			}
-			// 	toaster("Invalid credentials", "error");
-		},
-		[router],
-	);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const login = useCallback(async (email: string, password: string) => {
+		const response = await auth.login(email, password);
+		if (response.ok) {
+			setTimeout(() => {
+				router.push("/dashboard");
+			}, 3000);
+			toaster?.addToast("Logged. You will be redirected soon...", "success");
+		}
+		toaster?.addToast("Invalid credentials", "error");
+	}, []);
 
-	return <AuthContext value={{ user, logout, login }}>{children}</AuthContext>;
+	const value = useMemo(() => ({ user, logout, login }), [login, logout, user]);
+
+	return <AuthContext value={value}>{children}</AuthContext>;
 };
 
 export const useAuth = () => {

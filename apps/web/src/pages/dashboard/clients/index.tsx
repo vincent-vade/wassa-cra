@@ -1,12 +1,9 @@
 import dayjs from "dayjs";
 import { Layout } from "~/components/layout";
-import { useAuth } from "~/context/AuthContext";
 import type { Client } from "~/lib/client";
 import { getClients } from "~/services/clients";
 
 export default function Clients({ clients }: { clients: Client[] }) {
-	const { user } = useAuth();
-
 	return (
 		<Layout>
 			<h1>Clients</h1>

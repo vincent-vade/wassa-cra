@@ -7,11 +7,11 @@ const LoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const { login } = useAuth();
+	const auth = useAuth();
 
-	const handleLogin = async (e) => {
+	const handleLogin = async (e: any) => {
 		e.preventDefault();
-		login(email, password);
+		auth?.login(email, password);
 	};
 
 	return (
