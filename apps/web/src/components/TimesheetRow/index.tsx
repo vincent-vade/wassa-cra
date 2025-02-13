@@ -37,6 +37,7 @@ export const TimesheetRow = ({
             <td><p className="p-2">{task.projectName} / {task.taskTitle}</p></td>
             {
                 days.map((day, idx) => {
+                    const defaultValue = daysInput[idx] || 0;
                     return (
                         <td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
                             <NumberInput
@@ -44,7 +45,8 @@ export const TimesheetRow = ({
                                 taskId={task.projectTaskId}
                                 disabled={isWeekendDay(day.dayOfWeek)}
                                 handleChange={handleChange}
-                                val={day}
+                                // val={day}
+                                defaultValue={defaultValue}
                             />
                         </td>
                     );

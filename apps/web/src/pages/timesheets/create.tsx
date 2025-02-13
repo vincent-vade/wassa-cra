@@ -39,8 +39,47 @@ const isAllPromiseSettled = (promises: PromiseSettledResult<any>[]) => {
 	return promises.every(isStatusFullfilled)
 }
 
+const overrideRowPropByTaskId = (currTaskProjectTaskId: string, newTask: Task) => {
+	if (currTaskProjectTaskId !== newTask.projectTaskId) return {}
+
+	return {
+		row: newTask.row
+	}
+}
+const overrideTaskRow = (tasks: Tasks, newTask: Task) => (currTask: Task) => {
+	return {
+		...currTask,
+		...overrideRowPropByTaskId(currTask.projectTaskId, newTask)
+	}
+}
+const updateTasks = (tasks: Tasks, task: Task) => tasks.map(overrideTaskRow(tasks, task))
+
+const saveTasksToLocalStorage = (date: string, tasks: Tasks) => {
+	if (!/^\d{4}-\d{2}$/.test(date)) {
+		console.error('La date doit être au format YYYY-MM');
+		return;
+	}
+
+	if (!date) return
+
+	localStorage.setItem(date, JSON.stringify(tasks));
+}
+const loadTasksFromLocalStorage = (date: string) => {
+	if (!/^\d{4}-\d{2}$/.test(date)) {
+		console.error('La date doit être au format YYYY-MM');
+		return;
+	}
+
+	if (!date) return []
+
+	const tasks = JSON.parse(localStorage.getItem(date));
+
+	return tasks ?? [];
+}
+
 export default function CreateTimesheetPage({projects}: { projects: Project[] }) {
 	const [month, setMonth] = useState<number>(dayjs().get('month') + 1);
+	const [nbDays, setNbDays] = useState<number>(getAllDaysInCurrentMonth(dayjs().get('month') + 1).length);
 	const [tasks, setTasks] = useState<Tasks>([]);
 
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
@@ -53,6 +92,8 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
+	const tasksRef = useRef<Tasks>(tasks);
+	const timesheetDateRef = useRef<string>(timesheetDate);
 
 	const handleChangeProject = async () => {
 		const [projectId, projectName] = selectProjectRef.current?.value.split('#');
@@ -81,7 +122,7 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 					projectName: project.projectName,
 					projectTaskId,
 					taskTitle,
-					row: Array.from({ length: getAllDaysInCurrentMonth(month).length }, () => 0)
+					row: Array.from({ length: nbDays }, () => 0)
 				}
 			])
 
@@ -94,18 +135,22 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		}
 	}
 	const handleClickPrevious = () => {
-		setMonth(month - 1);
+		const previousMonth = month - 1
+		const nbDaysPreviousMonth = getAllDaysInCurrentMonth(previousMonth).length
+		setMonth(previousMonth);
+		setNbDays(nbDaysPreviousMonth);
 	}
 	const handleClickNext = () => {
-		setMonth(month + 1);
+		const nextMonth = month + 1
+		const nbDaysNextMonth = getAllDaysInCurrentMonth(nextMonth).length
+		setMonth(nextMonth);
+		setNbDays(nbDaysNextMonth);
 	}
 	const handleClickSave = async () => {
 		if (!project || !task) {
 			alert("Please select a project and a task")
 			return
 		}
-
-		console.log('tasks', tasks)
 
 		const promises = tasks.map(async (task) => {
 			return await createTimesheet({
@@ -127,29 +172,66 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 			toaster('An error occurred while creating the timesheet!', 'error');
 		}
 	}
-	const updateTaskById = (task: Task) => {
-		const newTasks = tasks.map((currTask) => {
-			if (currTask.projectTaskId === task.projectTaskId) {
-				return {
-					...currTask,
-					row: task.row
-				}
-			}
 
-			return currTask
-		})
+	const updateTaskById = (task: Task) => {
+		const newTasks = updateTasks(tasks, task)
 
 		setTasks(newTasks)
 	}
 	const handleUpdateTasks = (task: Task) => {
-		console.log('[handleUpdateTasks] task =>', task)
-		console.log('tasks', tasks)
 		updateTaskById(task)
 	}
 
+	const resetTimesheet = (tasks: Tasks) => {
+		const newTasks = tasks.map((task) => {
+			return {
+				...task,
+				row: Array.from({ length: nbDays }, () => 0)
+			}
+		})
+
+		setTasks(newTasks)
+	}
+
 	useEffect(() => {
-		setTimesheetDate(buildTimesheetDate(month))
+		const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate)
+		setTasks(tasksFromLocalStorage)
+	}, [])
+
+	useEffect(() => {
+		console.log('month has been updated', month)
+
+		const newDate = buildTimesheetDate(month)
+		setTimesheetDate(newDate)
+
+
+		const tasksFromLocalStorage = loadTasksFromLocalStorage(newDate)
+
+		if (tasksFromLocalStorage.length > 0) {
+			setTasks(tasksFromLocalStorage)
+		}
+
+		return () => {
+			if (Array.isArray(tasksRef.current) && tasksRef.current.length > 0) {
+				saveTasksToLocalStorage(timesheetDateRef.current, tasksRef.current);
+				resetTimesheet(tasks)
+			} else {
+				console.log('no tasks to save...')
+			}
+		};
 	}, [month])
+
+	useEffect(() => {
+		console.log('nbDays have been updated', nbDays)
+	}, [nbDays])
+
+	useEffect(() => {
+		tasksRef.current = tasks;
+	}, [tasks])
+
+	useEffect(() => {
+		timesheetDateRef.current = timesheetDate;
+	}, [timesheetDate]);
 
 	return (
 		<div style={{ "maxWidth": "80%" }}>
