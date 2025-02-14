@@ -4,7 +4,7 @@ type InputNumberProps = {
 	taskId: string
 	idx: number
 	disabled?: boolean;
-	handleChange?: (value: number) => void;
+	handleChange: (val: number, taskId: string, idx: number) => void;
 	val: number
 	defaultValue: number
 };

@@ -147,8 +147,8 @@ export default function CreateTimesheetPage({projects}: { projects: Project[] })
 		setNbDays(nbDaysNextMonth);
 	}
 	const handleClickSave = async () => {
-		if (!project || !task) {
-			alert("Please select a project and a task")
+		if (tasks.length === 0) {
+			alert("Please select a project/task and add it to the current timesheet")
 			return
 		}
 

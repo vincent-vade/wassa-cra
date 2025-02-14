@@ -2,6 +2,7 @@ import {getAllDaysInCurrentMonth, isWeekendDay} from "~/lib/date";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
 import {useEffect, useState} from "react";
+
 import {Tasks, Task} from "~/pages/timesheets/create";
 
 const EmptyRow = () => {
@@ -71,7 +72,7 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
 
         setTimesheetTotalRow(rowTotal)
         setTimesheetTotalDays(total as number)
-    }, [timesheets])
+    }, [tasks])
 
     return(
         <>
@@ -102,7 +103,6 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
                 {
                     tasks.length > 0 && <TimesheetRowTotal
                         days={days}
-                        tasks={tasks}
                         timesheetTotalRow={timesheetTotalRow}
                         timesheetTotalDays={timesheetTotalDays}
                     />

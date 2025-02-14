@@ -22,7 +22,7 @@ export const TimesheetRow = ({
         setTotalDaysWorked(totalDays);
     }, [daysInput])
 
-    const handleChange = (val: number, taskId: string, idx: number): void => {
+    const updateRow = (val: number, taskId: string, idx: number): void => {
         const newDaysInput = daysInput.map((input, newIdx) => {
             return newIdx === idx ? val : input;
         });
@@ -44,8 +44,7 @@ export const TimesheetRow = ({
                                 idx={idx}
                                 taskId={task.projectTaskId}
                                 disabled={isWeekendDay(day.dayOfWeek)}
-                                handleChange={handleChange}
-                                // val={day}
+                                handleChange={updateRow}
                                 defaultValue={defaultValue}
                             />
                         </td>
