@@ -9,12 +9,12 @@ const add = (a, b) => a + b;
 export default function Timesheets({
 	timesheets,
 }: { timesheets: Record<string, unknown> }) {
-	const { user } = useAuth();
-	console.log("[Timesheets] user", user);
+	const auth = useAuth();
+	console.log("[Timesheets] user", auth?.user);
 
 	return (
 		<Layout>
-			<Link href={"/timesheets/create"}>Create a new timesheet</Link>
+			<Link href={"/admin/timesheets/create"}>Create a new timesheet</Link>
 			<h1>Timesheets</h1>
 
 			<table>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import "./login.css";
 import { useAuth } from "~/context/AuthContext";
@@ -9,7 +9,7 @@ const LoginPage = () => {
 
 	const auth = useAuth();
 
-	const handleLogin = async (e: any) => {
+	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		auth?.login(email, password);
 	};

@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 		const response = await auth.login(email, password);
 		if (response.ok) {
 			setTimeout(() => {
-				router.push("/dashboard");
+				router.push("/admin");
 			}, 3000);
 			toaster?.addToast("Logged. You will be redirected soon...", "success");
 		}

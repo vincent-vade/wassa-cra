@@ -14,16 +14,16 @@ export const Layout = ({ children }: PropsWithChildren) => {
 				<nav>
 					<ul>
 						<li>
-							<Link href="/dashboard/projects">Projects</Link>
+							<Link href="/admin/projects">Projects</Link>
 						</li>
 						<li>
-							<Link href="/dashboard/clients">Clients</Link>
+							<Link href="/admin/clients">Clients</Link>
 						</li>
 						<li>
-							<Link href="/dashboard/freelances">Freelances</Link>
+							<Link href="/admin/freelances">Freelances</Link>
 						</li>
 						<li>
-							<Link href="/dashboard/timesheets">Timesheets</Link>
+							<Link href="/admin/timesheets">Timesheets</Link>
 						</li>
 					</ul>
 				</nav>
