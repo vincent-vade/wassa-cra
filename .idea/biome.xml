@@ -3,7 +3,6 @@
   <component name="BiomeSettings">
     <option name="applySafeFixesOnSave" value="true" />
     <option name="configPath" value="\\wsl.localhost\Ubuntu-22.04\home\gcadoret\www\wassa_cra\apps\web" />
-    <option name="configurationMode" value="MANUAL" />
     <option name="enableLspFormat" value="true" />
     <option name="formatOnSave" value="true" />
   </component>
