@@ -7,24 +7,22 @@ export const TimesheetRow = ({
      days,
      handleUpdateTimesheet
 }: {
-    task?: { taskTitle: string, projectTaskId: string, projectName: string },
-    days: number[],
+    task: { taskTitle: string, projectTaskId: string, projectName: string, row: number[] },
+    days: Days,
     handleUpdateTimesheet: (taskId: string, days: number[]) => void
 }) => {
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
-    const [daysInput, setDaysInput] = useState<number[]>(days );
+    const [daysInput, setDaysInput] = useState<number[]>(task.row || []);
 
     useEffect(() => {
         const totalDays = daysInput.reduce((acc, curr) => {
-            console.log('acc', acc)
-            console.log('curr', curr)
             return acc + curr
         }, 0);
         console.log('totalDays', totalDays)
         setTotalDaysWorked(totalDays);
     }, [daysInput])
 
-    const handleChange = (val: number, taskId: string, idx: number): void => {
+    const updateRow = (val: number, taskId: string, idx: number): void => {
         const newDaysInput = daysInput.map((input, newIdx) => {
             return newIdx === idx ? val : input;
         });
@@ -39,14 +37,15 @@ export const TimesheetRow = ({
             <td><p className="p-2">{task.projectName} / {task.taskTitle}</p></td>
             {
                 days.map((day, idx) => {
+                    const defaultValue = daysInput[idx] || 0;
                     return (
                         <td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
                             <NumberInput
                                 idx={idx}
                                 taskId={task.projectTaskId}
                                 disabled={isWeekendDay(day.dayOfWeek)}
-                                handleChange={handleChange}
-                                val={day}
+                                handleChange={updateRow}
+                                defaultValue={defaultValue}
                             />
                         </td>
                     );

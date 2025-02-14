@@ -2,7 +2,7 @@ import {getAllDaysInCurrentMonth, isWeekendDay} from "~/lib/date";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
 import {useEffect, useState} from "react";
-import {Tasks} from "~/pages/timesheets/create";
+import {Tasks, Task} from "~/pages/timesheets/create";
 
 const EmptyRow = () => {
     return (<tr>
@@ -10,27 +10,40 @@ const EmptyRow = () => {
     </tr>)
 }
 
-const add = (a, b) => a + b
+const add = (a: number, b: number) => a + b
 const arraySum = (arr: number[]) => Array.isArray(arr) ? arr.reduce(add, 0) : 0
 
-const calculateRowTotal = (timesheets: {[taskId: string]: number[]}): number[] => {
-    if (Object.values(timesheets).length === 0) return [0]
+const sumAllTasks = (tasks: Tasks) => {
+    const total = Array.from({ length: tasks[0].row.length }, () => 0)
 
-    return Object.values(timesheets).reduce((acc, el) => {
-        return acc.map((a, idx) => {
-            return a + el[idx]
+    return tasks.reduce((acc, task) => {
+        return task.row.map((el, idx) => {
+            return el + acc[idx]
         })
-    })
+    }, total)
+}
+
+const calculateRowTotalV2 = (month: number, tasks: Tasks) => {
+    if (tasks.length === 0) {
+        const days = getAllDaysInCurrentMonth(month);
+        return Array.from({ length: days.length }, () => 0);
+    }
+
+    if (tasks.length === 1) {
+        return tasks[0].row
+    }
+
+    return sumAllTasks(tasks)
 }
 
 type Timesheets = {
     [key: string]: number[]
 }
 
-export const Timesheet = ({ month, timesheet, handleClickSave }: { month: number, timesheet: Tasks, handleClickSave: () => void }) => {
+export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: { month: number, tasks: Tasks, handleClickSave: () => void, handleUpdateTasks: (task: Task) => void }) => {
     const [timesheets, setTimesheets] = useState<Timesheets>({});
-    const [timesheetTotalDays, setTimesheetTotalDays] = useState(0);
-    const [timesheetTotalRow, setTimesheetTotalRow] = useState<number>(0);
+    const [timesheetTotalDays, setTimesheetTotalDays] = useState<number>(0);
+    const [timesheetTotalRow, setTimesheetTotalRow] = useState<number[]>(calculateRowTotalV2(month, tasks));
 
     const days = getAllDaysInCurrentMonth(month);
 
@@ -41,19 +54,29 @@ export const Timesheet = ({ month, timesheet, handleClickSave }: { month: number
         }
 
         setTimesheets(newTimesheets)
+
+        const task: Task = {
+            projectTaskId,
+            projectName: '',
+            taskTitle: '',
+            row: days
+        }
+
+        handleUpdateTasks(task)
     }
 
     useEffect(() => {
-        const rowTotal = calculateRowTotal(timesheets)
+        const rowTotal = calculateRowTotalV2(month, tasks)
         const total = arraySum(rowTotal)
 
         setTimesheetTotalRow(rowTotal)
         setTimesheetTotalDays(total as number)
-    }, [timesheets])
+    }, [tasks])
 
     return(
-        <div style={{ "overflowX": "auto" }}>
-            <table>
+        <>
+            <div style={{ "overflowX": "auto" }}>
+                <table>
                 <thead>
                 <tr>
                     <td style={{minWidth: '110px'}}></td>
@@ -71,13 +94,13 @@ export const Timesheet = ({ month, timesheet, handleClickSave }: { month: number
                 </thead>
                 <tbody>
                 {
-                    timesheet.length === 0 ? <EmptyRow />  : timesheet.map((task) => {
-                        return (<TimesheetRow key={`${task.projectTaskId}`} task={task} days={task.row} handleUpdateTimesheet={handleUpdateTimesheet} />)
+                    tasks.length === 0 ? <EmptyRow />  : tasks.map((task) => {
+                        return (<TimesheetRow key={`${task.projectTaskId}`} task={task} days={days} handleUpdateTimesheet={handleUpdateTimesheet} />)
                     })
                 }
 
                 {
-                    timesheet.length > 0 && <TimesheetRowTotal
+                    tasks.length > 0 && <TimesheetRowTotal
                         days={days}
                         timesheetTotalRow={timesheetTotalRow}
                         timesheetTotalDays={timesheetTotalDays}
@@ -86,10 +109,10 @@ export const Timesheet = ({ month, timesheet, handleClickSave }: { month: number
 
                 </tbody>
             </table>
-
+            </div>
             <div>
                 <button onClick={handleClickSave}>Save timesheet</button>
             </div>
-        </div>
+        </>
     )
 }

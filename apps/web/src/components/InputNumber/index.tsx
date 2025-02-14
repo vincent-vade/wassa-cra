@@ -4,8 +4,9 @@ type InputNumberProps = {
 	taskId: string
 	idx: number
 	disabled?: boolean;
-	handleChange?: (value: number) => void;
+	handleChange: (val: number, taskId: string, idx: number) => void;
 	val: number
+	defaultValue: number
 };
 
 const MIN_VALUE = 0
@@ -15,8 +16,8 @@ const STEP = 0.5
 const increment = (val: number) => val < MAX_VALUE ? val + STEP : MAX_VALUE
 const decrement = (val: number) => val > MIN_VALUE ? val - STEP : MIN_VALUE
 
-export function NumberInput({ taskId, idx, disabled, handleChange, val }: InputNumberProps) {
-	const [value, setValue] = useState(val | 0);
+export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue }: InputNumberProps) {
+	const [value, setValue] = useState(defaultValue | 0);
 
 	const handleAdd = (taskId, idx) => () => {
 		const newValue = increment(value)
@@ -27,7 +28,6 @@ export function NumberInput({ taskId, idx, disabled, handleChange, val }: InputN
 			handleChange(newValue, taskId, idx);
 		}
 	};
-
 	const handleSubtract = (taskId, idx) => () => {
 		const newValue = decrement(value)
 
