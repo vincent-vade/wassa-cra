@@ -1,0 +1,41 @@
+/* apps/web/src/styles/table.css */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1rem;
+    text-align: left;
+}
+
+th, td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    font-size: 0.8rem;
+}
+
+td a {
+    color: #000099;
+    text-decoration: underline;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+tbody tr:hover {
+    background-color: #ecffec;
+}
+
+th {
+    background-color: #A8D5BA; /* Couleur pastel pour les titres de colonne */
+    color: #333333; /* Couleur de texte plus foncée */
+}
