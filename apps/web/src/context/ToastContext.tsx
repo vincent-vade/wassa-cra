@@ -31,7 +31,7 @@ const ToasterProvider = ({ children }: PropsWithChildren) => {
 	const addToast = useCallback((message: string, type: ToastType) => {
 		const id = toastId++;
 		setToasts((prevToasts) => [...prevToasts, { id, message, type }]);
-		setTimeout(() => removeToast(id), id + 3000); // Remove toast after 3 seconds
+		setTimeout(() => removeToast(id), id + 3000); // Remove toast after 7 seconds
 	}, []);
 
 	const removeToast = useCallback((toastId: number) => {

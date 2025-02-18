@@ -1,5 +1,5 @@
 {
-  "resource_version": 36,
+  "resource_version": 58,
   "metadata": {
     "version": 3,
     "sources": [
@@ -253,6 +253,18 @@
             {
               "name": "freelance_by_email",
               "query": "query freelance_by_email($email: String){\n  freelances(where: {email: {_eq: $email}}) {\n      id\n    email\n    password\n  }\n}"
+            },
+            {
+              "name": "timesheets_by_period",
+              "query": "query timesheets_by_period($period: String!) {\r\n  timesheets(where: {working_date: {_eq: $period}}) {\r\n    id\r\n    client_id\r\n    client {\r\n      name\r\n    }\r\n  \tproject_task_id\r\n    projects_task {\r\n      task_description\r\n      project_id\r\n      project {\r\n        name\r\n        description\r\n      }\r\n    }\r\n    created_at\r\n    updated_at\r\n    working_date\r\n    working_durations\r\n  }\r\n}"
+            },
+            {
+              "name": "timesheet_by_project_task_id_and_period",
+              "query": "query timesheet_by_project_task_id_and_period($period: String!,$project_task_id: uuid!) {\r\n  timesheets(\r\n    where: {\r\n      working_date: {_eq: $period}\r\n      project_task_id: {_eq: $project_task_id}\r\n    }\r\n  ) {\r\n    id\r\n    client_id\r\n    client {\r\n      name\r\n    }\r\n  \tproject_task_id\r\n    projects_task {\r\n      task_description\r\n      project_id\r\n      project {\r\n        name\r\n        description\r\n      }\r\n    }\r\n    created_at\r\n    updated_at\r\n    working_date\r\n    working_durations\r\n  }\r\n}"
+            },
+            {
+              "name": "update_timesheet_by_period",
+              "query": "mutation UpdateTimesheetByPeriod($period: String!, $project_task_id: uuid!, $newData: timesheets_set_input!) {\r\n  update_timesheets(\r\n    where: { \r\n      working_date: { _eq: $period}\r\n      project_task_id: { _eq: $project_task_id }\r\n    }, \r\n    _set: $newData\r\n  ) {\r\n    affected_rows\r\n    returning {\r\n      id\r\n      working_date\r\n      working_durations\r\n      freelance_id\r\n      projects_task {\r\n        task_description\r\n        project {\r\n          name\r\n          description\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
             }
           ]
         }
@@ -658,6 +670,48 @@
         ],
         "name": "delete_timesheets_by_pk",
         "url": "timesheets/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "timesheets_by_period"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "timesheets_by_period",
+        "url": "timesheets/period/:period"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "update_timesheet_by_period"
+          }
+        },
+        "methods": [
+          "PUT"
+        ],
+        "name": "update_timesheet_by_period",
+        "url": "timesheets/period/:period"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "timesheet_by_project_task_id_and_period"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "timesheet_by_project_task_id_and_period",
+        "url": "timesheets/project-task/:project_task_id/period/:period"
       }
     ],
     "backend_configs": {

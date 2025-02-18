@@ -2,11 +2,9 @@ import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
 import { useAuth } from "~/context/AuthContext";
-import { useToaster } from "~/context/ToastContext";
 
 export const Layout = ({ children }: PropsWithChildren) => {
 	const auth = useAuth();
-	const { addToast } = useToaster();
 
 	return (
 		<div className="flex">
@@ -25,18 +23,16 @@ export const Layout = ({ children }: PropsWithChildren) => {
 						<li>
 							<Link href="/admin/timesheets">Timesheets</Link>
 						</li>
+						<hr style={{marginTop: '1rem', marginBottom: '1rem'}} />
+						<li>
+							<button type="button" onClick={() => auth?.logout()}>
+								Logout
+							</button>
+						</li>
 					</ul>
 				</nav>
 			</aside>
 			<main className="w-full">
-				<nav>
-					<button type="button" onClick={() => auth?.logout()}>
-						Logout
-					</button>
-					<button type="button" onClick={() => addToast("Success", "success")}>
-						Success
-					</button>
-				</nav>
 				<div className="p-4">{children}</div>
 			</main>
 		</div>
