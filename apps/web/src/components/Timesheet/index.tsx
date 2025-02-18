@@ -2,7 +2,6 @@ import {getAllDaysInCurrentMonth, isWeekendDay} from "~/lib/date";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
 import {useEffect, useState} from "react";
-
 import {Tasks, Task} from "~/pages/timesheets/create";
 
 const EmptyRow = () => {

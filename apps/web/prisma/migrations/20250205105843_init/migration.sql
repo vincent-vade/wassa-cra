@@ -16,6 +16,7 @@ CREATE TABLE "freelances" (
                               "updated_at" TIMESTAMP(6),
                               "daily_rate" DECIMAL(10,2) NOT NULL,
                               "email" VARCHAR,
+                              "password" VARCHAR,
                               PRIMARY KEY ("id")
 );
 

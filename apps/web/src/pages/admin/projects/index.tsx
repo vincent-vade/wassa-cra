@@ -1,15 +1,16 @@
-import Link from "next/link";
-import { type Project } from "~/lib/client";
-import { getProjects } from "~/services/projects";
 import dayjs from "dayjs";
-import {useAuth} from "~/context/AuthContext";
+import Link from "next/link";
+import { Layout } from "~/components/layout";
+import { useAuth } from "~/context/AuthContext";
+import type { Project } from "~/lib/client";
+import { getProjects } from "~/services/projects";
 
 export default function Projects({ projects }: { projects: Project[] }) {
-	const { user } = useAuth();
-	console.log(user);
+	const auth = useAuth();
+	console.log(auth?.user);
 
 	return (
-		<>
+		<Layout>
 			<h1>Projects</h1>
 			<table>
 				<thead>
@@ -28,14 +29,17 @@ export default function Projects({ projects }: { projects: Project[] }) {
 								<Link href={`/projects/${project?.id}`}>{project?.id}</Link>
 							</td>
 							<td>{project?.name}</td>
-							<td>{dayjs(project.created_at).format('DD-MM-YYYY')}</td>
-							<td>{project.updated_at && dayjs(project.updated_at).format('DD-MM-YYYY')}</td>
+							<td>{dayjs(project.created_at).format("DD-MM-YYYY")}</td>
+							<td>
+								{project.updated_at &&
+									dayjs(project.updated_at).format("DD-MM-YYYY")}
+							</td>
 							<td>{project?.is_active}</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
-		</>
+		</Layout>
 	);
 }
 

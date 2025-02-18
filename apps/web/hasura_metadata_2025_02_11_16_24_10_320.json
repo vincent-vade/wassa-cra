@@ -1,5 +1,5 @@
 {
-  "resource_version": 48,
+  "resource_version": 36,
   "metadata": {
     "version": 3,
     "sources": [
@@ -17,19 +17,61 @@
             "table": {
               "name": "clients",
               "schema": "public"
-            }
+            },
+            "array_relationships": [
+              {
+                "name": "timesheets",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "name": "timesheets",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "table": {
               "name": "freelances",
               "schema": "public"
-            }
+            },
+            "array_relationships": [
+              {
+                "name": "timesheets",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "freelance_id",
+                    "table": {
+                      "name": "timesheets",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "table": {
               "name": "projects",
               "schema": "public"
-            }
+            },
+            "array_relationships": [
+              {
+                "name": "projects_tasks",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "project_id",
+                    "table": {
+                      "name": "projects_tasks",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "table": {
@@ -41,6 +83,20 @@
                 "name": "project",
                 "using": {
                   "foreign_key_constraint_on": "project_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "timesheets",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "project_task_id",
+                    "table": {
+                      "name": "timesheets",
+                      "schema": "public"
+                    }
+                  }
                 }
               }
             ]
@@ -191,8 +247,12 @@
               "query": "query projects_tasks_by_project_id($id: uuid!) {\r\n  projects_tasks(where: {project_id: {_eq: $id}}) {\r\n    id\r\n    project_id\r\n    task_description\r\n    updated_at\r\n    date\r\n    created_at\r\n  }\r\n}"
             },
             {
-              "name": "timesheets_by_period",
-              "query": "query timesheets_by_period($period: String) {\r\n  timesheets(where: { working_date: { _eq: $period } }) {\r\n    client_id\r\n    created_at\r\n    freelance_id\r\n    id\r\n    project_task_id\r\n    updated_at\r\n    working_date\r\n    working_durations\r\n    projects_task {\r\n      id\r\n      project_id\r\n      task_description\r\n      project {\r\n      \tid\r\n        name\r\n    \t}\r\n    }\r\n  }\r\n  \r\n}"
+              "name": "login",
+              "query": "query login($email: String, $password: String){\n  freelances(where: {email: {_eq: $email}, password: {_eq: $password}}) {\n    email\n  }\n}"
+            },
+            {
+              "name": "freelance_by_email",
+              "query": "query freelance_by_email($email: String){\n  freelances(where: {email: {_eq: $email}}) {\n      id\n    email\n    password\n  }\n}"
             }
           ]
         }
@@ -207,6 +267,20 @@
       }
     ],
     "rest_endpoints": [
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "login"
+          }
+        },
+        "methods": [
+          "POST"
+        ],
+        "name": "login",
+        "url": "auth/login"
+      },
       {
         "comment": "",
         "definition": {
@@ -276,6 +350,20 @@
         ],
         "name": "delete_clients_by_pk",
         "url": "clients/:id"
+      },
+      {
+        "comment": "",
+        "definition": {
+          "query": {
+            "collection_name": "allowed-queries",
+            "query_name": "freelance_by_email"
+          }
+        },
+        "methods": [
+          "GET"
+        ],
+        "name": "freelance_by_email",
+        "url": "freelance-by-email"
       },
       {
         "comment": "",
@@ -570,20 +658,6 @@
         ],
         "name": "delete_timesheets_by_pk",
         "url": "timesheets/:id"
-      },
-      {
-        "comment": "",
-        "definition": {
-          "query": {
-            "collection_name": "allowed-queries",
-            "query_name": "timesheets_by_period"
-          }
-        },
-        "methods": [
-          "GET"
-        ],
-        "name": "timesheets_by_period",
-        "url": "timesheets/period/:period"
       }
     ],
     "backend_configs": {

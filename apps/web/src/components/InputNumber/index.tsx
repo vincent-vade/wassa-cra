@@ -1,26 +1,32 @@
 import { useState } from "react";
 
 type InputNumberProps = {
-	taskId: string
-	idx: number
+	taskId: string;
+	idx: number;
 	disabled?: boolean;
 	handleChange: (val: number, taskId: string, idx: number) => void;
-	val: number
-	defaultValue: number
+	val: number;
+	defaultValue: number;
 };
 
-const MIN_VALUE = 0
-const MAX_VALUE = 1
-const STEP = 0.5
+const MIN_VALUE = 0;
+const MAX_VALUE = 1;
+const STEP = 0.5;
 
-const increment = (val: number) => val < MAX_VALUE ? val + STEP : MAX_VALUE
-const decrement = (val: number) => val > MIN_VALUE ? val - STEP : MIN_VALUE
+const increment = (val: number) => (val < MAX_VALUE ? val + STEP : MAX_VALUE);
+const decrement = (val: number) => (val > MIN_VALUE ? val - STEP : MIN_VALUE);
 
-export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue }: InputNumberProps) {
+export function NumberInput({
+	taskId,
+	idx,
+	disabled,
+	handleChange,
+	defaultValue,
+}: InputNumberProps) {
 	const [value, setValue] = useState(defaultValue | 0);
 
 	const handleAdd = (taskId, idx) => () => {
-		const newValue = increment(value)
+		const newValue = increment(value);
 
 		setValue(newValue);
 
@@ -29,7 +35,7 @@ export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue 
 		}
 	};
 	const handleSubtract = (taskId, idx) => () => {
-		const newValue = decrement(value)
+		const newValue = decrement(value);
 
 		setValue(newValue);
 
@@ -39,7 +45,7 @@ export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue 
 	};
 
 	return (
-		<div className="p-1 mr-2" style={{display: "flex", "minWidth": "50px"}}>
+		<div className="p-1 mr-2" style={{ display: "flex", minWidth: "50px" }}>
 			<input
 				key={`amountInput-${taskId}-${idx}`}
 				type="number"
@@ -64,7 +70,6 @@ export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue 
 						viewBox="0 0 16 16"
 						fill="currentColor"
 						className="w-4 h-4"
-						title="de"
 					>
 						<path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
 					</svg>
@@ -86,7 +91,6 @@ export function NumberInput({ taskId, idx, disabled, handleChange, defaultValue 
 					</svg>
 				</button>
 			</div>
-
 		</div>
 	);
 }

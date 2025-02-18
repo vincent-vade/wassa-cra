@@ -235,133 +235,6 @@
         }
       }
     },
-    "/api/rest/timesheets/period/{period}": {
-      "get": {
-        "summary": "timesheets_by_period",
-        "description": "***\nThe GraphQl query for this endpoint is:\n``` graphql\nquery timesheets_by_period($period: String) {\r\n  timesheets(where: { working_date: { _eq: $period } }) {\r\n    client_id\r\n    created_at\r\n    freelance_id\r\n    id\r\n    project_task_id\r\n    updated_at\r\n    working_date\r\n    working_durations\r\n    projects_task {\r\n      id\r\n      project_id\r\n      task_description\r\n      project {\r\n      \tid\r\n        name\r\n    \t}\r\n    }\r\n  }\r\n  \r\n}\n```",
-        "parameters": [
-          {
-            "description": "Your x-hasura-admin-secret will be used for authentication of the API request.",
-            "in": "header",
-            "name": "x-hasura-admin-secret",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "path",
-            "name": "period",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "period": {
-                    "nullable": true,
-                    "title": "String",
-                    "type": "string"
-                  }
-                },
-                "type": "object"
-              }
-            }
-          },
-          "description": "Query parameters can also be provided in the request body as a JSON object",
-          "required": false
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "timesheets": {
-                      "items": {
-                        "description": "columns and relationships of \"timesheets\"",
-                        "nullable": false,
-                        "properties": {
-                          "client_id": {
-                            "$ref": "#/components/schemas/uuid!"
-                          },
-                          "created_at": {
-                            "$ref": "#/components/schemas/timestamp!"
-                          },
-                          "freelance_id": {
-                            "$ref": "#/components/schemas/uuid!"
-                          },
-                          "id": {
-                            "$ref": "#/components/schemas/uuid!"
-                          },
-                          "project_task_id": {
-                            "$ref": "#/components/schemas/uuid!"
-                          },
-                          "projects_task": {
-                            "description": "columns and relationships of \"projects_tasks\"",
-                            "nullable": false,
-                            "properties": {
-                              "id": {
-                                "$ref": "#/components/schemas/uuid!"
-                              },
-                              "project": {
-                                "description": "columns and relationships of \"projects\"",
-                                "nullable": false,
-                                "properties": {
-                                  "id": {
-                                    "$ref": "#/components/schemas/uuid!"
-                                  },
-                                  "name": {
-                                    "nullable": false,
-                                    "title": "String",
-                                    "type": "string"
-                                  }
-                                },
-                                "title": "projects",
-                                "type": "object"
-                              },
-                              "project_id": {
-                                "$ref": "#/components/schemas/uuid!"
-                              },
-                              "task_description": {
-                                "nullable": true,
-                                "title": "String",
-                                "type": "string"
-                              }
-                            },
-                            "title": "projects_tasks",
-                            "type": "object"
-                          },
-                          "updated_at": {
-                            "$ref": "#/components/schemas/timestamp"
-                          },
-                          "working_date": {
-                            "nullable": false,
-                            "title": "String",
-                            "type": "string"
-                          },
-                          "working_durations": {
-                            "$ref": "#/components/schemas/jsonb"
-                          }
-                        },
-                        "title": "timesheets",
-                        "type": "object"
-                      },
-                      "nullable": false,
-                      "type": "array"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Responses for GET /api/rest/timesheets/period/{period}"
-          }
-        }
-      }
-    },
     "/api/rest/timesheets/{id}": {
       "get": {
         "summary": "timesheets_by_pk",
@@ -625,6 +498,85 @@
         }
       }
     },
+    "/api/rest/freelance-by-email": {
+      "get": {
+        "summary": "freelance_by_email",
+        "description": "***\nThe GraphQl query for this endpoint is:\n``` graphql\nquery freelance_by_email($email: String){\n  freelances(where: {email: {_eq: $email}}) {\n      id\n    email\n    password\n  }\n}\n```",
+        "parameters": [
+          {
+            "description": "Your x-hasura-admin-secret will be used for authentication of the API request.",
+            "in": "header",
+            "name": "x-hasura-admin-secret",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "nullable": true,
+                    "title": "String",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "description": "Query parameters can also be provided in the request body as a JSON object",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "freelances": {
+                      "items": {
+                        "description": "columns and relationships of \"freelances\"",
+                        "nullable": false,
+                        "properties": {
+                          "email": {
+                            "nullable": false,
+                            "title": "String",
+                            "type": "string"
+                          },
+                          "id": {
+                            "$ref": "#/components/schemas/uuid!"
+                          },
+                          "password": {
+                            "nullable": false,
+                            "title": "String",
+                            "type": "string"
+                          }
+                        },
+                        "title": "freelances",
+                        "type": "object"
+                      },
+                      "nullable": false,
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Responses for GET /api/rest/freelance-by-email"
+          }
+        }
+      }
+    },
     "/api/rest/freelances": {
       "get": {
         "summary": "freelances",
@@ -657,7 +609,7 @@
                             "$ref": "#/components/schemas/numeric!"
                           },
                           "email": {
-                            "nullable": true,
+                            "nullable": false,
                             "title": "String",
                             "type": "string"
                           },
@@ -728,7 +680,7 @@
                           "$ref": "#/components/schemas/numeric!"
                         },
                         "email": {
-                          "nullable": true,
+                          "nullable": false,
                           "title": "String",
                           "type": "string"
                         },
@@ -807,7 +759,7 @@
                           "$ref": "#/components/schemas/numeric!"
                         },
                         "email": {
-                          "nullable": true,
+                          "nullable": false,
                           "title": "String",
                           "type": "string"
                         },
@@ -887,7 +839,7 @@
                           "$ref": "#/components/schemas/numeric!"
                         },
                         "email": {
-                          "nullable": true,
+                          "nullable": false,
                           "title": "String",
                           "type": "string"
                         },
@@ -964,7 +916,7 @@
                           "$ref": "#/components/schemas/numeric!"
                         },
                         "email": {
-                          "nullable": true,
+                          "nullable": false,
                           "title": "String",
                           "type": "string"
                         },
@@ -2187,6 +2139,89 @@
           }
         }
       }
+    },
+    "/api/rest/auth/login": {
+      "post": {
+        "summary": "login",
+        "description": "***\nThe GraphQl query for this endpoint is:\n``` graphql\nquery login($email: String, $password: String){\n  freelances(where: {email: {_eq: $email}, password: {_eq: $password}}) {\n    email\n  }\n}\n```",
+        "parameters": [
+          {
+            "description": "Your x-hasura-admin-secret will be used for authentication of the API request.",
+            "in": "header",
+            "name": "x-hasura-admin-secret",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "password",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "nullable": true,
+                    "title": "String",
+                    "type": "string"
+                  },
+                  "password": {
+                    "nullable": true,
+                    "title": "String",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "description": "Query parameters can also be provided in the request body as a JSON object",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "freelances": {
+                      "items": {
+                        "description": "columns and relationships of \"freelances\"",
+                        "nullable": false,
+                        "properties": {
+                          "email": {
+                            "nullable": false,
+                            "title": "String",
+                            "type": "string"
+                          }
+                        },
+                        "title": "freelances",
+                        "type": "object"
+                      },
+                      "nullable": false,
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Responses for POST /api/rest/auth/login"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2215,58 +2250,63 @@
         "title": "uuid",
         "type": "string"
       },
-      "projects_insert_input!": {
-        "description": "input type for inserting data into table \"projects\"",
+      "projects_tasks_update_column!": {
+        "description": "update columns of table \"projects_tasks\"",
+        "enum": [
+          "created_at",
+          "date",
+          "id",
+          "project_id",
+          "task_description",
+          "updated_at"
+        ],
         "nullable": false,
+        "title": "projects_tasks_update_column"
+      },
+      "uuid_comparison_exp": {
+        "description": "Boolean expression to compare columns of type \"uuid\". All fields are combined with logical 'AND'.",
+        "nullable": true,
         "properties": {
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp"
-          },
-          "description": {
-            "nullable": true,
-            "title": "String",
-            "type": "string"
-          },
-          "end_date": {
-            "$ref": "#/components/schemas/timestamp"
-          },
-          "id": {
+          "_eq": {
             "$ref": "#/components/schemas/uuid"
           },
-          "is_active": {
+          "_gt": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "_gte": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "_in": {
+            "items": {
+              "$ref": "#/components/schemas/uuid!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_is_null": {
             "nullable": true,
             "title": "Boolean",
             "type": "boolean"
           },
-          "name": {
+          "_lt": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "_lte": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "_neq": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "_nin": {
+            "items": {
+              "$ref": "#/components/schemas/uuid!"
+            },
             "nullable": true,
-            "title": "String",
-            "type": "string"
-          },
-          "start_date": {
-            "$ref": "#/components/schemas/timestamp"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp"
+            "type": "array"
           }
         },
-        "title": "projects_insert_input",
+        "title": "uuid_comparison_exp",
         "type": "object"
-      },
-      "projects_update_column!": {
-        "description": "update columns of table \"projects\"",
-        "enum": [
-          "created_at",
-          "description",
-          "end_date",
-          "id",
-          "is_active",
-          "name",
-          "start_date",
-          "updated_at"
-        ],
-        "nullable": false,
-        "title": "projects_update_column"
       },
       "timestamp_comparison_exp": {
         "description": "Boolean expression to compare columns of type \"timestamp\". All fields are combined with logical 'AND'.",
@@ -2313,50 +2353,9 @@
         "title": "timestamp_comparison_exp",
         "type": "object"
       },
-      "uuid_comparison_exp": {
-        "description": "Boolean expression to compare columns of type \"uuid\". All fields are combined with logical 'AND'.",
-        "nullable": true,
-        "properties": {
-          "_eq": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_gt": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_gte": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_in": {
-            "items": {
-              "$ref": "#/components/schemas/uuid!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_is_null": {
-            "nullable": true,
-            "title": "Boolean",
-            "type": "boolean"
-          },
-          "_lt": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_lte": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_neq": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "_nin": {
-            "items": {
-              "$ref": "#/components/schemas/uuid!"
-            },
-            "nullable": true,
-            "type": "array"
-          }
-        },
-        "title": "uuid_comparison_exp",
-        "type": "object"
+      "jsonb!": {
+        "nullable": false,
+        "title": "jsonb"
       },
       "String_comparison_exp": {
         "description": "Boolean expression to compare columns of type \"String\". All fields are combined with logical 'AND'.",
@@ -2469,6 +2468,617 @@
         "title": "String_comparison_exp",
         "type": "object"
       },
+      "jsonb_cast_exp": {
+        "nullable": true,
+        "properties": {
+          "String": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          }
+        },
+        "title": "jsonb_cast_exp",
+        "type": "object"
+      },
+      "jsonb_comparison_exp": {
+        "description": "Boolean expression to compare columns of type \"jsonb\". All fields are combined with logical 'AND'.",
+        "nullable": true,
+        "properties": {
+          "_cast": {
+            "$ref": "#/components/schemas/jsonb_cast_exp"
+          },
+          "_contained_in": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_contains": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_eq": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_gt": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_gte": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_has_key": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
+          },
+          "_has_keys_all": {
+            "items": {
+              "nullable": false,
+              "title": "String",
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_has_keys_any": {
+            "items": {
+              "nullable": false,
+              "title": "String",
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_in": {
+            "items": {
+              "$ref": "#/components/schemas/jsonb!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_is_null": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "_lt": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_lte": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_neq": {
+            "$ref": "#/components/schemas/jsonb"
+          },
+          "_nin": {
+            "items": {
+              "$ref": "#/components/schemas/jsonb!"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "title": "jsonb_comparison_exp",
+        "type": "object"
+      },
+      "clients_bool_exp!": {
+        "description": "Boolean expression to filter rows from the table \"clients\". All fields are combined with a logical 'AND'.",
+        "nullable": false,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/clients_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/clients_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/clients_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "email": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "name": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          }
+        },
+        "title": "clients_bool_exp",
+        "type": "object"
+      },
+      "clients_bool_exp": {
+        "description": "Boolean expression to filter rows from the table \"clients\". All fields are combined with a logical 'AND'.",
+        "nullable": true,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/clients_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/clients_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/clients_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "email": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "name": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          }
+        },
+        "title": "clients_bool_exp",
+        "type": "object"
+      },
+      "numeric!": {
+        "nullable": false,
+        "title": "numeric"
+      },
+      "numeric": {
+        "nullable": true,
+        "title": "numeric"
+      },
+      "numeric_comparison_exp": {
+        "description": "Boolean expression to compare columns of type \"numeric\". All fields are combined with logical 'AND'.",
+        "nullable": true,
+        "properties": {
+          "_eq": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_gt": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_gte": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_in": {
+            "items": {
+              "$ref": "#/components/schemas/numeric!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_is_null": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "_lt": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_lte": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_neq": {
+            "$ref": "#/components/schemas/numeric"
+          },
+          "_nin": {
+            "items": {
+              "$ref": "#/components/schemas/numeric!"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "title": "numeric_comparison_exp",
+        "type": "object"
+      },
+      "freelances_bool_exp!": {
+        "description": "Boolean expression to filter rows from the table \"freelances\". All fields are combined with a logical 'AND'.",
+        "nullable": false,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/freelances_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/freelances_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/freelances_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "daily_rate": {
+            "$ref": "#/components/schemas/numeric_comparison_exp"
+          },
+          "email": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "password": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          }
+        },
+        "title": "freelances_bool_exp",
+        "type": "object"
+      },
+      "freelances_bool_exp": {
+        "description": "Boolean expression to filter rows from the table \"freelances\". All fields are combined with a logical 'AND'.",
+        "nullable": true,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/freelances_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/freelances_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/freelances_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "daily_rate": {
+            "$ref": "#/components/schemas/numeric_comparison_exp"
+          },
+          "email": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "password": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          }
+        },
+        "title": "freelances_bool_exp",
+        "type": "object"
+      },
+      "timesheets_bool_exp!": {
+        "description": "Boolean expression to filter rows from the table \"timesheets\". All fields are combined with a logical 'AND'.",
+        "nullable": false,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "client": {
+            "$ref": "#/components/schemas/clients_bool_exp"
+          },
+          "client_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "freelance": {
+            "$ref": "#/components/schemas/freelances_bool_exp"
+          },
+          "freelance_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "project_task_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "projects_task": {
+            "$ref": "#/components/schemas/projects_tasks_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "working_date": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "working_durations": {
+            "$ref": "#/components/schemas/jsonb_comparison_exp"
+          }
+        },
+        "title": "timesheets_bool_exp",
+        "type": "object"
+      },
+      "timesheets_bool_exp": {
+        "description": "Boolean expression to filter rows from the table \"timesheets\". All fields are combined with a logical 'AND'.",
+        "nullable": true,
+        "properties": {
+          "_and": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_not": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "_or": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_bool_exp!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "client": {
+            "$ref": "#/components/schemas/clients_bool_exp"
+          },
+          "client_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "freelance": {
+            "$ref": "#/components/schemas/freelances_bool_exp"
+          },
+          "freelance_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "project_task_id": {
+            "$ref": "#/components/schemas/uuid_comparison_exp"
+          },
+          "projects_task": {
+            "$ref": "#/components/schemas/projects_tasks_bool_exp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp_comparison_exp"
+          },
+          "working_date": {
+            "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "working_durations": {
+            "$ref": "#/components/schemas/jsonb_comparison_exp"
+          }
+        },
+        "title": "timesheets_bool_exp",
+        "type": "object"
+      },
+      "timesheets_select_column!": {
+        "description": "select columns of table \"timesheets\"",
+        "enum": [
+          "client_id",
+          "created_at",
+          "freelance_id",
+          "id",
+          "project_task_id",
+          "updated_at",
+          "working_date",
+          "working_durations"
+        ],
+        "nullable": false,
+        "title": "timesheets_select_column"
+      },
+      "Int_comparison_exp!": {
+        "description": "Boolean expression to compare columns of type \"Int\". All fields are combined with logical 'AND'.",
+        "nullable": false,
+        "properties": {
+          "_eq": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_gt": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_gte": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_in": {
+            "items": {
+              "nullable": false,
+              "title": "Int",
+              "type": "integer"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "_is_null": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "_lt": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_lte": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_neq": {
+            "nullable": true,
+            "title": "Int",
+            "type": "integer"
+          },
+          "_nin": {
+            "items": {
+              "nullable": false,
+              "title": "Int",
+              "type": "integer"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "title": "Int_comparison_exp",
+        "type": "object"
+      },
+      "timesheets_aggregate_bool_exp_count": {
+        "nullable": true,
+        "properties": {
+          "arguments": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_select_column!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "distinct": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "predicate": {
+            "$ref": "#/components/schemas/Int_comparison_exp!"
+          }
+        },
+        "title": "timesheets_aggregate_bool_exp_count",
+        "type": "object"
+      },
+      "timesheets_aggregate_bool_exp": {
+        "nullable": true,
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp_count"
+          }
+        },
+        "title": "timesheets_aggregate_bool_exp",
+        "type": "object"
+      },
+      "projects_tasks_select_column!": {
+        "description": "select columns of table \"projects_tasks\"",
+        "enum": [
+          "created_at",
+          "date",
+          "id",
+          "project_id",
+          "task_description",
+          "updated_at"
+        ],
+        "nullable": false,
+        "title": "projects_tasks_select_column"
+      },
+      "projects_tasks_aggregate_bool_exp_count": {
+        "nullable": true,
+        "properties": {
+          "arguments": {
+            "items": {
+              "$ref": "#/components/schemas/projects_tasks_select_column!"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "distinct": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/projects_tasks_bool_exp"
+          },
+          "predicate": {
+            "$ref": "#/components/schemas/Int_comparison_exp!"
+          }
+        },
+        "title": "projects_tasks_aggregate_bool_exp_count",
+        "type": "object"
+      },
+      "projects_tasks_aggregate_bool_exp": {
+        "nullable": true,
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/projects_tasks_aggregate_bool_exp_count"
+          }
+        },
+        "title": "projects_tasks_aggregate_bool_exp",
+        "type": "object"
+      },
       "Boolean_comparison_exp": {
         "description": "Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'.",
         "nullable": true,
@@ -2569,6 +3179,12 @@
           "name": {
             "$ref": "#/components/schemas/String_comparison_exp"
           },
+          "projects_tasks": {
+            "$ref": "#/components/schemas/projects_tasks_bool_exp"
+          },
+          "projects_tasks_aggregate": {
+            "$ref": "#/components/schemas/projects_tasks_aggregate_bool_exp"
+          },
           "start_date": {
             "$ref": "#/components/schemas/timestamp_comparison_exp"
           },
@@ -2618,6 +3234,12 @@
           "name": {
             "$ref": "#/components/schemas/String_comparison_exp"
           },
+          "projects_tasks": {
+            "$ref": "#/components/schemas/projects_tasks_bool_exp"
+          },
+          "projects_tasks_aggregate": {
+            "$ref": "#/components/schemas/projects_tasks_aggregate_bool_exp"
+          },
           "start_date": {
             "$ref": "#/components/schemas/timestamp_comparison_exp"
           },
@@ -2627,93 +3249,6 @@
         },
         "title": "projects_bool_exp",
         "type": "object"
-      },
-      "projects_constraint!": {
-        "description": "unique or primary key constraints on table \"projects\"",
-        "enum": [
-          "projects_pkey"
-        ],
-        "nullable": false,
-        "title": "projects_constraint"
-      },
-      "projects_on_conflict": {
-        "description": "on_conflict condition type for table \"projects\"",
-        "nullable": true,
-        "properties": {
-          "constraint": {
-            "$ref": "#/components/schemas/projects_constraint!"
-          },
-          "update_columns": {
-            "items": {
-              "$ref": "#/components/schemas/projects_update_column!"
-            },
-            "nullable": false,
-            "type": "array"
-          },
-          "where": {
-            "$ref": "#/components/schemas/projects_bool_exp"
-          }
-        },
-        "title": "projects_on_conflict",
-        "type": "object"
-      },
-      "projects_obj_rel_insert_input": {
-        "description": "input type for inserting object relation for remote table \"projects\"",
-        "nullable": true,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/projects_insert_input!"
-          },
-          "on_conflict": {
-            "$ref": "#/components/schemas/projects_on_conflict"
-          }
-        },
-        "title": "projects_obj_rel_insert_input",
-        "type": "object"
-      },
-      "projects_tasks_insert_input!": {
-        "description": "input type for inserting data into table \"projects_tasks\"",
-        "nullable": false,
-        "properties": {
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp"
-          },
-          "date": {
-            "$ref": "#/components/schemas/timestamp"
-          },
-          "id": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "project": {
-            "$ref": "#/components/schemas/projects_obj_rel_insert_input"
-          },
-          "project_id": {
-            "$ref": "#/components/schemas/uuid"
-          },
-          "task_description": {
-            "nullable": true,
-            "title": "String",
-            "type": "string"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp"
-          }
-        },
-        "title": "projects_tasks_insert_input",
-        "type": "object"
-      },
-      "projects_tasks_update_column!": {
-        "description": "update columns of table \"projects_tasks\"",
-        "enum": [
-          "created_at",
-          "date",
-          "id",
-          "project_id",
-          "task_description",
-          "updated_at"
-        ],
-        "nullable": false,
-        "title": "projects_tasks_update_column"
       },
       "projects_tasks_bool_exp!": {
         "description": "Boolean expression to filter rows from the table \"projects_tasks\". All fields are combined with a logical 'AND'.",
@@ -2753,6 +3288,12 @@
           },
           "task_description": {
             "$ref": "#/components/schemas/String_comparison_exp"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
           },
           "updated_at": {
             "$ref": "#/components/schemas/timestamp_comparison_exp"
@@ -2800,6 +3341,12 @@
           "task_description": {
             "$ref": "#/components/schemas/String_comparison_exp"
           },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          },
+          "timesheets_aggregate": {
+            "$ref": "#/components/schemas/timesheets_aggregate_bool_exp"
+          },
           "updated_at": {
             "$ref": "#/components/schemas/timestamp_comparison_exp"
           }
@@ -2834,6 +3381,219 @@
           }
         },
         "title": "projects_tasks_on_conflict",
+        "type": "object"
+      },
+      "projects_tasks_arr_rel_insert_input": {
+        "description": "input type for inserting array relation for remote table \"projects_tasks\"",
+        "nullable": true,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/projects_tasks_insert_input!"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "on_conflict": {
+            "$ref": "#/components/schemas/projects_tasks_on_conflict"
+          }
+        },
+        "title": "projects_tasks_arr_rel_insert_input",
+        "type": "object"
+      },
+      "projects_insert_input!": {
+        "description": "input type for inserting data into table \"projects\"",
+        "nullable": false,
+        "properties": {
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "description": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
+          },
+          "end_date": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "is_active": {
+            "nullable": true,
+            "title": "Boolean",
+            "type": "boolean"
+          },
+          "name": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
+          },
+          "projects_tasks": {
+            "$ref": "#/components/schemas/projects_tasks_arr_rel_insert_input"
+          },
+          "start_date": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp"
+          }
+        },
+        "title": "projects_insert_input",
+        "type": "object"
+      },
+      "projects_update_column!": {
+        "description": "update columns of table \"projects\"",
+        "enum": [
+          "created_at",
+          "description",
+          "end_date",
+          "id",
+          "is_active",
+          "name",
+          "start_date",
+          "updated_at"
+        ],
+        "nullable": false,
+        "title": "projects_update_column"
+      },
+      "projects_constraint!": {
+        "description": "unique or primary key constraints on table \"projects\"",
+        "enum": [
+          "projects_pkey"
+        ],
+        "nullable": false,
+        "title": "projects_constraint"
+      },
+      "projects_on_conflict": {
+        "description": "on_conflict condition type for table \"projects\"",
+        "nullable": true,
+        "properties": {
+          "constraint": {
+            "$ref": "#/components/schemas/projects_constraint!"
+          },
+          "update_columns": {
+            "items": {
+              "$ref": "#/components/schemas/projects_update_column!"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "where": {
+            "$ref": "#/components/schemas/projects_bool_exp"
+          }
+        },
+        "title": "projects_on_conflict",
+        "type": "object"
+      },
+      "projects_obj_rel_insert_input": {
+        "description": "input type for inserting object relation for remote table \"projects\"",
+        "nullable": true,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/projects_insert_input!"
+          },
+          "on_conflict": {
+            "$ref": "#/components/schemas/projects_on_conflict"
+          }
+        },
+        "title": "projects_obj_rel_insert_input",
+        "type": "object"
+      },
+      "timesheets_update_column!": {
+        "description": "update columns of table \"timesheets\"",
+        "enum": [
+          "client_id",
+          "created_at",
+          "freelance_id",
+          "id",
+          "project_task_id",
+          "updated_at",
+          "working_date",
+          "working_durations"
+        ],
+        "nullable": false,
+        "title": "timesheets_update_column"
+      },
+      "timesheets_constraint!": {
+        "description": "unique or primary key constraints on table \"timesheets\"",
+        "enum": [
+          "timesheets_pkey"
+        ],
+        "nullable": false,
+        "title": "timesheets_constraint"
+      },
+      "timesheets_on_conflict": {
+        "description": "on_conflict condition type for table \"timesheets\"",
+        "nullable": true,
+        "properties": {
+          "constraint": {
+            "$ref": "#/components/schemas/timesheets_constraint!"
+          },
+          "update_columns": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_update_column!"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "where": {
+            "$ref": "#/components/schemas/timesheets_bool_exp"
+          }
+        },
+        "title": "timesheets_on_conflict",
+        "type": "object"
+      },
+      "timesheets_arr_rel_insert_input": {
+        "description": "input type for inserting array relation for remote table \"timesheets\"",
+        "nullable": true,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/timesheets_insert_input!"
+            },
+            "nullable": false,
+            "type": "array"
+          },
+          "on_conflict": {
+            "$ref": "#/components/schemas/timesheets_on_conflict"
+          }
+        },
+        "title": "timesheets_arr_rel_insert_input",
+        "type": "object"
+      },
+      "projects_tasks_insert_input!": {
+        "description": "input type for inserting data into table \"projects_tasks\"",
+        "nullable": false,
+        "properties": {
+          "created_at": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "date": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "id": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "project": {
+            "$ref": "#/components/schemas/projects_obj_rel_insert_input"
+          },
+          "project_id": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "task_description": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_arr_rel_insert_input"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/timestamp"
+          }
+        },
+        "title": "projects_tasks_insert_input",
         "type": "object"
       },
       "projects_tasks_obj_rel_insert_input": {
@@ -2875,6 +3635,9 @@
             "title": "String",
             "type": "string"
           },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_arr_rel_insert_input"
+          },
           "updated_at": {
             "$ref": "#/components/schemas/timestamp"
           }
@@ -2894,92 +3657,6 @@
         ],
         "nullable": false,
         "title": "clients_update_column"
-      },
-      "clients_bool_exp!": {
-        "description": "Boolean expression to filter rows from the table \"clients\". All fields are combined with a logical 'AND'.",
-        "nullable": false,
-        "properties": {
-          "_and": {
-            "items": {
-              "$ref": "#/components/schemas/clients_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_not": {
-            "$ref": "#/components/schemas/clients_bool_exp"
-          },
-          "_or": {
-            "items": {
-              "$ref": "#/components/schemas/clients_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          },
-          "email": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "id": {
-            "$ref": "#/components/schemas/uuid_comparison_exp"
-          },
-          "name": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "phone": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          }
-        },
-        "title": "clients_bool_exp",
-        "type": "object"
-      },
-      "clients_bool_exp": {
-        "description": "Boolean expression to filter rows from the table \"clients\". All fields are combined with a logical 'AND'.",
-        "nullable": true,
-        "properties": {
-          "_and": {
-            "items": {
-              "$ref": "#/components/schemas/clients_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_not": {
-            "$ref": "#/components/schemas/clients_bool_exp"
-          },
-          "_or": {
-            "items": {
-              "$ref": "#/components/schemas/clients_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          },
-          "email": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "id": {
-            "$ref": "#/components/schemas/uuid_comparison_exp"
-          },
-          "name": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "phone": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          }
-        },
-        "title": "clients_bool_exp",
-        "type": "object"
       },
       "clients_constraint!": {
         "description": "unique or primary key constraints on table \"clients\"",
@@ -3024,10 +3701,6 @@
         "title": "clients_obj_rel_insert_input",
         "type": "object"
       },
-      "numeric": {
-        "nullable": true,
-        "title": "numeric"
-      },
       "freelances_insert_input!": {
         "description": "input type for inserting data into table \"freelances\"",
         "nullable": false,
@@ -3046,6 +3719,14 @@
           "id": {
             "$ref": "#/components/schemas/uuid"
           },
+          "password": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
+          },
+          "timesheets": {
+            "$ref": "#/components/schemas/timesheets_arr_rel_insert_input"
+          },
           "updated_at": {
             "$ref": "#/components/schemas/timestamp"
           }
@@ -3060,139 +3741,11 @@
           "daily_rate",
           "email",
           "id",
+          "password",
           "updated_at"
         ],
         "nullable": false,
         "title": "freelances_update_column"
-      },
-      "numeric!": {
-        "nullable": false,
-        "title": "numeric"
-      },
-      "numeric_comparison_exp": {
-        "description": "Boolean expression to compare columns of type \"numeric\". All fields are combined with logical 'AND'.",
-        "nullable": true,
-        "properties": {
-          "_eq": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_gt": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_gte": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_in": {
-            "items": {
-              "$ref": "#/components/schemas/numeric!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_is_null": {
-            "nullable": true,
-            "title": "Boolean",
-            "type": "boolean"
-          },
-          "_lt": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_lte": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_neq": {
-            "$ref": "#/components/schemas/numeric"
-          },
-          "_nin": {
-            "items": {
-              "$ref": "#/components/schemas/numeric!"
-            },
-            "nullable": true,
-            "type": "array"
-          }
-        },
-        "title": "numeric_comparison_exp",
-        "type": "object"
-      },
-      "freelances_bool_exp!": {
-        "description": "Boolean expression to filter rows from the table \"freelances\". All fields are combined with a logical 'AND'.",
-        "nullable": false,
-        "properties": {
-          "_and": {
-            "items": {
-              "$ref": "#/components/schemas/freelances_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_not": {
-            "$ref": "#/components/schemas/freelances_bool_exp"
-          },
-          "_or": {
-            "items": {
-              "$ref": "#/components/schemas/freelances_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          },
-          "daily_rate": {
-            "$ref": "#/components/schemas/numeric_comparison_exp"
-          },
-          "email": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "id": {
-            "$ref": "#/components/schemas/uuid_comparison_exp"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          }
-        },
-        "title": "freelances_bool_exp",
-        "type": "object"
-      },
-      "freelances_bool_exp": {
-        "description": "Boolean expression to filter rows from the table \"freelances\". All fields are combined with a logical 'AND'.",
-        "nullable": true,
-        "properties": {
-          "_and": {
-            "items": {
-              "$ref": "#/components/schemas/freelances_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "_not": {
-            "$ref": "#/components/schemas/freelances_bool_exp"
-          },
-          "_or": {
-            "items": {
-              "$ref": "#/components/schemas/freelances_bool_exp!"
-            },
-            "nullable": true,
-            "type": "array"
-          },
-          "created_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          },
-          "daily_rate": {
-            "$ref": "#/components/schemas/numeric_comparison_exp"
-          },
-          "email": {
-            "$ref": "#/components/schemas/String_comparison_exp"
-          },
-          "id": {
-            "$ref": "#/components/schemas/uuid_comparison_exp"
-          },
-          "updated_at": {
-            "$ref": "#/components/schemas/timestamp_comparison_exp"
-          }
-        },
-        "title": "freelances_bool_exp",
-        "type": "object"
       },
       "freelances_constraint!": {
         "description": "unique or primary key constraints on table \"freelances\"",
@@ -3331,6 +3884,11 @@
           },
           "id": {
             "$ref": "#/components/schemas/uuid"
+          },
+          "password": {
+            "nullable": true,
+            "title": "String",
+            "type": "string"
           },
           "updated_at": {
             "$ref": "#/components/schemas/timestamp"

@@ -1,14 +1,15 @@
-import { type Client } from "~/lib/client";
-import { getClients } from "~/services/clients";
 import dayjs from "dayjs";
+import { Layout } from "~/components/layout";
 import { useAuth } from "~/context/AuthContext";
+import type { Client } from "~/lib/client";
+import { getClients } from "~/services/clients";
 
 export default function Clients({ clients }: { clients: Client[] }) {
-	const { user } = useAuth();
-	console.log(user);
+	const auth = useAuth();
+	console.log(auth?.user);
 
 	return (
-		<>
+		<Layout>
 			<h1>Clients</h1>
 			<table>
 				<thead>
@@ -28,13 +29,16 @@ export default function Clients({ clients }: { clients: Client[] }) {
 							<td>{client?.name}</td>
 							<td>{client?.email}</td>
 							<td>{client?.phone}</td>
-							<td>{dayjs(client.created_at).format('DD-MM-YYYY')}</td>
-							<td>{client.updated_at && dayjs(client.updated_at).format('DD-MM-YYYY')}</td>
+							<td>{dayjs(client.created_at).format("DD-MM-YYYY")}</td>
+							<td>
+								{client.updated_at &&
+									dayjs(client.updated_at).format("DD-MM-YYYY")}
+							</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
-		</>
+		</Layout>
 	);
 }
 
