@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
+import './layout.css'
+
 import { useAuth } from "~/context/AuthContext";
 
 export const Layout = ({ children }: PropsWithChildren) => {
@@ -8,7 +10,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
 
 	return (
 		<div className="flex">
-			<aside className="h-screen top-0 sticky bg-gray-200 min-w-[200px] py-4 px-2">
+			<aside>
 				<nav>
 					<ul>
 						<li>
@@ -32,9 +34,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
 					</ul>
 				</nav>
 			</aside>
-			<main className="w-full">
-				<div className="p-4">{children}</div>
-			</main>
+			<div className={'main'}>
+				{children}
+			</div>
 		</div>
 	);
 };
