@@ -1,3 +1,4 @@
+import { AppShell } from "@mantine/core";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
@@ -9,8 +10,22 @@ export const Layout = ({ children }: PropsWithChildren) => {
 	const auth = useAuth();
 
 	return (
-		<div className="flex">
-			<aside>
+		<AppShell
+			header={{ height: 60 }}
+			navbar={{
+				width: 250,
+				breakpoint: "sm",
+			}}
+			padding="md"
+		>
+			<AppShell.Header>
+				<div>Logo</div>
+				<button type="button" onClick={() => auth?.logout()}>
+					Logout
+				</button>
+			</AppShell.Header>
+
+			<AppShell.Navbar p="md">
 				<nav>
 					<ul>
 						<li>
@@ -25,18 +40,11 @@ export const Layout = ({ children }: PropsWithChildren) => {
 						<li>
 							<Link href="/admin/timesheets">Timesheets</Link>
 						</li>
-						<hr style={{marginTop: '1rem', marginBottom: '1rem'}} />
-						<li>
-							<button type="button" onClick={() => auth?.logout()}>
-								Logout
-							</button>
-						</li>
 					</ul>
 				</nav>
-			</aside>
-			<div className={'main'}>
-				{children}
-			</div>
-		</div>
+			</AppShell.Navbar>
+
+			<AppShell.Main>{children}</AppShell.Main>
+		</AppShell>
 	);
 };

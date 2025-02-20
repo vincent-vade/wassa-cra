@@ -6,15 +6,25 @@ import { ToasterProvider } from "~/context/ToastContext";
 
 import Toaster from "~/components/Toaster";
 
-import "../styles/table.css";
+import "@mantine/core/styles.css";
+
+// import "../styles/table.css";
+
+import { MantineProvider, createTheme } from "@mantine/core";
+
+const theme = createTheme({
+	/** Put your mantine theme override here */
+});
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
-		<ToasterProvider>
-			<AuthProvider>
-				<Component {...pageProps} />
-				<Toaster />
-			</AuthProvider>
-		</ToasterProvider>
+    <ToasterProvider>
+			<MantineProvider theme={theme}>
+				<AuthProvider>
+					<Component {...pageProps} />
+					<Toaster />
+				</AuthProvider>
+			</MantineProvider>
+      </ToasterProvider>
 	);
 }
