@@ -23,7 +23,7 @@ export function NumberInput({
 	handleChange,
 	defaultValue,
 }: InputNumberProps) {
-	const [value, setValue] = useState(defaultValue | 0);
+	const [value, setValue] = useState(defaultValue ?? 0);
 
 	const handleAdd = (taskId, idx) => () => {
 		const newValue = increment(value);
@@ -53,7 +53,7 @@ export function NumberInput({
 				max="1"
 				step="0.5"
 				disabled={disabled}
-				value={value}
+				defaultValue={value}
 				style={{ width: "20px" }}
 				className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border-none rounded-md py-2  text-center transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 focus:shadow appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 			/>

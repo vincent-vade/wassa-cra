@@ -214,6 +214,225 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/rest/timesheets/period/{period}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * timesheets_by_period
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query timesheets_by_period($period: String!) {
+         *       timesheets(where: {working_date: {_eq: $period}}) {
+         *         id
+         *         client_id
+         *         client {
+         *           name
+         *         }
+         *       	project_task_id
+         *         projects_task {
+         *           task_description
+         *           project_id
+         *           project {
+         *             name
+         *             description
+         *           }
+         *         }
+         *         created_at
+         *         updated_at
+         *         working_date
+         *         working_durations
+         *       }
+         *     }
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"period" is required (enter it either in parameters or request body)_ */
+                    period: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        period?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/timesheets/period/{period} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            timesheets?: {
+                                /**
+                                 * clients
+                                 * @description columns and relationships of "clients"
+                                 */
+                                client?: {
+                                    /** String */
+                                    name?: string;
+                                };
+                                client_id?: components["schemas"]["uuid!"];
+                                created_at?: components["schemas"]["timestamp!"];
+                                id?: components["schemas"]["uuid!"];
+                                project_task_id?: components["schemas"]["uuid!"];
+                                /**
+                                 * projects_tasks
+                                 * @description columns and relationships of "projects_tasks"
+                                 */
+                                projects_task?: {
+                                    /**
+                                     * projects
+                                     * @description columns and relationships of "projects"
+                                     */
+                                    project?: {
+                                        /** String */
+                                        description?: string | null;
+                                        /** String */
+                                        name?: string;
+                                    };
+                                    project_id?: components["schemas"]["uuid!"];
+                                    /** String */
+                                    task_description?: string | null;
+                                };
+                                updated_at?: components["schemas"]["timestamp"];
+                                /** String */
+                                working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        /**
+         * update_timesheet_by_period
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     mutation UpdateTimesheetByPeriod($period: String!, $project_task_id: uuid!, $newData: timesheets_set_input!) {
+         *       update_timesheets(
+         *         where: {
+         *           working_date: { _eq: $period}
+         *           project_task_id: { _eq: $project_task_id }
+         *         },
+         *         _set: $newData
+         *       ) {
+         *         affected_rows
+         *         returning {
+         *           id
+         *           working_date
+         *           working_durations
+         *           freelance_id
+         *           projects_task {
+         *             task_description
+         *             project {
+         *               name
+         *               description
+         *             }
+         *           }
+         *         }
+         *       }
+         *     }
+         *     ```
+         */
+        put: {
+            parameters: {
+                query?: {
+                    /** @description _"project_task_id" is required (enter it either in parameters or request body)_ */
+                    project_task_id?: string;
+                };
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"period" is required (enter it either in parameters or request body)_ */
+                    period: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody: {
+                content: {
+                    "application/json": {
+                        newData?: components["schemas"]["timesheets_set_input!"];
+                        /** String */
+                        period?: string;
+                        project_task_id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for PUT /api/rest/timesheets/period/{period} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * timesheets_mutation_response
+                             * @description response of any mutation on the table "timesheets"
+                             */
+                            update_timesheets?: {
+                                /** Int */
+                                affected_rows?: number;
+                                returning?: {
+                                    freelance_id?: components["schemas"]["uuid!"];
+                                    id?: components["schemas"]["uuid!"];
+                                    /**
+                                     * projects_tasks
+                                     * @description columns and relationships of "projects_tasks"
+                                     */
+                                    projects_task?: {
+                                        /**
+                                         * projects
+                                         * @description columns and relationships of "projects"
+                                         */
+                                        project?: {
+                                            /** String */
+                                            description?: string | null;
+                                            /** String */
+                                            name?: string;
+                                        };
+                                        /** String */
+                                        task_description?: string | null;
+                                    };
+                                    /** String */
+                                    working_date?: string;
+                                    working_durations?: components["schemas"]["jsonb"];
+                                }[];
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/rest/timesheets/{id}": {
         parameters: {
             query?: never;
@@ -430,6 +649,130 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rest/timesheets/project-task/{project_task_id}/period/{period}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * timesheet_by_project_task_id_and_period
+         * @description ***
+         *     The GraphQl query for this endpoint is:
+         *     ``` graphql
+         *     query timesheet_by_project_task_id_and_period($period: String!,$project_task_id: uuid!) {
+         *       timesheets(
+         *         where: {
+         *           working_date: {_eq: $period}
+         *           project_task_id: {_eq: $project_task_id}
+         *         }
+         *       ) {
+         *         id
+         *         client_id
+         *         client {
+         *           name
+         *         }
+         *       	project_task_id
+         *         projects_task {
+         *           task_description
+         *           project_id
+         *           project {
+         *             name
+         *             description
+         *           }
+         *         }
+         *         created_at
+         *         updated_at
+         *         working_date
+         *         working_durations
+         *       }
+         *     }
+         *     ```
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
+                    "x-hasura-admin-secret"?: string;
+                };
+                path: {
+                    /** @description _"period" is required (enter it either in parameters or request body)_ */
+                    period: string;
+                    /** @description _"project_task_id" is required (enter it either in parameters or request body)_ */
+                    project_task_id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Query parameters can also be provided in the request body as a JSON object */
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** String */
+                        period?: string;
+                        project_task_id?: components["schemas"]["uuid!"];
+                    };
+                };
+            };
+            responses: {
+                /** @description Responses for GET /api/rest/timesheets/project-task/{project_task_id}/period/{period} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            timesheets?: {
+                                /**
+                                 * clients
+                                 * @description columns and relationships of "clients"
+                                 */
+                                client?: {
+                                    /** String */
+                                    name?: string;
+                                };
+                                client_id?: components["schemas"]["uuid!"];
+                                created_at?: components["schemas"]["timestamp!"];
+                                id?: components["schemas"]["uuid!"];
+                                project_task_id?: components["schemas"]["uuid!"];
+                                /**
+                                 * projects_tasks
+                                 * @description columns and relationships of "projects_tasks"
+                                 */
+                                projects_task?: {
+                                    /**
+                                     * projects
+                                     * @description columns and relationships of "projects"
+                                     */
+                                    project?: {
+                                        /** String */
+                                        description?: string | null;
+                                        /** String */
+                                        name?: string;
+                                    };
+                                    project_id?: components["schemas"]["uuid!"];
+                                    /** String */
+                                    task_description?: string | null;
+                                };
+                                updated_at?: components["schemas"]["timestamp"];
+                                /** String */
+                                working_date?: string;
+                                working_durations?: components["schemas"]["jsonb"];
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;

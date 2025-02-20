@@ -52,12 +52,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 	const login = useCallback(async (email: string, password: string) => {
 		const response = await auth.login(email, password);
 		if (response.ok) {
+			toaster.addToast("Logged. You will be redirected soon...", "success");
+
 			setTimeout(() => {
 				router.push("/admin");
 			}, 3000);
-			toaster?.addToast("Logged. You will be redirected soon...", "success");
+		} else {
+			toaster.addToast("Invalid credentials", "error");
 		}
-		toaster?.addToast("Invalid credentials", "error");
 	}, []);
 
 	const value = useMemo(() => ({ user, logout, login }), [login, logout, user]);

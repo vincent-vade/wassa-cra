@@ -19,6 +19,12 @@ export type Timesheets =
 export type TimesheetsByPeriod =
 	paths['/api/rest/timesheets/period/{period}']["get"]["responses"]["200"]["content"]["application/json"]["timesheets"];
 
+export type TimesheetByProjectTaskIdAndPeriod =
+	paths['/api/rest/timesheets/project-task/{project_task_id}/period/{period}']['get']['responses']['200']['content']['application/json']['timesheets'];
+
+export type UpdateTimesheetByPeriod =
+	paths['/api/rest/timesheets/period/{period}']["put"]["requestBody"]["content"]["application/json"];
+
 export type Project =
 	paths["/api/rest/projects/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["projects_by_pk"];
 export type Projects =

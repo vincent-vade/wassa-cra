@@ -10,11 +10,11 @@ import "../styles/table.css";
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
-		<AuthProvider>
-			<ToasterProvider>
+		<ToasterProvider>
+			<AuthProvider>
 				<Component {...pageProps} />
 				<Toaster />
-			</ToasterProvider>
-		</AuthProvider>
+			</AuthProvider>
+		</ToasterProvider>
 	);
 }

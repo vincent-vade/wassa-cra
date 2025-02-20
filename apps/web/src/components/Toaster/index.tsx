@@ -12,7 +12,7 @@ const Toaster = () => {
 				<div key={toast.id} className={`toast ${toast.type}`}>
 					<span>{toast.message}</span>
 					<button type="button" onClick={() => removeToast(toast.id)}>
-						×
+						&nbsp;×&nbsp;
 					</button>
 				</div>
 			))}

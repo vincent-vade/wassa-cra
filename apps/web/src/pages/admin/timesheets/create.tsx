@@ -179,9 +179,9 @@ export default function CreateTimesheetPage({
 		const results = await Promise.allSettled(promises);
 
 		if (isAllPromiseSettled(results)) {
-			toaster("Timesheet created successfully!", "success");
+			toaster.addToast("Timesheet created successfully!", "success");
 		} else {
-			toaster("An error occurred while creating the timesheet!", "error");
+			toaster.addToast("An error occurred while creating the timesheet!", "error");
 		}
 	};
 

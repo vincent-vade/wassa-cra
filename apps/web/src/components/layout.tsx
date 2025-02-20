@@ -1,16 +1,16 @@
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
+import './layout.css'
+
 import { useAuth } from "~/context/AuthContext";
-import { useToaster } from "~/context/ToastContext";
 
 export const Layout = ({ children }: PropsWithChildren) => {
 	const auth = useAuth();
-	const { addToast } = useToaster();
 
 	return (
 		<div className="flex">
-			<aside className="h-screen top-0 sticky bg-gray-200 min-w-[200px] py-4 px-2">
+			<aside>
 				<nav>
 					<ul>
 						<li>
@@ -25,20 +25,18 @@ export const Layout = ({ children }: PropsWithChildren) => {
 						<li>
 							<Link href="/admin/timesheets">Timesheets</Link>
 						</li>
+						<hr style={{marginTop: '1rem', marginBottom: '1rem'}} />
+						<li>
+							<button type="button" onClick={() => auth?.logout()}>
+								Logout
+							</button>
+						</li>
 					</ul>
 				</nav>
 			</aside>
-			<main className="w-full">
-				<nav>
-					<button type="button" onClick={() => auth?.logout()}>
-						Logout
-					</button>
-					<button type="button" onClick={() => addToast("Success", "success")}>
-						Success
-					</button>
-				</nav>
-				<div className="p-4">{children}</div>
-			</main>
+			<div className={'main'}>
+				{children}
+			</div>
 		</div>
 	);
 };

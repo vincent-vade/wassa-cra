@@ -6,7 +6,7 @@ import {Tasks, Task} from "~/pages/timesheets/create";
 
 const EmptyRow = () => {
     return (<tr>
-        <td colSpan={9} align={'center'} style={{color: '#CC0000', fontStyle: 'italic'}}>Please select a project and add some task(s)...</td>
+        <td colSpan={33} align={'left'} style={{color: '#CC0000', fontStyle: 'italic'}}>Please select a project and add some task(s)...</td>
     </tr>)
 }
 
