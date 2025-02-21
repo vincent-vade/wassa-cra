@@ -1,42 +1,66 @@
-import { type FormEvent, useState } from "react";
+// import "./login.css";
 
-import "./login.css";
+import { Box, Button, Group, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
+
 import { useAuth } from "~/context/AuthContext";
 
 const LoginPage = () => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const form = useForm({
+		initialValues: {
+			email: "",
+			password: "",
+		},
+		validate: {
+			email: (value: string) =>
+				/^\S+@\S+$/.test(value) ? null : "Invalid email",
+		},
+	});
 
 	const auth = useAuth();
 
-	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		auth?.login(email, password);
-	};
-
 	return (
-		<div className="login container">
-			<div className="form-container">
+		<Group grow gap="lg" justify="center" h="100vh">
+			<Box>
 				<h1>Login</h1>
-				<form className="form" onSubmit={handleLogin}>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="Email"
+			</Box>
+			<Box p="lg">
+				<form
+					onSubmit={form.onSubmit((values) => {
+						auth?.login(values.email, values.password);
+					})}
+				>
+					<TextInput
+						label="Email"
 						name="email"
+						size="lg"
+						key={form.key("email")}
+						withAsterisk
+						mb="lg"
+						{...form.getInputProps("email")}
 					/>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="Password"
+					<TextInput
+						label="Password"
 						name="password"
+						type="password"
+						size="lg"
+						key={form.key("password")}
+						withAsterisk
+						mb="lg"
+						{...form.getInputProps("password")}
 					/>
-					<button type="submit">Login</button>
+
+					<Button
+						variant="filled"
+						type="submit"
+						size="lg"
+						style={{ float: "right" }}
+					>
+						Login
+					</Button>
 				</form>
-			</div>
-		</div>
+			</Box>
+		</Group>
 	);
 };
 
