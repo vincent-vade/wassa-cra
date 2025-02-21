@@ -14,6 +14,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
 				<nav>
 					<ul>
 						<li>
+							<Link href="/admin">Dashboard</Link>
+						</li>
+						<li>
 							<Link href="/admin/projects">Projects</Link>
 						</li>
 						<li>
