@@ -12,17 +12,27 @@ async function addProjects() {
 	await prisma.$connect();
 
 	try {
+		const client1 = await prisma.clients.create({
+			data: {
+				name: "Chanel",
+				email: "contact@chanel.com",
+				phone: "+1234567890",
+			}
+		});
+
 		const project1 = await prisma.projects.create({
 			data: {
 				is_active: true,
-				name: "Headless ONE"
+				name: "Headless ONE",
+				client_id: client1.id,
 			}
 		})
 
 		const project2 = await prisma.projects.create({
 			data: {
 				is_active: true,
-				name: "Puls"
+				name: "Puls",
+				client_id: client1.id,
 			}
 		})
 

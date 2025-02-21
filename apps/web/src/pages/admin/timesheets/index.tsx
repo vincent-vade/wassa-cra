@@ -1,3 +1,4 @@
+import { getCookie } from 'cookies-next/server';
 import {
 	createTimesheet,
 	getTimesheetsByPeriod,
@@ -18,6 +19,7 @@ import {getProjectTasksByProjectId} from "~/services/projectTasks";
 import {ProjectSelection, Task, Tasks, TaskSelection} from "~/pages/admin/timesheets/create";
 import {FetchResponse} from "openapi-fetch";
 import {useAuth} from "~/context/AuthContext";
+import {GetServerSideProps, GetServerSidePropsContext} from "next";
 
 const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a";
 const client_id = "728f81cd-45ab-4cb8-92b6-956fc5c5d256";
@@ -233,15 +235,15 @@ export default function Timesheets({
 			return;
 		}
 
-		const response = await getTimesheetsByPeriod(timesheetDate)
+		// const response = await getTimesheetsByPeriod(auth?.user?.id, timesheetDate)
 
-		console.log('response', response)
+		const promises = tasks.map(async (task: Task) => {
 
-		const promises = tasks.map(async (task) => {
-
-			const response = await getTimesheetsByProjectTaskIdAndPeriod(timesheetDate, task.projectTaskId)
+			const response = await getTimesheetsByProjectTaskIdAndPeriod(auth?.user?.id, timesheetDate, task.projectTaskId)
 
 			if (response.length === 0) {
+				console.log('no timesheet found for this projectTaskId and period')
+
 				return await createTimesheet({
 					object: {
 						working_durations: task.row,
@@ -252,7 +254,7 @@ export default function Timesheets({
 					},
 				} as CreateTimesheet);
 			} else {
-				return await updateTimesheetByPeriod(timesheetDate, task.projectTaskId, task.row)
+				return await updateTimesheetByPeriod(auth?.user?.id, timesheetDate, task.projectTaskId, task.row)
 			}
 		});
 
@@ -293,6 +295,7 @@ export default function Timesheets({
 
 	useEffect(() => {
 		console.log('tasks.length', tasks.length)
+		console.log('timesheetDate', timesheetDate)
 		if (tasks.length === 0) {
 			const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
 			setTasks(tasksFromLocalStorage);
@@ -333,6 +336,7 @@ export default function Timesheets({
 	}, [tasks]);
 
 	useEffect(() => {
+		console.log("timesheetDate has been updated", timesheetDate);
 		timesheetDateRef.current = timesheetDate;
 	}, [timesheetDate]);
 
@@ -363,13 +367,17 @@ export default function Timesheets({
 	);
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 	const currentDate = dayjs().format("YYYY-MM");
+	const freelance_id = await getCookie('token', {
+		req: ctx.req,
+		res: ctx.res
+	})
 
 	return {
 		props: {
 			projects: await getProjects(),
-			timesheets: await getTimesheetsByPeriod(currentDate)
+			timesheets: await getTimesheetsByPeriod(freelance_id, currentDate)
 		},
 	};
 }
