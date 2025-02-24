@@ -1,4 +1,5 @@
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "~/styles/globals.css";
 
 import {
@@ -9,9 +10,8 @@ import {
 import type { AppProps } from "next/app";
 
 import { AuthProvider } from "~/context/AuthContext";
-import { ToasterProvider } from "~/context/ToastContext";
 
-import Toaster from "~/components/Toaster";
+import { Notifications } from "@mantine/notifications";
 
 const base: MantineColorsTuple = [
 	"#eeedff",
@@ -35,13 +35,11 @@ const theme = createTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
-		<ToasterProvider>
-			<MantineProvider theme={theme}>
-				<AuthProvider>
-					<Component {...pageProps} />
-					<Toaster />
-				</AuthProvider>
-			</MantineProvider>
-		</ToasterProvider>
+		<MantineProvider theme={theme}>
+			<AuthProvider>
+				<Component {...pageProps} />
+				<Notifications />
+			</AuthProvider>
+		</MantineProvider>
 	);
 }

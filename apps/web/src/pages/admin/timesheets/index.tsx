@@ -2,22 +2,32 @@ import {
 	createTimesheet,
 	getTimesheetsByPeriod,
 	getTimesheetsByProjectTaskIdAndPeriod,
-	updateTimesheetByPeriod
+	updateTimesheetByPeriod,
 } from "~/services/timesheets";
 
-import { Layout } from "~/components/layout";
-import {TimesheetHeader} from "~/components/TimesheetHeader";
-import {Timesheet} from "~/components/Timesheet";
-import {getProjects} from "~/services/projects";
-import {useEffect, useRef, useState} from "react";
+import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
-import {getAllDaysInCurrentMonth} from "~/lib/date";
-import type {CreateTimesheet, Project, ProjectTasks, TimesheetsByPeriod} from "~/lib/client";
-import {useToaster} from "~/context/ToastContext";
-import {getProjectTasksByProjectId} from "~/services/projectTasks";
-import {ProjectSelection, Task, Tasks, TaskSelection} from "~/pages/admin/timesheets/create";
-import {FetchResponse} from "openapi-fetch";
-import {useAuth} from "~/context/AuthContext";
+import type { FetchResponse } from "openapi-fetch";
+import { useEffect, useRef, useState } from "react";
+import { Timesheet } from "~/components/Timesheet";
+import { TimesheetHeader } from "~/components/TimesheetHeader";
+import { Layout } from "~/components/layout";
+import { useAuth } from "~/context/AuthContext";
+import type {
+	CreateTimesheet,
+	Project,
+	ProjectTasks,
+	TimesheetsByPeriod,
+} from "~/lib/client";
+import { getAllDaysInCurrentMonth } from "~/lib/date";
+import {
+	ProjectSelection,
+	Task,
+	TaskSelection,
+	Tasks,
+} from "~/pages/admin/timesheets/create";
+import { getProjectTasksByProjectId } from "~/services/projectTasks";
+import { getProjects } from "~/services/projects";
 
 const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a";
 const client_id = "728f81cd-45ab-4cb8-92b6-956fc5c5d256";
@@ -42,8 +52,7 @@ const buildTimesheetDate = (month) => {
 const isStatusFullfilled = ({ status }: { status: string }) =>
 	status === "fulfilled";
 
-const isResponseOk = ({ value }: FetchResponse) =>
-	value.response.ok;
+const isResponseOk = ({ value }: FetchResponse) => value.response.ok;
 
 const isAllPromiseFullfilled = (promises: PromiseSettledResult<any>[]) => {
 	return promises.every(isStatusFullfilled);
@@ -101,7 +110,7 @@ const buildErrorMessage = (results: PromiseSettledResult<any>[]) => {
 		.map((result) => `${result.value.error.code}: ${result.value.error.error}`);
 
 	return errors.join(" - ");
-}
+};
 
 /**
  * Data from localStorage working with Timesheets component
@@ -146,14 +155,14 @@ const buildTasks = (timesheets) => {
 			taskTitle: timesheet.projects_task.task_description,
 			row: timesheet.working_durations,
 		};
-	})
-}
+	});
+};
 
 export default function Timesheets({
 	projects,
 	timesheets,
-}: { projects: Project[], timesheets: TimesheetsByPeriod }) {
-	console.log('timesheets', timesheets)
+}: { projects: Project[]; timesheets: TimesheetsByPeriod }) {
+	console.log("timesheets", timesheets);
 	const [month, setMonth] = useState<number>(dayjs().get("month") + 1);
 	const [nbDays, setNbDays] = useState<number>(
 		getAllDaysInCurrentMonth(dayjs().get("month") + 1).length,
@@ -168,8 +177,7 @@ export default function Timesheets({
 	const [project, setProject] = useState<ProjectSelection>(null);
 	const [task, setTask] = useState<TaskSelection>(null);
 
-	const toaster = useToaster();
-	const auth = useAuth()
+	const auth = useAuth();
 
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
@@ -233,13 +241,15 @@ export default function Timesheets({
 			return;
 		}
 
-		const response = await getTimesheetsByPeriod(timesheetDate)
+		const response = await getTimesheetsByPeriod(timesheetDate);
 
-		console.log('response', response)
+		console.log("response", response);
 
 		const promises = tasks.map(async (task) => {
-
-			const response = await getTimesheetsByProjectTaskIdAndPeriod(timesheetDate, task.projectTaskId)
+			const response = await getTimesheetsByProjectTaskIdAndPeriod(
+				timesheetDate,
+				task.projectTaskId,
+			);
 
 			if (response.length === 0) {
 				return await createTimesheet({
@@ -252,22 +262,38 @@ export default function Timesheets({
 					},
 				} as CreateTimesheet);
 			} else {
-				return await updateTimesheetByPeriod(timesheetDate, task.projectTaskId, task.row)
+				return await updateTimesheetByPeriod(
+					timesheetDate,
+					task.projectTaskId,
+					task.row,
+				);
 			}
 		});
 
 		const results = await Promise.allSettled(promises);
 
 		if (isAllPromiseFullfilled(results)) {
-			console.log('results', results)
+			console.log("results", results);
 			if (isAllPromiseSucceeded(results)) {
-				toaster.addToast("Timesheet created successfully!", "success");
+				notifications.show({
+					title: "Success",
+					message: "Timesheet created successfully!",
+					color: "green",
+				});
 			} else {
-				const errorMessage = buildErrorMessage(results)
-				toaster.addToast(errorMessage, "error");
+				const errorMessage = buildErrorMessage(results);
+				notifications.show({
+					title: "Error",
+					message: errorMessage,
+					color: "red",
+				});
 			}
 		} else {
-			toaster.addToast("An error occurred while creating the timesheet!", "error");
+			notifications.show({
+				title: "Error",
+				message: "An error occurred while creating the timesheet!",
+				color: "blue",
+			});
 		}
 	};
 
@@ -292,14 +318,15 @@ export default function Timesheets({
 	};
 
 	useEffect(() => {
-		console.log('tasks.length', tasks.length)
+		console.log("tasks.length", tasks.length);
 		if (tasks.length === 0) {
 			const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
 			setTasks(tasksFromLocalStorage);
 		} else {
-			console.log("no tasks to load from localStorage... Data comes fron database");
+			console.log(
+				"no tasks to load from localStorage... Data comes fron database",
+			);
 		}
-
 	}, []);
 
 	useEffect(() => {
@@ -338,7 +365,6 @@ export default function Timesheets({
 
 	return (
 		<Layout>
-
 			<h1>Timesheets</h1>
 
 			<TimesheetHeader
@@ -369,7 +395,7 @@ export async function getServerSideProps() {
 	return {
 		props: {
 			projects: await getProjects(),
-			timesheets: await getTimesheetsByPeriod(currentDate)
+			timesheets: await getTimesheetsByPeriod(currentDate),
 		},
 	};
 }

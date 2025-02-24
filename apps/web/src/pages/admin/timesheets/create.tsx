@@ -1,8 +1,8 @@
+import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { useToaster } from "~/context/ToastContext";
 import type { CreateTimesheet, Project, ProjectTasks } from "~/lib/client";
 import { getAllDaysInCurrentMonth } from "~/lib/date";
 import { getProjectTasksByProjectId } from "~/services/projectTasks";
@@ -100,8 +100,6 @@ export default function CreateTimesheetPage({
 	const [project, setProject] = useState<ProjectSelection>(null);
 	const [task, setTask] = useState<TaskSelection>(null);
 
-	const toaster = useToaster();
-
 	const selectProjectRef = useRef<HTMLSelectElement>(null);
 	const selectTaskRef = useRef<HTMLSelectElement>(null);
 	const tasksRef = useRef<Tasks>(tasks);
@@ -179,9 +177,16 @@ export default function CreateTimesheetPage({
 		const results = await Promise.allSettled(promises);
 
 		if (isAllPromiseSettled(results)) {
-			toaster.addToast("Timesheet created successfully!", "success");
+			notifications.show({
+				title: "Success",
+				message: "Timesheet created successfully!",
+				color: "green",
+			});
 		} else {
-			toaster.addToast("An error occurred while creating the timesheet!", "error");
+			notifications.show({
+				title: "Error",
+				message: "An error occurred while creating the timesheet!",
+			});
 		}
 	};
 
