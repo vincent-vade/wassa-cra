@@ -24,7 +24,7 @@ const LoginPage = () => {
 			email: (value: string) =>
 				!/^\S+@\S+$/.test(value) ? "Invalid email" : null,
 			password: (val: string) =>
-				val.length <= 6
+				!/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(val)
 					? "Password should include at least 6 characters"
 					: null,
 		},
@@ -51,8 +51,6 @@ const LoginPage = () => {
 							key={form.key("email")}
 							withAsterisk
 							size="md"
-							color="base"
-							variant="filled"
 							{...form.getInputProps("email")}
 						/>
 						<PasswordInput
@@ -61,7 +59,6 @@ const LoginPage = () => {
 							key={form.key("password")}
 							withAsterisk
 							size="md"
-							variant="filled"
 							{...form.getInputProps("password")}
 						/>
 					</Stack>
@@ -70,6 +67,7 @@ const LoginPage = () => {
 							component={Link}
 							href="/reset-password"
 							variant="transparent"
+							px={0}
 						>
 							Mot de passe oublié ?
 						</Button>
