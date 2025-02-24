@@ -1,4 +1,4 @@
-import { AppShell, Group, NavLink } from "@mantine/core";
+import { AppShell, Box, Button, Group, NavLink } from "@mantine/core";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
@@ -35,9 +35,16 @@ export const Layout = ({ children }: PropsWithChildren) => {
 					p="md"
 				>
 					<div>Logo</div>
-					<button type="button" onClick={() => auth?.logout()}>
-						Logout
-					</button>
+					<Box>
+						{auth?.user?.email}
+						<Button
+							type="button"
+							onClick={() => auth?.logout()}
+							variant="transparent"
+						>
+							Logout
+						</Button>
+					</Box>
 				</Group>
 			</AppShell.Header>
 

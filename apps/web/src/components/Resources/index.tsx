@@ -11,6 +11,14 @@ export const Resources = <T extends Record<keyof T, unknown>>({
 	columns,
 	data,
 }: { title: string; columns: Column<T>[]; data: ColumnRequireProps<T>[] }) => {
+	if (data.length === 0) {
+		return (
+			<Layout>
+				<Title order={2}>No data</Title>
+			</Layout>
+		);
+	}
+
 	return (
 		<Layout>
 			<Title order={2} mb="md">

@@ -16,3 +16,15 @@ export const getProjectById = async (id: string) => {
 
 	return data?.projects_by_pk as Project;
 };
+
+export const deleteProjectById = async (id: string) => {
+	const { data } = await client.DELETE("/api/rest/projects/{id}", {
+		params: {
+			path: {
+				id,
+			},
+		},
+	});
+
+	return data?.delete_projects_by_pk as Project;
+};

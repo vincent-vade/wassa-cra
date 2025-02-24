@@ -1,14 +1,15 @@
 import { Button, Group } from "@mantine/core";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { type NextRouter, useRouter } from "next/router";
 
 import type { Column } from "~/components/DataTable";
+import { deleteModal } from "~/components/DeleteModal";
 import { Resources } from "~/components/Resources";
-import { useAuth } from "~/context/AuthContext";
 import type { Client } from "~/lib/client";
-import { getClients } from "~/services/clients";
+import { deleteClientById, getClients } from "~/services/clients";
 
-export const columns: Column<Client>[] = [
+export const columns: (routes: NextRouter) => Column<Client>[] = (router) => [
 	{
 		accessor: "id",
 		Header: "ID",
@@ -51,7 +52,19 @@ export const columns: Column<Client>[] = [
 				>
 					Edit
 				</Button>
-				<Button variant="filled" color="red">
+				<Button
+					variant="filled"
+					color="red"
+					onClick={() =>
+						deleteModal({
+							title: `Delete client ${data.name}`,
+							onConfirm: async () => {
+								await deleteClientById(data.id);
+								await router.push("/admin/clients");
+							},
+						})
+					}
+				>
 					Delete
 				</Button>
 			</Group>
@@ -60,9 +73,7 @@ export const columns: Column<Client>[] = [
 ];
 
 export default function Clients({ clients }: { clients: Client[] }) {
-	const auth = useAuth();
-	console.log(auth?.user);
-
+	const router = useRouter();
 	const data = clients?.map((client) => ({
 		id: client?.id as string,
 		name: client?.name,
@@ -72,7 +83,7 @@ export default function Clients({ clients }: { clients: Client[] }) {
 		updated_at: client?.updated_at,
 	}));
 
-	return <Resources title="Clients" columns={columns} data={data} />;
+	return <Resources title="Clients" columns={columns(router)} data={data} />;
 }
 
 export async function getServerSideProps() {

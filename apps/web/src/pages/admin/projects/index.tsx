@@ -1,13 +1,16 @@
-import { Resources } from "~/components/Resources";
-import type { Project } from "~/lib/client";
-import { getProjects } from "~/services/projects";
-
 import { Button, Chip, Group } from "@mantine/core";
 import dayjs from "dayjs";
 import Link from "next/link";
-import type { Column } from "~/components/DataTable";
+import { type NextRouter, useRouter } from "next/router";
 
-export const columns: Column<Project>[] = [
+import { Resources } from "~/components/Resources";
+import type { Project } from "~/lib/client";
+import { deleteProjectById, getProjects } from "~/services/projects";
+
+import type { Column } from "~/components/DataTable";
+import { deleteModal } from "~/components/DeleteModal";
+
+const columns: (router: NextRouter) => Column<Project>[] = (router) => [
 	{
 		accessor: "id",
 		Header: () => "Id",
@@ -55,7 +58,19 @@ export const columns: Column<Project>[] = [
 				>
 					Edit
 				</Button>
-				<Button variant="filled" color="red">
+				<Button
+					variant="filled"
+					color="red"
+					onClick={() =>
+						deleteModal({
+							title: `Delete project ${data.name}`,
+							onConfirm: async () => {
+								await deleteProjectById(data.id);
+								await router.push("/admin/projects");
+							},
+						})
+					}
+				>
 					Delete
 				</Button>
 			</Group>
@@ -64,6 +79,8 @@ export const columns: Column<Project>[] = [
 ];
 
 export default function Projects({ projects }: { projects: Project[] }) {
+	const router = useRouter();
+
 	const data = projects?.map((project) => ({
 		id: project?.id as string,
 		name: project?.name,
@@ -72,7 +89,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
 		is_active: project?.is_active,
 	}));
 
-	return <Resources title="Projects" columns={columns} data={data} />;
+	return <Resources title="Projects" columns={columns(router)} data={data} />;
 }
 
 export async function getServerSideProps() {

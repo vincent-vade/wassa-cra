@@ -27,9 +27,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
 	const router = useRouter();
 	const getCookies = useGetCookies();
+	const cookies = getCookies();
 
 	useEffect(() => {
-		const cookies = getCookies();
 		if (cookies?.token) {
 			getFreelanceById(cookies?.token).then((freelance) => {
 				if (freelance?.id) {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 				}
 			});
 		}
-	}, [getCookies]);
+	}, [cookies?.token]);
 
 	const logout = useCallback(() => {
 		if (hasCookie("token")) {

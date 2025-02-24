@@ -11,6 +11,7 @@ import type { AppProps } from "next/app";
 
 import { AuthProvider } from "~/context/AuthContext";
 
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 
 const base: MantineColorsTuple = [
@@ -37,7 +38,9 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<MantineProvider theme={theme}>
 			<AuthProvider>
-				<Component {...pageProps} />
+				<ModalsProvider>
+					<Component {...pageProps} />
+				</ModalsProvider>
 				<Notifications />
 			</AuthProvider>
 		</MantineProvider>
