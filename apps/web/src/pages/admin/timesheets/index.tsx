@@ -35,7 +35,9 @@ export type Tasks = Task[];
 export type ProjectSelection = { projectId: string; projectName: string };
 export type TaskSelection = { projectTaskId: string; taskTitle: string };
 
-const buildTimesheetDate = (month) => {
+const buildTimesheetDate = (month: number) => {
+	console.log('[buildTimesheetDate] month =>', month)
+
 	return dayjs()
 		.month(month - 1)
 		.format("YYYY-MM");
@@ -152,20 +154,23 @@ const buildTasks = (timesheets) => {
 }
 
 export default function Timesheets({
-	projects,
-	timesheets,
-}: { projects: Project[], timesheets: TimesheetsByPeriod }) {
-	console.log('timesheets', timesheets)
-	const [month, setMonth] = useState<number>(dayjs().get("month") + 1);
+	_freelance_id,
+	_timesheetDate,
+	_month,
+	_projects,
+	// _tasks,
+}: { _freelance_id: string, _timesheetDate: string, _month: number, _projects: Project[], _tasks: TimesheetsByPeriod }) {
+	const [freelance_id, setFreelanceId] = useState<string>(_freelance_id);
+	const [month, setMonth] = useState<number>(_month);
+	const [timesheetDate, setTimesheetDate] = useState<string>(_timesheetDate);
+
 	const [nbDays, setNbDays] = useState<number>(
 		getAllDaysInCurrentMonth(dayjs().get("month") + 1).length,
 	);
-	const [tasks, setTasks] = useState<Tasks>(buildTasks(timesheets));
+	const [tasks, setTasks] = useState<Tasks>([]); // buildTasks(_tasks)
 
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
-	const [timesheetDate, setTimesheetDate] = useState<string>(
-		buildTimesheetDate(month),
-	);
+
 
 	const [project, setProject] = useState<ProjectSelection>(null);
 	const [task, setTask] = useState<TaskSelection>(null);
@@ -222,12 +227,18 @@ export default function Timesheets({
 		const nbDaysPreviousMonth = getAllDaysInCurrentMonth(previousMonth).length;
 		setMonth(previousMonth);
 		setNbDays(nbDaysPreviousMonth);
+		setTimesheetDate(buildTimesheetDate(previousMonth));
+
+		// resetTimesheet();
 	};
 	const handleClickNext = () => {
 		const nextMonth = month + 1;
 		const nbDaysNextMonth = getAllDaysInCurrentMonth(nextMonth).length;
 		setMonth(nextMonth);
 		setNbDays(nbDaysNextMonth);
+		setTimesheetDate(buildTimesheetDate(nextMonth));
+
+		// resetTimesheet();
 	};
 	const handleClickSave = async () => {
 		if (tasks.length === 0) {
@@ -239,7 +250,7 @@ export default function Timesheets({
 
 		const promises = tasks.map(async (task: Task) => {
 
-			const response = await getTimesheetsByProjectTaskIdAndPeriod(auth?.user?.id, timesheetDate, task.projectTaskId)
+			const response = await getTimesheetsByProjectTaskIdAndPeriod(freelance_id, timesheetDate, task.projectTaskId)
 
 			if (response.length === 0) {
 				console.log('no timesheet found for this projectTaskId and period')
@@ -248,13 +259,13 @@ export default function Timesheets({
 					object: {
 						working_durations: task.row,
 						working_date: timesheetDate,
-						client_id: client_id,
-						freelance_id: auth?.user?.id,
+						client_id,
+						freelance_id,
 						project_task_id: task.projectTaskId,
 					},
 				} as CreateTimesheet);
 			} else {
-				return await updateTimesheetByPeriod(auth?.user?.id, timesheetDate, task.projectTaskId, task.row)
+				return await updateTimesheetByPeriod(freelance_id, timesheetDate, task.projectTaskId, task.row)
 			}
 		});
 
@@ -282,8 +293,8 @@ export default function Timesheets({
 		updateTaskById(task);
 	};
 
-	const resetTimesheet = (tasks: Tasks) => {
-		const newTasks = tasks.map((task) => {
+	const resetTimesheet = () => {
+		const newTasks = tasks.map((task: Task) => {
 			return {
 				...task,
 				row: Array.from({ length: nbDays }, () => 0),
@@ -294,49 +305,69 @@ export default function Timesheets({
 	};
 
 	useEffect(() => {
+		console.log('***** INIT *****')
 		console.log('tasks.length', tasks.length)
 		console.log('timesheetDate', timesheetDate)
-		if (tasks.length === 0) {
-			const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
-			setTasks(tasksFromLocalStorage);
-		} else {
-			console.log("no tasks to load from localStorage... Data comes fron database");
-		}
 
+		// if (tasks.length === 0) {
+		// 	const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
+		// 	setTasks(tasksFromLocalStorage);
+		// } else {
+		// 	console.log("no tasks to load from localStorage... Data comes fron database");
+		// }
 	}, []);
 
+	// useEffect(() => {
+	// 	console.log("month has been updated", month);
+	//
+	// 	const newDate = buildTimesheetDate(month);
+	// 	setTimesheetDate(newDate);
+	//
+	// 	// const tasksFromLocalStorage = loadTasksFromLocalStorage(newDate);
+	// 	//
+	// 	// if (tasksFromLocalStorage.length > 0) {
+	// 	// 	setTasks(tasksFromLocalStorage);
+	// 	// }
+	//
+	// 	// return () => {
+	// 	// 	if (Array.isArray(tasksRef.current) && tasksRef.current.length > 0) {
+	// 	// 		saveTasksToLocalStorage(timesheetDateRef.current, tasksRef.current);
+	// 	// 		resetTimesheet(tasks);
+	// 	// 	} else {
+	// 	// 		console.log("no tasks to save...");
+	// 	// 	}
+	// 	// };
+	// }, [month]);
+
+	// useEffect(() => {
+	// 	console.log("nbDays have been updated", nbDays);
+	// }, [nbDays]);
+
 	useEffect(() => {
-		console.log("month has been updated", month);
+		console.log("[useEffect] month has been updated", month);
 
-		const newDate = buildTimesheetDate(month);
-		setTimesheetDate(newDate);
+		;(async () => {
+			console.log('freelance_id =>', freelance_id)
+			console.log('timesheetDate =>', timesheetDate)
+			const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate)
+			console.log('[DB] timesheets', timesheets)
+			setTasks(buildTasks(timesheets))
+		})()
 
-		// const tasksFromLocalStorage = loadTasksFromLocalStorage(newDate);
-		//
-		// if (tasksFromLocalStorage.length > 0) {
-		// 	setTasks(tasksFromLocalStorage);
-		// }
-
-		// return () => {
-		// 	if (Array.isArray(tasksRef.current) && tasksRef.current.length > 0) {
-		// 		saveTasksToLocalStorage(timesheetDateRef.current, tasksRef.current);
-		// 		resetTimesheet(tasks);
-		// 	} else {
-		// 		console.log("no tasks to save...");
-		// 	}
-		// };
-	}, [month]);
+		return () => {
+			console.log('***** CLEANUP *****')
+			console.log('month =>', month)
+			setTasks([])
+		}
+	}, [month])
 
 	useEffect(() => {
-		console.log("nbDays have been updated", nbDays);
-	}, [nbDays]);
-
-	useEffect(() => {
+		console.log("[useEffect] tasks have been updated", tasks);
 		tasksRef.current = tasks;
 	}, [tasks]);
 
 	useEffect(() => {
-		console.log("timesheetDate has been updated", timesheetDate);
+		console.log("[useEffect] timesheetDate has been updated", timesheetDate);
 		timesheetDateRef.current = timesheetDate;
 	}, [timesheetDate]);
 
@@ -353,7 +384,7 @@ export default function Timesheets({
 				handleClickTaskAdd={handleClickTaskAdd}
 				refProjectDropdown={selectProjectRef}
 				refTaskDropdown={selectTaskRef}
-				projects={projects}
+				projects={_projects}
 				projectTasks={projectTasks}
 			/>
 
@@ -376,8 +407,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 	return {
 		props: {
-			projects: await getProjects(),
-			timesheets: await getTimesheetsByPeriod(freelance_id, currentDate)
+			_freelance_id: freelance_id,
+			_timesheetDate: currentDate,
+			_month: dayjs().get("month") + 1,
+			_projects: await getProjects(),
 		},
 	};
 }
