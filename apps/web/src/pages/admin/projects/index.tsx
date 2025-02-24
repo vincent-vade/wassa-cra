@@ -1,49 +1,81 @@
-import dayjs from "dayjs";
-import Link from "next/link";
-import { Layout } from "~/components/layout";
-import { useAuth } from "~/context/AuthContext";
+import { Resources } from "~/components/Resources";
 import type { Project } from "~/lib/client";
 import { getProjects } from "~/services/projects";
 
-export default function Projects({ projects }: { projects: Project[] }) {
-	const auth = useAuth();
-	console.log(auth?.user);
+import { Button, Chip, Group } from "@mantine/core";
+import dayjs from "dayjs";
+import Link from "next/link";
+import type { Column } from "~/components/DataTable";
 
-	return (
-		<Layout>
-			<h1>Projects</h1>
-			<table>
-				<thead>
-					<tr>
-						<th width={"260px"}>ID</th>
-						<th>Project name</th>
-						<th>Created at</th>
-						<th>Updated at</th>
-						<th>Is active</th>
-					</tr>
-				</thead>
-				<tbody>
-					{projects?.map((project) => (
-						<tr key={project?.id}>
-							<td>
-								<Link href={`/projects/${project?.id}`}>{project?.id}</Link>
-							</td>
-							<td>{project?.name}</td>
-							<td>{dayjs(project.created_at).format("DD-MM-YYYY")}</td>
-							<td>
-								{project.updated_at &&
-									dayjs(project.updated_at).format("DD-MM-YYYY")}
-							</td>
-							<td>{project?.is_active}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</Layout>
-	);
+export const columns: Column<Project>[] = [
+	{
+		accessor: "id",
+		Header: () => "Id",
+	},
+	{
+		accessor: "name",
+		Header: "Project name",
+	},
+	{
+		accessor: "created_at",
+		Header: "Created at",
+		Row: ({ created_at }) => {
+			return dayjs(created_at as string).format("DD-MM-YYYY");
+		},
+	},
+	{
+		accessor: "updated_at",
+		Header: "Updated at",
+		Row: ({ updated_at }) => {
+			return updated_at
+				? dayjs(updated_at as string).format("DD-MM-YYYY")
+				: null;
+		},
+	},
+	{
+		accessor: "is_active",
+		Header: "Is active",
+		Row: (data) => {
+			return (
+				<Chip checked={data.is_active} color={data.is_active ? "green" : "red"}>
+					OK
+				</Chip>
+			);
+		},
+	},
+	{
+		accessor: "actions",
+		Header: "Actions",
+		Row: (data) => (
+			<Group>
+				<Button
+					variant="transparent"
+					component={Link}
+					href={`/admin/projects/${data.id}`}
+				>
+					Edit
+				</Button>
+				<Button variant="filled" color="red">
+					Delete
+				</Button>
+			</Group>
+		),
+	},
+];
+
+export default function Projects({ projects }: { projects: Project[] }) {
+	const data = projects?.map((project) => ({
+		id: project?.id as string,
+		name: project?.name,
+		created_at: project?.created_at,
+		updated_at: project?.updated_at,
+		is_active: project?.is_active,
+	}));
+
+	return <Resources title="Projects" columns={columns} data={data} />;
 }
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps() {
 	return {
 		props: {
 			projects: await getProjects(),

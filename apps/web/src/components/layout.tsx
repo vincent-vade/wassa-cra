@@ -1,4 +1,4 @@
-import { AppShell, Flex, List, NavLink } from "@mantine/core";
+import { AppShell, Group, NavLink } from "@mantine/core";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
@@ -26,12 +26,11 @@ export const Layout = ({ children }: PropsWithChildren) => {
 			padding="md"
 		>
 			<AppShell.Header>
-				<Flex
+				<Group
 					mih={50}
 					gap="lg"
 					justify="space-between"
 					align="center"
-					direction="row"
 					wrap="nowrap"
 					p="md"
 				>
@@ -39,7 +38,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
 					<button type="button" onClick={() => auth?.logout()}>
 						Logout
 					</button>
-				</Flex>
+				</Group>
 			</AppShell.Header>
 
 			<AppShell.Navbar p="md">
