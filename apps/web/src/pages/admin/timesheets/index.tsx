@@ -343,16 +343,19 @@ export default function Timesheets({
 	// 	console.log("nbDays have been updated", nbDays);
 	// }, [nbDays]);
 
-	useEffect(() => {
-		console.log("[useEffect] month has been updated", month);
+	const fetchTasks = async () => {
+		console.log('%c fetchTasks ', 'background-color: #006600')
+		console.log('freelance_id =>', freelance_id)
+		console.log('timesheetDate =>', timesheetDate)
+		const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate)
+		console.log('[DB] timesheets', timesheets)
+		setTasks(buildTasks(timesheets))
+	}
 
-		;(async () => {
-			console.log('freelance_id =>', freelance_id)
-			console.log('timesheetDate =>', timesheetDate)
-			const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate)
-			console.log('[DB] timesheets', timesheets)
-			setTasks(buildTasks(timesheets))
-		})()
+	useEffect(() => {
+		console.log(`%c [useEffect] %c month has been updated => %c ${month} `, 'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
+
+		fetchTasks()
 
 		return () => {
 			console.log('***** CLEANUP *****')
@@ -362,7 +365,7 @@ export default function Timesheets({
 	}, [month])
 
 	useEffect(() => {
-		console.log("[useEffect] tasks have been updated", tasks);
+		console.log(`%c [useEffect] %c tasks have been updated - nb task(s) => %c ${tasks.length} `,'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
 		tasksRef.current = tasks;
 	}, [tasks]);
 
