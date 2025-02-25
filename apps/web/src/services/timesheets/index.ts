@@ -12,7 +12,7 @@ export const getTimesheets = async () => {
     return response.data?.timesheets as Timesheet[];
 };
 
-export const updateTimesheetByPeriod = async (period: string, projectTaskId: string, working_durations: number[]) => {
+export const updateTimesheetByPeriod = async (freelanceId: string, period: string, projectTaskId: string, working_durations: number[]) => {
     const response = await client.PUT(`/api/rest/timesheets/period/{period}`, {
         params: {
             path: {
@@ -20,42 +20,57 @@ export const updateTimesheetByPeriod = async (period: string, projectTaskId: str
             }
         },
         body: {
+            freelance_id: freelanceId,
             project_task_id: projectTaskId,
             newData: {
                 working_durations,
             }
         }
     })
+
     return response as UpdateTimesheetByPeriod;
 }
 
-export const getTimesheetsByPeriod = async (period: string) => {
+export const getTimesheetsByPeriod = async (freelanceId: string | undefined, period: string) => {
+    if (!freelanceId || !period) return [];
+
     const response = await client.GET(`/api/rest/timesheets/period/{period}`, {
         params: {
             path: {
                 period
+            },
+            query: {
+                freelance_id: freelanceId
             }
-        }
+        },
     });
     return response.data?.timesheets as TimesheetsByPeriod[];
 };
 
-export const getTimesheetsByProjectTaskIdAndPeriod = async (period: string, projectTaskId: string) => {
+export const getTimesheetsByProjectTaskIdAndPeriod = async (freelanceId: string | undefined, period: string, projectTaskId: string) => {
+    if (!freelanceId || !period || !projectTaskId) return [];
+
     const response = await client.GET('/api/rest/timesheets/project-task/{project_task_id}/period/{period}', {
         params: {
             path: {
                 project_task_id: projectTaskId,
                 period
+            },
+            query: {
+                freelance_id: freelanceId
             }
         }
     });
+
     return response.data?.timesheets as TimesheetByProjectTaskIdAndPeriod[];
 };
 
 export const getTimesheetById = async (id: string) => {
     const { data } = await client.GET(`/api/rest/timesheets/{id}`, {
         params: {
-            id,
+            path: {
+                id
+            },
         }
     });
     return data?.timesheets_by_pk as Timesheet;
@@ -67,7 +82,7 @@ export const createTimesheet = async (timesheet: CreateTimesheet) => {
             body: timesheet
         });
         return result
-    } catch (e) {
+    } catch (e: unknown) {
         throw new Error('Error creating timesheet', e);
 
     }

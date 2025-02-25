@@ -11,6 +11,9 @@ async function addFreelances() {
 
 	await prisma.$connect();
 
+	console.log("Cleaning freelances");
+	await prisma.freelances.deleteMany();
+
 	try {
 		await prisma.freelances.createMany({
 			data: [
