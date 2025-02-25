@@ -19,7 +19,7 @@ export const getProjectTasksByProjectId = async (projectId: string) => {
 	return data?.projects_tasks as ProjectTasks;
 };
 
-export const getProjectById = async (id: string) => {
+export const getProjectTasksById = async (id: string) => {
 	const { data } = await client.GET("/api/rest/projects_tasks/{id}", {
 		params: {
 			path: {

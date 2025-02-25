@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next/server';
 import { notifications } from "@mantine/notifications";
 import {FetchResponse} from "openapi-fetch";
 import {GetServerSidePropsContext} from "next";
-import {useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import dayjs from "dayjs";
 
 import {
@@ -15,10 +15,10 @@ import {
 import { Layout } from "~/components/layout";
 import {TimesheetHeader} from "~/components/TimesheetHeader";
 import {Timesheet} from "~/components/Timesheet";
-import {getProjects} from "~/services/projects";
+import {getProjectById, getProjects} from "~/services/projects";
 import {getAllDaysInCurrentMonth} from "~/lib/date";
-import type {CreateTimesheet, Project, ProjectTasks, TimesheetsByPeriod} from "~/lib/client";
-import {getProjectTasksByProjectId} from "~/services/projectTasks";
+import {CreateTimesheet, Project, Projects, ProjectTasks, ProjetTask, TimesheetsByPeriod} from "~/lib/client";
+import {getProjectTasksById, getProjectTasksByProjectId} from "~/services/projectTasks";
 
 export type Task = {
 	projectName: string;
@@ -28,7 +28,7 @@ export type Task = {
 };
 export type Tasks = Task[];
 
-export type ProjectSelection = { projectId: string; projectName: string } | undefined;
+export type ProjectSelection = { projectId: string; projectName?: string };
 
 const buildTimesheetDate = (month: number) => {
 	console.log('[buildTimesheetDate] month =>', month)
@@ -123,7 +123,7 @@ export default function Timesheets({
 	_timesheetDate,
 	_month,
 	_projects,
-}: { freelance_id: string, _timesheetDate: string, _month: number, _projects: Project[] }) {
+}: { freelance_id: string, _timesheetDate: string, _month: number, _projects: Projects }) {
 	const [month, setMonth] = useState<number>(_month);
 	const [timesheetDate, setTimesheetDate] = useState<string>(_timesheetDate);
 	const [nbDays, setNbDays] = useState<number>(
@@ -131,7 +131,9 @@ export default function Timesheets({
 	);
 	const [tasks, setTasks] = useState<Tasks>([]);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(undefined);
+
 	const [project, setProject] = useState<ProjectSelection>(undefined);
+	const [projectTask, setProjectTask] = useState<ProjetTask>(undefined);
 
 
 	const selectProjectRef = useRef<HTMLSelectElement>(undefined);
@@ -139,17 +141,26 @@ export default function Timesheets({
 	const tasksRef = useRef<Tasks>(tasks);
 	const timesheetDateRef = useRef<string>(timesheetDate);
 
-	const handleChangeProject = async () => {
-		const [projectId, projectName] = selectProjectRef.current?.value.split("#");
+	const handleChangeProjectTasks = async (e: ChangeEvent<HTMLSelectElement>) => {
+		const projectTaskId = e.target.value
+
+		const projectTask = await getProjectTasksById(projectTaskId)
+
+		setProjectTask(projectTask);
+	}
+	const handleChangeProject = async (e: ChangeEvent<HTMLSelectElement>) => {
+		const projectId = e.target.value
 
 		if (!projectId) {
 			setProjectTasks(undefined);
 			return;
 		}
 
+		const project = await getProjectById(projectId)
+
 		setProject({
 			projectId,
-			projectName,
+			projectName: project?.name,
 		});
 
 		const projectTasks = await getProjectTasksByProjectId(projectId);
@@ -157,15 +168,13 @@ export default function Timesheets({
 		setProjectTasks(projectTasks);
 	};
 	const handleClickTaskAdd = () => {
-		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split("#");
-
-		if (projectTaskId && taskTitle && project) {
+		if (projectTask && project) {
 			setTasks([
 				...tasks,
 				{
 					projectName: project.projectName,
-					projectTaskId,
-					taskTitle,
+					projectTaskId: projectTask?.id,
+					taskTitle: projectTask?.task_description,
 					row: Array.from({ length: nbDays }, () => 0),
 				},
 			]);
@@ -333,6 +342,7 @@ export default function Timesheets({
 				handleClickNext={handleClickNext}
 				month={month}
 				handleChangeProject={handleChangeProject}
+				handleChangeProjectTasks={handleChangeProjectTasks}
 				handleClickTaskAdd={handleClickTaskAdd}
 				refProjectDropdown={selectProjectRef}
 				refTaskDropdown={selectTaskRef}
