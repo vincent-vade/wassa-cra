@@ -1,36 +1,24 @@
+import { getCookie } from 'cookies-next/server';
+
+import { notifications } from "@mantine/notifications";
+import {FetchResponse} from "openapi-fetch";
+import {GetServerSidePropsContext} from "next";
+import {useEffect, useRef, useState} from "react";
+import dayjs from "dayjs";
+
 import {
 	createTimesheet,
 	getTimesheetsByPeriod,
 	getTimesheetsByProjectTaskIdAndPeriod,
 	updateTimesheetByPeriod,
 } from "~/services/timesheets";
-
-import { notifications } from "@mantine/notifications";
-import dayjs from "dayjs";
-import type { FetchResponse } from "openapi-fetch";
-import { useEffect, useRef, useState } from "react";
-import { Timesheet } from "~/components/Timesheet";
-import { TimesheetHeader } from "~/components/TimesheetHeader";
 import { Layout } from "~/components/layout";
-import { useAuth } from "~/context/AuthContext";
-import type {
-	CreateTimesheet,
-	Project,
-	ProjectTasks,
-	TimesheetsByPeriod,
-} from "~/lib/client";
-import { getAllDaysInCurrentMonth } from "~/lib/date";
-import {
-	ProjectSelection,
-	Task,
-	TaskSelection,
-	Tasks,
-} from "~/pages/admin/timesheets/create";
-import { getProjectTasksByProjectId } from "~/services/projectTasks";
-import { getProjects } from "~/services/projects";
-
-const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a";
-const client_id = "728f81cd-45ab-4cb8-92b6-956fc5c5d256";
+import {TimesheetHeader} from "~/components/TimesheetHeader";
+import {Timesheet} from "~/components/Timesheet";
+import {getProjects} from "~/services/projects";
+import {getAllDaysInCurrentMonth} from "~/lib/date";
+import type {CreateTimesheet, Project, ProjectTasks, TimesheetsByPeriod} from "~/lib/client";
+import {getProjectTasksByProjectId} from "~/services/projectTasks";
 
 export type Task = {
 	projectName: string;
@@ -40,10 +28,11 @@ export type Task = {
 };
 export type Tasks = Task[];
 
-export type ProjectSelection = { projectId: string; projectName: string };
-export type TaskSelection = { projectTaskId: string; taskTitle: string };
+export type ProjectSelection = { projectId: string; projectName: string } | undefined;
 
-const buildTimesheetDate = (month) => {
+const buildTimesheetDate = (month: number) => {
+	console.log('[buildTimesheetDate] month =>', month)
+
 	return dayjs()
 		.month(month - 1)
 		.format("YYYY-MM");
@@ -54,11 +43,11 @@ const isStatusFullfilled = ({ status }: { status: string }) =>
 
 const isResponseOk = ({ value }: FetchResponse) => value.response.ok;
 
-const isAllPromiseFullfilled = (promises: PromiseSettledResult<any>[]) => {
+const isAllPromiseFullfilled = (promises: PromiseSettledResult<unknown>[]) => {
 	return promises.every(isStatusFullfilled);
 };
 
-const isAllPromiseSucceeded = (promises: PromiseSettledResult<any>[]) => {
+const isAllPromiseSucceeded = (promises: PromiseSettledResult<unknown>[]) => {
 	return promises.every(isResponseOk);
 };
 
@@ -104,83 +93,49 @@ const loadTasksFromLocalStorage = (date: string) => {
 	return tasks ?? [];
 };
 
-const buildErrorMessage = (results: PromiseSettledResult<any>[]) => {
+const fullFilledErrorFilter = (result: PromiseSettledResult<unknown>) => result.status === "fulfilled" && result.value?.error;
+const buildErrorMessage = (result: PromiseSettledResult<unknown>) => {
+	return `${result.value?.error?.code}: ${result.value?.error?.error}`
+}
+const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
 	const errors = results
-		.filter((result) => result.status === "fulfilled")
-		.map((result) => `${result.value.error.code}: ${result.value.error.error}`);
+		.filter(fullFilledErrorFilter)
+		.map(buildErrorMessage);
 
 	return errors.join(" - ");
 };
 
-/**
- * Data from localStorage working with Timesheets component
- * [
- *     {
- *         "projectName": "Headless ONE",
- *         "projectTaskId": "b86bd374-8585-42a2-8fc5-2e61b238c36d",
- *         "taskTitle": "JavaScript development",
- *         "row": []
- *     }
- * ]
- *
- * [
- *     {
- *         "id": "73856699-c11e-4e95-a9fc-afc726041b5f",
- *         "client_id": "728f81cd-45ab-4cb8-92b6-956fc5c5d256",
- *         "client": {
- *             "name": "Client 1"
- *         },
- *         "project_task_id": "b86bd374-8585-42a2-8fc5-2e61b238c36d",
- *         "projects_task": {
- *             "task_description": "JavaScript development",
- *             "project_id": "ca023d6d-71ca-41fd-b318-2bf9d319a092",
- *             "project": {
- *                 "name": "Headless ONE",
- *                 "description": null
- *             }
- *         },
- *         "created_at": "2025-02-18T21:47:54.582475",
- *         "updated_at": null,
- *         "working_date": "2025-02",
- *         "working_durations": []
- *     }
- * ]
- */
+const buildTasks = (timesheets: TimesheetsByPeriod): Tasks => {
+	if (!Array.isArray(timesheets) || timesheets.length === 0) return []
 
-const buildTasks = (timesheets) => {
 	return timesheets.map((timesheet) => {
 		return {
-			projectName: timesheet.projects_task.project.name,
+			projectName: timesheet.projects_task?.project?.name,
 			projectTaskId: timesheet.project_task_id,
-			taskTitle: timesheet.projects_task.task_description,
+			taskTitle: timesheet.projects_task?.task_description,
 			row: timesheet.working_durations,
-		};
-	});
-};
+		} as Task;
+	})
+}
 
 export default function Timesheets({
-	projects,
-	timesheets,
-}: { projects: Project[]; timesheets: TimesheetsByPeriod }) {
-	console.log("timesheets", timesheets);
-	const [month, setMonth] = useState<number>(dayjs().get("month") + 1);
+	freelance_id,
+	_timesheetDate,
+	_month,
+	_projects,
+}: { freelance_id: string, _timesheetDate: string, _month: number, _projects: Project[] }) {
+	const [month, setMonth] = useState<number>(_month);
+	const [timesheetDate, setTimesheetDate] = useState<string>(_timesheetDate);
 	const [nbDays, setNbDays] = useState<number>(
 		getAllDaysInCurrentMonth(dayjs().get("month") + 1).length,
 	);
-	const [tasks, setTasks] = useState<Tasks>(buildTasks(timesheets));
+	const [tasks, setTasks] = useState<Tasks>([]);
+	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(undefined);
+	const [project, setProject] = useState<ProjectSelection>(undefined);
 
-	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
-	const [timesheetDate, setTimesheetDate] = useState<string>(
-		buildTimesheetDate(month),
-	);
 
-	const [project, setProject] = useState<ProjectSelection>(null);
-	const [task, setTask] = useState<TaskSelection>(null);
-
-	const auth = useAuth();
-
-	const selectProjectRef = useRef<HTMLSelectElement>(null);
-	const selectTaskRef = useRef<HTMLSelectElement>(null);
+	const selectProjectRef = useRef<HTMLSelectElement>(undefined);
+	const selectTaskRef = useRef<HTMLSelectElement>(undefined);
 	const tasksRef = useRef<Tasks>(tasks);
 	const timesheetDateRef = useRef<string>(timesheetDate);
 
@@ -188,7 +143,7 @@ export default function Timesheets({
 		const [projectId, projectName] = selectProjectRef.current?.value.split("#");
 
 		if (!projectId) {
-			setProjectTasks(null);
+			setProjectTasks(undefined);
 			return;
 		}
 
@@ -204,7 +159,7 @@ export default function Timesheets({
 	const handleClickTaskAdd = () => {
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split("#");
 
-		if (projectTaskId && taskTitle) {
+		if (projectTaskId && taskTitle && project) {
 			setTasks([
 				...tasks,
 				{
@@ -214,11 +169,6 @@ export default function Timesheets({
 					row: Array.from({ length: nbDays }, () => 0),
 				},
 			]);
-
-			setTask({
-				projectTaskId,
-				taskTitle,
-			});
 		} else {
 			alert("Please select a task");
 		}
@@ -228,12 +178,18 @@ export default function Timesheets({
 		const nbDaysPreviousMonth = getAllDaysInCurrentMonth(previousMonth).length;
 		setMonth(previousMonth);
 		setNbDays(nbDaysPreviousMonth);
+		setTimesheetDate(buildTimesheetDate(previousMonth));
+
+		// resetTimesheet();
 	};
 	const handleClickNext = () => {
 		const nextMonth = month + 1;
 		const nbDaysNextMonth = getAllDaysInCurrentMonth(nextMonth).length;
 		setMonth(nextMonth);
 		setNbDays(nbDaysNextMonth);
+		setTimesheetDate(buildTimesheetDate(nextMonth));
+
+		// resetTimesheet();
 	};
 	const handleClickSave = async () => {
 		if (tasks.length === 0) {
@@ -241,32 +197,25 @@ export default function Timesheets({
 			return;
 		}
 
-		const response = await getTimesheetsByPeriod(timesheetDate);
+		// const response = await getTimesheetsByPeriod(auth?.user?.id, timesheetDate)
 
-		console.log("response", response);
+		const promises = tasks.map(async (task: Task) => {
 
-		const promises = tasks.map(async (task) => {
-			const response = await getTimesheetsByProjectTaskIdAndPeriod(
-				timesheetDate,
-				task.projectTaskId,
-			);
+			const response = await getTimesheetsByProjectTaskIdAndPeriod(freelance_id, timesheetDate, task.projectTaskId)
 
 			if (response.length === 0) {
+				console.log('no timesheet found for this projectTaskId and period')
+
 				return await createTimesheet({
 					object: {
 						working_durations: task.row,
 						working_date: timesheetDate,
-						client_id: client_id,
-						freelance_id: auth?.user?.id,
+						freelance_id,
 						project_task_id: task.projectTaskId,
 					},
 				} as CreateTimesheet);
 			} else {
-				return await updateTimesheetByPeriod(
-					timesheetDate,
-					task.projectTaskId,
-					task.row,
-				);
+				return await updateTimesheetByPeriod(freelance_id, timesheetDate, task.projectTaskId, task.row)
 			}
 		});
 
@@ -282,7 +231,7 @@ export default function Timesheets({
 					position: "bottom-center",
 				});
 			} else {
-				const errorMessage = buildErrorMessage(results);
+				const errorMessage = buildErrorMessages(results);
 				notifications.show({
 					title: "Error",
 					message: errorMessage,
@@ -309,60 +258,69 @@ export default function Timesheets({
 		updateTaskById(task);
 	};
 
-	const resetTimesheet = (tasks: Tasks) => {
-		const newTasks = tasks.map((task) => {
-			return {
-				...task,
-				row: Array.from({ length: nbDays }, () => 0),
-			};
-		});
-
-		setTasks(newTasks);
-	};
-
 	useEffect(() => {
-		console.log("tasks.length", tasks.length);
-		if (tasks.length === 0) {
-			const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
-			setTasks(tasksFromLocalStorage);
-		} else {
-			console.log(
-				"no tasks to load from localStorage... Data comes fron database",
-			);
-		}
+		console.log('***** INIT *****')
+		console.log('tasks.length', tasks.length)
+		console.log('timesheetDate', timesheetDate)
+
+		// if (tasks.length === 0) {
+		// 	const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
+		// 	setTasks(tasksFromLocalStorage);
+		// } else {
+		// 	console.log("no tasks to load from localStorage... Data comes fron database");
+		// }
 	}, []);
 
+	// useEffect(() => {
+	// 	console.log("month has been updated", month);
+	//
+	// 	const newDate = buildTimesheetDate(month);
+	// 	setTimesheetDate(newDate);
+	//
+	// 	// const tasksFromLocalStorage = loadTasksFromLocalStorage(newDate);
+	// 	//
+	// 	// if (tasksFromLocalStorage.length > 0) {
+	// 	// 	setTasks(tasksFromLocalStorage);
+	// 	// }
+	//
+	// 	// return () => {
+	// 	// 	if (Array.isArray(tasksRef.current) && tasksRef.current.length > 0) {
+	// 	// 		saveTasksToLocalStorage(timesheetDateRef.current, tasksRef.current);
+	// 	// 		resetTimesheet(tasks);
+	// 	// 	} else {
+	// 	// 		console.log("no tasks to save...");
+	// 	// 	}
+	// 	// };
+	// }, [month]);
+
+	const fetchTasks = async () => {
+		console.log('%c fetchTasks ', 'background-color: #006600')
+		console.log('freelance_id =>', freelance_id)
+		console.log('timesheetDate =>', timesheetDate)
+		const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate)
+		console.log('[DB] timesheets', timesheets)
+		setTasks(buildTasks(timesheets))
+	}
+
 	useEffect(() => {
-		console.log("month has been updated", month);
+		console.log(`%c [useEffect] %c month has been updated => %c ${month} `, 'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
 
-		const newDate = buildTimesheetDate(month);
-		setTimesheetDate(newDate);
+		fetchTasks()
 
-		// const tasksFromLocalStorage = loadTasksFromLocalStorage(newDate);
-		//
-		// if (tasksFromLocalStorage.length > 0) {
-		// 	setTasks(tasksFromLocalStorage);
-		// }
-
-		// return () => {
-		// 	if (Array.isArray(tasksRef.current) && tasksRef.current.length > 0) {
-		// 		saveTasksToLocalStorage(timesheetDateRef.current, tasksRef.current);
-		// 		resetTimesheet(tasks);
-		// 	} else {
-		// 		console.log("no tasks to save...");
-		// 	}
-		// };
-	}, [month]);
+		return () => {
+			console.log('***** CLEANUP *****')
+			console.log('month =>', month)
+			setTasks([])
+		}
+	}, [month])
 
 	useEffect(() => {
-		console.log("nbDays have been updated", nbDays);
-	}, [nbDays]);
-
-	useEffect(() => {
+		console.log(`%c [useEffect] %c tasks have been updated - nb task(s) => %c ${tasks.length} `,'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
 		tasksRef.current = tasks;
 	}, [tasks]);
 
 	useEffect(() => {
+		console.log("[useEffect] timesheetDate has been updated", timesheetDate);
 		timesheetDateRef.current = timesheetDate;
 	}, [timesheetDate]);
 
@@ -378,7 +336,7 @@ export default function Timesheets({
 				handleClickTaskAdd={handleClickTaskAdd}
 				refProjectDropdown={selectProjectRef}
 				refTaskDropdown={selectTaskRef}
-				projects={projects}
+				projects={_projects}
 				projectTasks={projectTasks}
 			/>
 
@@ -392,13 +350,19 @@ export default function Timesheets({
 	);
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 	const currentDate = dayjs().format("YYYY-MM");
+	const freelance_id = await getCookie('token', {
+		req: ctx.req,
+		res: ctx.res
+	})
 
 	return {
 		props: {
-			projects: await getProjects(),
-			timesheets: await getTimesheetsByPeriod(currentDate),
+			freelance_id,
+			_timesheetDate: currentDate,
+			_month: dayjs().get("month") + 1,
+			_projects: await getProjects(),
 		},
 	};
 }

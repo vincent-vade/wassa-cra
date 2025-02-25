@@ -29,6 +29,8 @@ export type Project =
 	paths["/api/rest/projects/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["projects_by_pk"];
 export type Projects =
 	paths['/api/rest/projects']["get"]["responses"]["200"]["content"]["application/json"]["projects"];
+export type CreateProject =
+	paths["/api/rest/projects"]["post"]["requestBody"]["content"]["application/json"];
 
 export type ProjetTask =
 	paths["/api/rest/projects_tasks/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["projects_tasks_by_pk"];

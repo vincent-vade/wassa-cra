@@ -93,7 +93,6 @@ export interface paths {
          *     ``` graphql
          *     query timesheets {
          *       timesheets {
-         *         client_id
          *         created_at
          *         freelance_id
          *         id
@@ -126,7 +125,6 @@ export interface paths {
                     content: {
                         "application/json": {
                             timesheets?: {
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 freelance_id?: components["schemas"]["uuid!"];
                                 id?: components["schemas"]["uuid!"];
@@ -149,7 +147,6 @@ export interface paths {
          *     ``` graphql
          *     mutation insert_timesheets_one($object: timesheets_insert_input!) {
          *       insert_timesheets_one(object: $object) {
-         *         client_id
          *         created_at
          *         freelance_id
          *         id
@@ -193,7 +190,6 @@ export interface paths {
                              * @description columns and relationships of "timesheets"
                              */
                             insert_timesheets_one?: {
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 freelance_id?: components["schemas"]["uuid!"];
                                 id?: components["schemas"]["uuid!"];
@@ -226,12 +222,12 @@ export interface paths {
          * @description ***
          *     The GraphQl query for this endpoint is:
          *     ``` graphql
-         *     query timesheets_by_period($period: String!) {
-         *       timesheets(where: {working_date: {_eq: $period}}) {
+         *     query timesheets_by_period($period: String!, $freelance_id: uuid!) {
+         *       timesheets(where: {working_date: {_eq: $period},  freelance_id: { _eq: $freelance_id}}) {
          *         id
-         *         client_id
-         *         client {
-         *           name
+         *         freelance {
+         *           id
+         *           email
          *         }
          *       	project_task_id
          *         projects_task {
@@ -252,7 +248,10 @@ export interface paths {
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description _"freelance_id" is required (enter it either in parameters or request body)_ */
+                    freelance_id?: string;
+                };
                 header?: {
                     /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
                     "x-hasura-admin-secret"?: string;
@@ -267,6 +266,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        freelance_id?: components["schemas"]["uuid!"];
                         /** String */
                         period?: string;
                     };
@@ -281,16 +281,16 @@ export interface paths {
                     content: {
                         "application/json": {
                             timesheets?: {
-                                /**
-                                 * clients
-                                 * @description columns and relationships of "clients"
-                                 */
-                                client?: {
-                                    /** String */
-                                    name?: string;
-                                };
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
+                                /**
+                                 * freelances
+                                 * @description columns and relationships of "freelances"
+                                 */
+                                freelance?: {
+                                    /** String */
+                                    email?: string;
+                                    id?: components["schemas"]["uuid!"];
+                                };
                                 id?: components["schemas"]["uuid!"];
                                 project_task_id?: components["schemas"]["uuid!"];
                                 /**
@@ -327,10 +327,11 @@ export interface paths {
          * @description ***
          *     The GraphQl query for this endpoint is:
          *     ``` graphql
-         *     mutation UpdateTimesheetByPeriod($period: String!, $project_task_id: uuid!, $newData: timesheets_set_input!) {
+         *     mutation UpdateTimesheetByPeriod($freelance_id: uuid!, $period: String!, $project_task_id: uuid!, $newData: timesheets_set_input!) {
          *       update_timesheets(
          *         where: {
          *           working_date: { _eq: $period}
+         *           freelance_id: { _eq: $freelance_id}
          *           project_task_id: { _eq: $project_task_id }
          *         },
          *         _set: $newData
@@ -346,6 +347,10 @@ export interface paths {
          *             project {
          *               name
          *               description
+         *               client_id
+         *               client {
+         *                   name
+         *               }
          *             }
          *           }
          *         }
@@ -356,6 +361,8 @@ export interface paths {
         put: {
             parameters: {
                 query?: {
+                    /** @description _"freelance_id" is required (enter it either in parameters or request body)_ */
+                    freelance_id?: string;
                     /** @description _"project_task_id" is required (enter it either in parameters or request body)_ */
                     project_task_id?: string;
                 };
@@ -373,6 +380,7 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        freelance_id?: components["schemas"]["uuid!"];
                         newData?: components["schemas"]["timesheets_set_input!"];
                         /** String */
                         period?: string;
@@ -408,6 +416,15 @@ export interface paths {
                                          * @description columns and relationships of "projects"
                                          */
                                         project?: {
+                                            /**
+                                             * clients
+                                             * @description columns and relationships of "clients"
+                                             */
+                                            client?: {
+                                                /** String */
+                                                name?: string;
+                                            };
+                                            client_id?: components["schemas"]["uuid!"];
                                             /** String */
                                             description?: string | null;
                                             /** String */
@@ -447,8 +464,7 @@ export interface paths {
          *     ``` graphql
          *     query timesheets_by_pk($id: uuid!) {
          *       timesheets_by_pk(id: $id) {
-         *         client_id
-         *         created_at
+         *        created_at
          *         freelance_id
          *         id
          *         project_task_id
@@ -494,7 +510,6 @@ export interface paths {
                              * @description columns and relationships of "timesheets"
                              */
                             timesheets_by_pk?: {
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 freelance_id?: components["schemas"]["uuid!"];
                                 id?: components["schemas"]["uuid!"];
@@ -517,7 +532,6 @@ export interface paths {
          *     ``` graphql
          *     mutation update_timesheets_by_pk($id: uuid!, $object: timesheets_set_input!) {
          *       update_timesheets_by_pk(pk_columns: {id: $id}, _set: $object) {
-         *         client_id
          *         created_at
          *         freelance_id
          *         id
@@ -565,7 +579,6 @@ export interface paths {
                              * @description columns and relationships of "timesheets"
                              */
                             update_timesheets_by_pk?: {
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 freelance_id?: components["schemas"]["uuid!"];
                                 id?: components["schemas"]["uuid!"];
@@ -587,7 +600,6 @@ export interface paths {
          *     ``` graphql
          *     mutation delete_timesheets_by_pk($id: uuid!) {
          *       delete_timesheets_by_pk(id: $id) {
-         *         client_id
          *         created_at
          *         freelance_id
          *         id
@@ -634,7 +646,6 @@ export interface paths {
                              * @description columns and relationships of "timesheets"
                              */
                             delete_timesheets_by_pk?: {
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 freelance_id?: components["schemas"]["uuid!"];
                                 id?: components["schemas"]["uuid!"];
@@ -662,29 +673,30 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * timesheet_by_project_task_id_and_period
+         * timesheets_by_project_task_id_and_period
          * @description ***
          *     The GraphQl query for this endpoint is:
          *     ``` graphql
-         *     query timesheet_by_project_task_id_and_period($period: String!,$project_task_id: uuid!) {
+         *     query timesheets_by_period($period: String!, $freelance_id: uuid!, $project_task_id: uuid!) {
          *       timesheets(
          *         where: {
          *           working_date: {_eq: $period}
+         *           freelance_id: {_eq: $freelance_id}
          *           project_task_id: {_eq: $project_task_id}
          *         }
          *       ) {
          *         id
-         *         client_id
-         *         client {
-         *           name
-         *         }
-         *       	project_task_id
+         *         project_task_id
          *         projects_task {
          *           task_description
          *           project_id
          *           project {
          *             name
          *             description
+         *             client_id
+         *             client {
+         *                 name
+         *             }
          *           }
          *         }
          *         created_at
@@ -697,7 +709,10 @@ export interface paths {
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description _"freelance_id" is required (enter it either in parameters or request body)_ */
+                    freelance_id?: string;
+                };
                 header?: {
                     /** @description Your x-hasura-admin-secret will be used for authentication of the API request. */
                     "x-hasura-admin-secret"?: string;
@@ -714,6 +729,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        freelance_id?: components["schemas"]["uuid!"];
                         /** String */
                         period?: string;
                         project_task_id?: components["schemas"]["uuid!"];
@@ -729,15 +745,6 @@ export interface paths {
                     content: {
                         "application/json": {
                             timesheets?: {
-                                /**
-                                 * clients
-                                 * @description columns and relationships of "clients"
-                                 */
-                                client?: {
-                                    /** String */
-                                    name?: string;
-                                };
-                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 id?: components["schemas"]["uuid!"];
                                 project_task_id?: components["schemas"]["uuid!"];
@@ -751,6 +758,15 @@ export interface paths {
                                      * @description columns and relationships of "projects"
                                      */
                                     project?: {
+                                        /**
+                                         * clients
+                                         * @description columns and relationships of "clients"
+                                         */
+                                        client?: {
+                                            /** String */
+                                            name?: string;
+                                        };
+                                        client_id?: components["schemas"]["uuid!"];
                                         /** String */
                                         description?: string | null;
                                         /** String */
@@ -1598,11 +1614,11 @@ export interface paths {
          *         id
          *         is_active
          *         name
+         *         client_id
          *         start_date
          *         updated_at
          *       }
          *     }
-         *
          *     ```
          */
         post: {
@@ -1636,6 +1652,7 @@ export interface paths {
                              * @description columns and relationships of "projects"
                              */
                             insert_projects_one?: {
+                                client_id?: components["schemas"]["uuid!"];
                                 created_at?: components["schemas"]["timestamp!"];
                                 /** String */
                                 description?: string | null;
@@ -2305,11 +2322,11 @@ export interface components {
         /** uuid */
         uuid: string | null;
         /**
-         * projects_tasks_update_column
-         * @description update columns of table "projects_tasks"
+         * projects_update_column
+         * @description update columns of table "projects"
          * @enum {unknown}
          */
-        "projects_tasks_update_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
+        "projects_update_column!": "client_id" | "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
         /**
          * uuid_comparison_exp
          * @description Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
@@ -2413,40 +2430,6 @@ export interface components {
             _neq?: components["schemas"]["jsonb"];
             _nin?: components["schemas"]["jsonb!"][] | null;
         } | null;
-        /**
-         * clients_bool_exp
-         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
-         */
-        "clients_bool_exp!": {
-            _and?: components["schemas"]["clients_bool_exp!"][] | null;
-            _not?: components["schemas"]["clients_bool_exp"];
-            _or?: components["schemas"]["clients_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            phone?: components["schemas"]["String_comparison_exp"];
-            timesheets?: components["schemas"]["timesheets_bool_exp"];
-            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        };
-        /**
-         * clients_bool_exp
-         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
-         */
-        clients_bool_exp: {
-            _and?: components["schemas"]["clients_bool_exp!"][] | null;
-            _not?: components["schemas"]["clients_bool_exp"];
-            _or?: components["schemas"]["clients_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            email?: components["schemas"]["String_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            phone?: components["schemas"]["String_comparison_exp"];
-            timesheets?: components["schemas"]["timesheets_bool_exp"];
-            timesheets_aggregate?: components["schemas"]["timesheets_aggregate_bool_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        } | null;
         /** numeric */
         "numeric!": unknown;
         /** numeric */
@@ -2509,8 +2492,6 @@ export interface components {
             _and?: components["schemas"]["timesheets_bool_exp!"][] | null;
             _not?: components["schemas"]["timesheets_bool_exp"];
             _or?: components["schemas"]["timesheets_bool_exp!"][] | null;
-            client?: components["schemas"]["clients_bool_exp"];
-            client_id?: components["schemas"]["uuid_comparison_exp"];
             created_at?: components["schemas"]["timestamp_comparison_exp"];
             freelance?: components["schemas"]["freelances_bool_exp"];
             freelance_id?: components["schemas"]["uuid_comparison_exp"];
@@ -2529,8 +2510,6 @@ export interface components {
             _and?: components["schemas"]["timesheets_bool_exp!"][] | null;
             _not?: components["schemas"]["timesheets_bool_exp"];
             _or?: components["schemas"]["timesheets_bool_exp!"][] | null;
-            client?: components["schemas"]["clients_bool_exp"];
-            client_id?: components["schemas"]["uuid_comparison_exp"];
             created_at?: components["schemas"]["timestamp_comparison_exp"];
             freelance?: components["schemas"]["freelances_bool_exp"];
             freelance_id?: components["schemas"]["uuid_comparison_exp"];
@@ -2546,7 +2525,7 @@ export interface components {
          * @description select columns of table "timesheets"
          * @enum {unknown}
          */
-        "timesheets_select_column!": "client_id" | "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
+        "timesheets_select_column!": "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
         /**
          * Int_comparison_exp
          * @description Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
@@ -2580,84 +2559,6 @@ export interface components {
         /** timesheets_aggregate_bool_exp */
         timesheets_aggregate_bool_exp: {
             count?: components["schemas"]["timesheets_aggregate_bool_exp_count"];
-        } | null;
-        /**
-         * projects_tasks_select_column
-         * @description select columns of table "projects_tasks"
-         * @enum {unknown}
-         */
-        "projects_tasks_select_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
-        /** projects_tasks_aggregate_bool_exp_count */
-        projects_tasks_aggregate_bool_exp_count: {
-            arguments?: components["schemas"]["projects_tasks_select_column!"][] | null;
-            /** Boolean */
-            distinct?: boolean | null;
-            filter?: components["schemas"]["projects_tasks_bool_exp"];
-            predicate?: components["schemas"]["Int_comparison_exp!"];
-        } | null;
-        /** projects_tasks_aggregate_bool_exp */
-        projects_tasks_aggregate_bool_exp: {
-            count?: components["schemas"]["projects_tasks_aggregate_bool_exp_count"];
-        } | null;
-        /**
-         * Boolean_comparison_exp
-         * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
-         */
-        Boolean_comparison_exp: {
-            /** Boolean */
-            _eq?: boolean | null;
-            /** Boolean */
-            _gt?: boolean | null;
-            /** Boolean */
-            _gte?: boolean | null;
-            _in?: boolean[] | null;
-            /** Boolean */
-            _is_null?: boolean | null;
-            /** Boolean */
-            _lt?: boolean | null;
-            /** Boolean */
-            _lte?: boolean | null;
-            /** Boolean */
-            _neq?: boolean | null;
-            _nin?: boolean[] | null;
-        } | null;
-        /**
-         * projects_bool_exp
-         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
-         */
-        "projects_bool_exp!": {
-            _and?: components["schemas"]["projects_bool_exp!"][] | null;
-            _not?: components["schemas"]["projects_bool_exp"];
-            _or?: components["schemas"]["projects_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            description?: components["schemas"]["String_comparison_exp"];
-            end_date?: components["schemas"]["timestamp_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            is_active?: components["schemas"]["Boolean_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
-            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
-            start_date?: components["schemas"]["timestamp_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
-        };
-        /**
-         * projects_bool_exp
-         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
-         */
-        projects_bool_exp: {
-            _and?: components["schemas"]["projects_bool_exp!"][] | null;
-            _not?: components["schemas"]["projects_bool_exp"];
-            _or?: components["schemas"]["projects_bool_exp!"][] | null;
-            created_at?: components["schemas"]["timestamp_comparison_exp"];
-            description?: components["schemas"]["String_comparison_exp"];
-            end_date?: components["schemas"]["timestamp_comparison_exp"];
-            id?: components["schemas"]["uuid_comparison_exp"];
-            is_active?: components["schemas"]["Boolean_comparison_exp"];
-            name?: components["schemas"]["String_comparison_exp"];
-            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
-            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
-            start_date?: components["schemas"]["timestamp_comparison_exp"];
-            updated_at?: components["schemas"]["timestamp_comparison_exp"];
         } | null;
         /**
          * projects_tasks_bool_exp
@@ -2696,6 +2597,266 @@ export interface components {
             updated_at?: components["schemas"]["timestamp_comparison_exp"];
         } | null;
         /**
+         * projects_tasks_select_column
+         * @description select columns of table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_select_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
+        /** projects_tasks_aggregate_bool_exp_count */
+        projects_tasks_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["projects_tasks_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["projects_tasks_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** projects_tasks_aggregate_bool_exp */
+        projects_tasks_aggregate_bool_exp: {
+            count?: components["schemas"]["projects_tasks_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * projects_select_column_projects_aggregate_bool_exp_bool_and_arguments_columns
+         * @description select "projects_aggregate_bool_exp_bool_and_arguments_columns" columns of table "projects"
+         * @enum {unknown}
+         */
+        "projects_select_column_projects_aggregate_bool_exp_bool_and_arguments_columns!": "is_active";
+        /**
+         * Boolean_comparison_exp
+         * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+         */
+        "Boolean_comparison_exp!": {
+            /** Boolean */
+            _eq?: boolean | null;
+            /** Boolean */
+            _gt?: boolean | null;
+            /** Boolean */
+            _gte?: boolean | null;
+            _in?: boolean[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Boolean */
+            _lt?: boolean | null;
+            /** Boolean */
+            _lte?: boolean | null;
+            /** Boolean */
+            _neq?: boolean | null;
+            _nin?: boolean[] | null;
+        };
+        /** projects_aggregate_bool_exp_bool_and */
+        projects_aggregate_bool_exp_bool_and: {
+            arguments?: components["schemas"]["projects_select_column_projects_aggregate_bool_exp_bool_and_arguments_columns!"];
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["projects_bool_exp"];
+            predicate?: components["schemas"]["Boolean_comparison_exp!"];
+        } | null;
+        /**
+         * projects_select_column_projects_aggregate_bool_exp_bool_or_arguments_columns
+         * @description select "projects_aggregate_bool_exp_bool_or_arguments_columns" columns of table "projects"
+         * @enum {unknown}
+         */
+        "projects_select_column_projects_aggregate_bool_exp_bool_or_arguments_columns!": "is_active";
+        /** projects_aggregate_bool_exp_bool_or */
+        projects_aggregate_bool_exp_bool_or: {
+            arguments?: components["schemas"]["projects_select_column_projects_aggregate_bool_exp_bool_or_arguments_columns!"];
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["projects_bool_exp"];
+            predicate?: components["schemas"]["Boolean_comparison_exp!"];
+        } | null;
+        /**
+         * projects_select_column
+         * @description select columns of table "projects"
+         * @enum {unknown}
+         */
+        "projects_select_column!": "client_id" | "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
+        /** projects_aggregate_bool_exp_count */
+        projects_aggregate_bool_exp_count: {
+            arguments?: components["schemas"]["projects_select_column!"][] | null;
+            /** Boolean */
+            distinct?: boolean | null;
+            filter?: components["schemas"]["projects_bool_exp"];
+            predicate?: components["schemas"]["Int_comparison_exp!"];
+        } | null;
+        /** projects_aggregate_bool_exp */
+        projects_aggregate_bool_exp: {
+            bool_and?: components["schemas"]["projects_aggregate_bool_exp_bool_and"];
+            bool_or?: components["schemas"]["projects_aggregate_bool_exp_bool_or"];
+            count?: components["schemas"]["projects_aggregate_bool_exp_count"];
+        } | null;
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        "clients_bool_exp!": {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            projects?: components["schemas"]["projects_bool_exp"];
+            projects_aggregate?: components["schemas"]["projects_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * clients_bool_exp
+         * @description Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'.
+         */
+        clients_bool_exp: {
+            _and?: components["schemas"]["clients_bool_exp!"][] | null;
+            _not?: components["schemas"]["clients_bool_exp"];
+            _or?: components["schemas"]["clients_bool_exp!"][] | null;
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            email?: components["schemas"]["String_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            phone?: components["schemas"]["String_comparison_exp"];
+            projects?: components["schemas"]["projects_bool_exp"];
+            projects_aggregate?: components["schemas"]["projects_aggregate_bool_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * Boolean_comparison_exp
+         * @description Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+         */
+        Boolean_comparison_exp: {
+            /** Boolean */
+            _eq?: boolean | null;
+            /** Boolean */
+            _gt?: boolean | null;
+            /** Boolean */
+            _gte?: boolean | null;
+            _in?: boolean[] | null;
+            /** Boolean */
+            _is_null?: boolean | null;
+            /** Boolean */
+            _lt?: boolean | null;
+            /** Boolean */
+            _lte?: boolean | null;
+            /** Boolean */
+            _neq?: boolean | null;
+            _nin?: boolean[] | null;
+        } | null;
+        /**
+         * projects_bool_exp
+         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+         */
+        "projects_bool_exp!": {
+            _and?: components["schemas"]["projects_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_bool_exp"];
+            _or?: components["schemas"]["projects_bool_exp!"][] | null;
+            client?: components["schemas"]["clients_bool_exp"];
+            client_id?: components["schemas"]["uuid_comparison_exp"];
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            end_date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            is_active?: components["schemas"]["Boolean_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
+            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
+            start_date?: components["schemas"]["timestamp_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        };
+        /**
+         * projects_bool_exp
+         * @description Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+         */
+        projects_bool_exp: {
+            _and?: components["schemas"]["projects_bool_exp!"][] | null;
+            _not?: components["schemas"]["projects_bool_exp"];
+            _or?: components["schemas"]["projects_bool_exp!"][] | null;
+            client?: components["schemas"]["clients_bool_exp"];
+            client_id?: components["schemas"]["uuid_comparison_exp"];
+            created_at?: components["schemas"]["timestamp_comparison_exp"];
+            description?: components["schemas"]["String_comparison_exp"];
+            end_date?: components["schemas"]["timestamp_comparison_exp"];
+            id?: components["schemas"]["uuid_comparison_exp"];
+            is_active?: components["schemas"]["Boolean_comparison_exp"];
+            name?: components["schemas"]["String_comparison_exp"];
+            projects_tasks?: components["schemas"]["projects_tasks_bool_exp"];
+            projects_tasks_aggregate?: components["schemas"]["projects_tasks_aggregate_bool_exp"];
+            start_date?: components["schemas"]["timestamp_comparison_exp"];
+            updated_at?: components["schemas"]["timestamp_comparison_exp"];
+        } | null;
+        /**
+         * projects_constraint
+         * @description unique or primary key constraints on table "projects"
+         * @enum {unknown}
+         */
+        "projects_constraint!": "projects_pkey";
+        /**
+         * projects_on_conflict
+         * @description on_conflict condition type for table "projects"
+         */
+        projects_on_conflict: {
+            constraint?: components["schemas"]["projects_constraint!"];
+            update_columns?: components["schemas"]["projects_update_column!"][];
+            where?: components["schemas"]["projects_bool_exp"];
+        } | null;
+        /**
+         * projects_arr_rel_insert_input
+         * @description input type for inserting array relation for remote table "projects"
+         */
+        projects_arr_rel_insert_input: {
+            data?: components["schemas"]["projects_insert_input!"][];
+            on_conflict?: components["schemas"]["projects_on_conflict"];
+        } | null;
+        /**
+         * clients_insert_input
+         * @description input type for inserting data into table "clients"
+         */
+        "clients_insert_input!": {
+            created_at?: components["schemas"]["timestamp"];
+            /** String */
+            email?: string | null;
+            id?: components["schemas"]["uuid"];
+            /** String */
+            name?: string | null;
+            /** String */
+            phone?: string | null;
+            projects?: components["schemas"]["projects_arr_rel_insert_input"];
+            updated_at?: components["schemas"]["timestamp"];
+        };
+        /**
+         * clients_update_column
+         * @description update columns of table "clients"
+         * @enum {unknown}
+         */
+        "clients_update_column!": "created_at" | "email" | "id" | "name" | "phone" | "updated_at";
+        /**
+         * clients_constraint
+         * @description unique or primary key constraints on table "clients"
+         * @enum {unknown}
+         */
+        "clients_constraint!": "clients_pkey";
+        /**
+         * clients_on_conflict
+         * @description on_conflict condition type for table "clients"
+         */
+        clients_on_conflict: {
+            constraint?: components["schemas"]["clients_constraint!"];
+            update_columns?: components["schemas"]["clients_update_column!"][];
+            where?: components["schemas"]["clients_bool_exp"];
+        } | null;
+        /**
+         * clients_obj_rel_insert_input
+         * @description input type for inserting object relation for remote table "clients"
+         */
+        clients_obj_rel_insert_input: {
+            data?: components["schemas"]["clients_insert_input!"];
+            on_conflict?: components["schemas"]["clients_on_conflict"];
+        } | null;
+        /**
+         * projects_tasks_update_column
+         * @description update columns of table "projects_tasks"
+         * @enum {unknown}
+         */
+        "projects_tasks_update_column!": "created_at" | "date" | "id" | "project_id" | "task_description" | "updated_at";
+        /**
          * projects_tasks_constraint
          * @description unique or primary key constraints on table "projects_tasks"
          * @enum {unknown}
@@ -2723,6 +2884,8 @@ export interface components {
          * @description input type for inserting data into table "projects"
          */
         "projects_insert_input!": {
+            client?: components["schemas"]["clients_obj_rel_insert_input"];
+            client_id?: components["schemas"]["uuid"];
             created_at?: components["schemas"]["timestamp"];
             /** String */
             description?: string | null;
@@ -2737,27 +2900,6 @@ export interface components {
             updated_at?: components["schemas"]["timestamp"];
         };
         /**
-         * projects_update_column
-         * @description update columns of table "projects"
-         * @enum {unknown}
-         */
-        "projects_update_column!": "created_at" | "description" | "end_date" | "id" | "is_active" | "name" | "start_date" | "updated_at";
-        /**
-         * projects_constraint
-         * @description unique or primary key constraints on table "projects"
-         * @enum {unknown}
-         */
-        "projects_constraint!": "projects_pkey";
-        /**
-         * projects_on_conflict
-         * @description on_conflict condition type for table "projects"
-         */
-        projects_on_conflict: {
-            constraint?: components["schemas"]["projects_constraint!"];
-            update_columns?: components["schemas"]["projects_update_column!"][];
-            where?: components["schemas"]["projects_bool_exp"];
-        } | null;
-        /**
          * projects_obj_rel_insert_input
          * @description input type for inserting object relation for remote table "projects"
          */
@@ -2770,7 +2912,7 @@ export interface components {
          * @description update columns of table "timesheets"
          * @enum {unknown}
          */
-        "timesheets_update_column!": "client_id" | "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
+        "timesheets_update_column!": "created_at" | "freelance_id" | "id" | "project_task_id" | "updated_at" | "working_date" | "working_durations";
         /**
          * timesheets_constraint
          * @description unique or primary key constraints on table "timesheets"
@@ -2816,51 +2958,6 @@ export interface components {
         projects_tasks_obj_rel_insert_input: {
             data?: components["schemas"]["projects_tasks_insert_input!"];
             on_conflict?: components["schemas"]["projects_tasks_on_conflict"];
-        } | null;
-        /**
-         * clients_insert_input
-         * @description input type for inserting data into table "clients"
-         */
-        "clients_insert_input!": {
-            created_at?: components["schemas"]["timestamp"];
-            /** String */
-            email?: string | null;
-            id?: components["schemas"]["uuid"];
-            /** String */
-            name?: string | null;
-            /** String */
-            phone?: string | null;
-            timesheets?: components["schemas"]["timesheets_arr_rel_insert_input"];
-            updated_at?: components["schemas"]["timestamp"];
-        };
-        /**
-         * clients_update_column
-         * @description update columns of table "clients"
-         * @enum {unknown}
-         */
-        "clients_update_column!": "created_at" | "email" | "id" | "name" | "phone" | "updated_at";
-        /**
-         * clients_constraint
-         * @description unique or primary key constraints on table "clients"
-         * @enum {unknown}
-         */
-        "clients_constraint!": "clients_pkey";
-        /**
-         * clients_on_conflict
-         * @description on_conflict condition type for table "clients"
-         */
-        clients_on_conflict: {
-            constraint?: components["schemas"]["clients_constraint!"];
-            update_columns?: components["schemas"]["clients_update_column!"][];
-            where?: components["schemas"]["clients_bool_exp"];
-        } | null;
-        /**
-         * clients_obj_rel_insert_input
-         * @description input type for inserting object relation for remote table "clients"
-         */
-        clients_obj_rel_insert_input: {
-            data?: components["schemas"]["clients_insert_input!"];
-            on_conflict?: components["schemas"]["clients_on_conflict"];
         } | null;
         /**
          * freelances_insert_input
@@ -2911,8 +3008,6 @@ export interface components {
          * @description input type for inserting data into table "timesheets"
          */
         "timesheets_insert_input!": {
-            client?: components["schemas"]["clients_obj_rel_insert_input"];
-            client_id?: components["schemas"]["uuid"];
             created_at?: components["schemas"]["timestamp"];
             freelance?: components["schemas"]["freelances_obj_rel_insert_input"];
             freelance_id?: components["schemas"]["uuid"];
@@ -2929,7 +3024,6 @@ export interface components {
          * @description input type for updating data in table "timesheets"
          */
         "timesheets_set_input!": {
-            client_id?: components["schemas"]["uuid"];
             created_at?: components["schemas"]["timestamp"];
             freelance_id?: components["schemas"]["uuid"];
             id?: components["schemas"]["uuid"];
@@ -2973,6 +3067,7 @@ export interface components {
          * @description input type for updating data in table "projects"
          */
         "projects_set_input!": {
+            client_id?: components["schemas"]["uuid"];
             created_at?: components["schemas"]["timestamp"];
             /** String */
             description?: string | null;
