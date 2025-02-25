@@ -99,10 +99,14 @@ const loadTasksFromLocalStorage = (date: string) => {
 	return tasks ?? [];
 };
 
-const buildErrorMessage = (results: PromiseSettledResult<any>[]) => {
+const fullFilledErrorFilter = (result: PromiseSettledResult<unknown>) => result.status === "fulfilled" && result.value?.error;
+const buildErrorMessage = (result) => {
+	return `${result.value?.error?.code}: ${result.value?.error?.error}`
+}
+const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
 	const errors = results
-		.filter((result) => result.status === "fulfilled")
-		.map((result) => `${result.value.error.code}: ${result.value.error.error}`);
+		.filter(fullFilledErrorFilter)
+		.map(buildErrorMessage);
 
 	return errors.join(" - ");
 }
@@ -259,7 +263,6 @@ export default function Timesheets({
 					object: {
 						working_durations: task.row,
 						working_date: timesheetDate,
-						client_id,
 						freelance_id,
 						project_task_id: task.projectTaskId,
 					},
@@ -276,7 +279,7 @@ export default function Timesheets({
 			if (isAllPromiseSucceeded(results)) {
 				toaster.addToast("Timesheet created successfully!", "success");
 			} else {
-				const errorMessage = buildErrorMessage(results)
+				const errorMessage = buildErrorMessages(results)
 				toaster.addToast(errorMessage, "error");
 			}
 		} else {
