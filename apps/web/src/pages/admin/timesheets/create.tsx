@@ -181,11 +181,13 @@ export default function CreateTimesheetPage({
 				title: "Success",
 				message: "Timesheet created successfully!",
 				color: "green",
+				position: "bottom-center",
 			});
 		} else {
 			notifications.show({
 				title: "Error",
 				message: "An error occurred while creating the timesheet!",
+				position: "bottom-center",
 			});
 		}
 	};

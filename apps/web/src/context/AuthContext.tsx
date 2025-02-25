@@ -55,8 +55,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 				title: "Success",
 				message: "Logged. You will be redirected soon...",
 				color: "green",
-				position: "top-right",
-				autoClose: 5000,
+				position: "bottom-center",
 			});
 
 			setTimeout(() => {
@@ -67,8 +66,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 				title: "Error",
 				message: "Invalid credentials",
 				color: "red",
-				position: "top-right",
-				autoClose: 5000,
+				position: "bottom-center",
 			});
 		}
 	}, []);

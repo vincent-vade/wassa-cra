@@ -279,6 +279,7 @@ export default function Timesheets({
 					title: "Success",
 					message: "Timesheet created successfully!",
 					color: "green",
+					position: "bottom-center",
 				});
 			} else {
 				const errorMessage = buildErrorMessage(results);
@@ -286,6 +287,7 @@ export default function Timesheets({
 					title: "Error",
 					message: errorMessage,
 					color: "red",
+					position: "bottom-center",
 				});
 			}
 		} else {
@@ -293,6 +295,7 @@ export default function Timesheets({
 				title: "Error",
 				message: "An error occurred while creating the timesheet!",
 				color: "blue",
+				position: "bottom-center",
 			});
 		}
 	};
