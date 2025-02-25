@@ -13,16 +13,11 @@ import {getProjects} from "~/services/projects";
 import {useEffect, useRef, useState} from "react";
 import dayjs from "dayjs";
 import {getAllDaysInCurrentMonth} from "~/lib/date";
-import type {CreateTimesheet, Project, ProjectTasks, TimesheetsByPeriod} from "~/lib/client";
+import type {CreateTimesheet, Project, ProjectTasks, Timesheets, TimesheetsByPeriod} from "~/lib/client";
 import {useToaster} from "~/context/ToastContext";
 import {getProjectTasksByProjectId} from "~/services/projectTasks";
-import {ProjectSelection, Task, Tasks, TaskSelection} from "~/pages/admin/timesheets/create";
 import {FetchResponse} from "openapi-fetch";
-import {useAuth} from "~/context/AuthContext";
-import {GetServerSideProps, GetServerSidePropsContext} from "next";
-
-const projectTaskId = "13e43911-7a28-46d4-a844-b8cbbdfc9b9a";
-const client_id = "728f81cd-45ab-4cb8-92b6-956fc5c5d256";
+import {GetServerSidePropsContext} from "next";
 
 export type Task = {
 	projectName: string;
@@ -32,8 +27,7 @@ export type Task = {
 };
 export type Tasks = Task[];
 
-export type ProjectSelection = { projectId: string; projectName: string };
-export type TaskSelection = { projectTaskId: string; taskTitle: string };
+export type ProjectSelection = { projectId: string; projectName: string } | undefined;
 
 const buildTimesheetDate = (month: number) => {
 	console.log('[buildTimesheetDate] month =>', month)
@@ -49,11 +43,11 @@ const isStatusFullfilled = ({ status }: { status: string }) =>
 const isResponseOk = ({ value }: FetchResponse) =>
 	value.response.ok;
 
-const isAllPromiseFullfilled = (promises: PromiseSettledResult<any>[]) => {
+const isAllPromiseFullfilled = (promises: PromiseSettledResult<unknown>[]) => {
 	return promises.every(isStatusFullfilled);
 };
 
-const isAllPromiseSucceeded = (promises: PromiseSettledResult<any>[]) => {
+const isAllPromiseSucceeded = (promises: PromiseSettledResult<unknown>[]) => {
 	return promises.every(isResponseOk);
 };
 
@@ -100,7 +94,7 @@ const loadTasksFromLocalStorage = (date: string) => {
 };
 
 const fullFilledErrorFilter = (result: PromiseSettledResult<unknown>) => result.status === "fulfilled" && result.value?.error;
-const buildErrorMessage = (result) => {
+const buildErrorMessage = (result: PromiseSettledResult<unknown>) => {
 	return `${result.value?.error?.code}: ${result.value?.error?.error}`
 }
 const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
@@ -111,79 +105,38 @@ const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
 	return errors.join(" - ");
 }
 
-/**
- * Data from localStorage working with Timesheets component
- * [
- *     {
- *         "projectName": "Headless ONE",
- *         "projectTaskId": "b86bd374-8585-42a2-8fc5-2e61b238c36d",
- *         "taskTitle": "JavaScript development",
- *         "row": []
- *     }
- * ]
- *
- * [
- *     {
- *         "id": "73856699-c11e-4e95-a9fc-afc726041b5f",
- *         "client_id": "728f81cd-45ab-4cb8-92b6-956fc5c5d256",
- *         "client": {
- *             "name": "Client 1"
- *         },
- *         "project_task_id": "b86bd374-8585-42a2-8fc5-2e61b238c36d",
- *         "projects_task": {
- *             "task_description": "JavaScript development",
- *             "project_id": "ca023d6d-71ca-41fd-b318-2bf9d319a092",
- *             "project": {
- *                 "name": "Headless ONE",
- *                 "description": null
- *             }
- *         },
- *         "created_at": "2025-02-18T21:47:54.582475",
- *         "updated_at": null,
- *         "working_date": "2025-02",
- *         "working_durations": []
- *     }
- * ]
- */
+const buildTasks = (timesheets: TimesheetsByPeriod): Tasks => {
+	if (!Array.isArray(timesheets) || timesheets.length === 0) return []
 
-const buildTasks = (timesheets) => {
 	return timesheets.map((timesheet) => {
 		return {
-			projectName: timesheet.projects_task.project.name,
+			projectName: timesheet.projects_task?.project?.name,
 			projectTaskId: timesheet.project_task_id,
-			taskTitle: timesheet.projects_task.task_description,
+			taskTitle: timesheet.projects_task?.task_description,
 			row: timesheet.working_durations,
-		};
+		} as Task;
 	})
 }
 
 export default function Timesheets({
-	_freelance_id,
+	freelance_id,
 	_timesheetDate,
 	_month,
 	_projects,
-	// _tasks,
-}: { _freelance_id: string, _timesheetDate: string, _month: number, _projects: Project[], _tasks: TimesheetsByPeriod }) {
-	const [freelance_id, setFreelanceId] = useState<string>(_freelance_id);
+}: { freelance_id: string, _timesheetDate: string, _month: number, _projects: Project[] }) {
 	const [month, setMonth] = useState<number>(_month);
 	const [timesheetDate, setTimesheetDate] = useState<string>(_timesheetDate);
-
 	const [nbDays, setNbDays] = useState<number>(
 		getAllDaysInCurrentMonth(dayjs().get("month") + 1).length,
 	);
-	const [tasks, setTasks] = useState<Tasks>([]); // buildTasks(_tasks)
-
-	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(null);
-
-
-	const [project, setProject] = useState<ProjectSelection>(null);
-	const [task, setTask] = useState<TaskSelection>(null);
+	const [tasks, setTasks] = useState<Tasks>([]);
+	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(undefined);
+	const [project, setProject] = useState<ProjectSelection>(undefined);
 
 	const toaster = useToaster();
-	const auth = useAuth()
 
-	const selectProjectRef = useRef<HTMLSelectElement>(null);
-	const selectTaskRef = useRef<HTMLSelectElement>(null);
+	const selectProjectRef = useRef<HTMLSelectElement>(undefined);
+	const selectTaskRef = useRef<HTMLSelectElement>(undefined);
 	const tasksRef = useRef<Tasks>(tasks);
 	const timesheetDateRef = useRef<string>(timesheetDate);
 
@@ -191,7 +144,7 @@ export default function Timesheets({
 		const [projectId, projectName] = selectProjectRef.current?.value.split("#");
 
 		if (!projectId) {
-			setProjectTasks(null);
+			setProjectTasks(undefined);
 			return;
 		}
 
@@ -207,7 +160,7 @@ export default function Timesheets({
 	const handleClickTaskAdd = () => {
 		const [projectTaskId, taskTitle] = selectTaskRef.current?.value.split("#");
 
-		if (projectTaskId && taskTitle) {
+		if (projectTaskId && taskTitle && project) {
 			setTasks([
 				...tasks,
 				{
@@ -217,11 +170,6 @@ export default function Timesheets({
 					row: Array.from({ length: nbDays }, () => 0),
 				},
 			]);
-
-			setTask({
-				projectTaskId,
-				taskTitle,
-			});
 		} else {
 			alert("Please select a task");
 		}
@@ -296,17 +244,6 @@ export default function Timesheets({
 		updateTaskById(task);
 	};
 
-	const resetTimesheet = () => {
-		const newTasks = tasks.map((task: Task) => {
-			return {
-				...task,
-				row: Array.from({ length: nbDays }, () => 0),
-			};
-		});
-
-		setTasks(newTasks);
-	};
-
 	useEffect(() => {
 		console.log('***** INIT *****')
 		console.log('tasks.length', tasks.length)
@@ -341,10 +278,6 @@ export default function Timesheets({
 	// 	// 	}
 	// 	// };
 	// }, [month]);
-
-	// useEffect(() => {
-	// 	console.log("nbDays have been updated", nbDays);
-	// }, [nbDays]);
 
 	const fetchTasks = async () => {
 		console.log('%c fetchTasks ', 'background-color: #006600')
@@ -413,7 +346,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 	return {
 		props: {
-			_freelance_id: freelance_id,
+			freelance_id,
 			_timesheetDate: currentDate,
 			_month: dayjs().get("month") + 1,
 			_projects: await getProjects(),
