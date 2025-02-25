@@ -1,42 +1,83 @@
-import { type FormEvent, useState } from "react";
+import {
+	Button,
+	Container,
+	Group,
+	Paper,
+	PasswordInput,
+	Stack,
+	TextInput,
+	Title,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import Link from "next/link";
 
-import "./login.css";
 import { useAuth } from "~/context/AuthContext";
 
 const LoginPage = () => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const form = useForm({
+		initialValues: {
+			email: "",
+			password: "",
+		},
+		validateInputOnBlur: true,
+		validate: {
+			email: (value: string) =>
+				!/^\S+@\S+$/.test(value) ? "Invalid email" : null,
+			password: (val: string) =>
+				!/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(val)
+					? "Password should include at least 6 characters"
+					: null,
+		},
+	});
 
 	const auth = useAuth();
 
-	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		auth?.login(email, password);
-	};
-
 	return (
-		<div className="login container">
-			<div className="form-container">
-				<h1>Login</h1>
-				<form className="form" onSubmit={handleLogin}>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="Email"
-						name="email"
-					/>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="Password"
-						name="password"
-					/>
-					<button type="submit">Login</button>
+		<Container mt="25vh" size={480}>
+			<Paper radius="md" p="xl" withBorder shadow="sm">
+				<Title order={3} mb="lg">
+					Se connecter à Wassa CRA
+				</Title>
+
+				<form
+					onSubmit={form.onSubmit((values) => {
+						auth?.login(values.email, values.password);
+					})}
+				>
+					<Stack>
+						<TextInput
+							label="Email"
+							name="email"
+							key={form.key("email")}
+							withAsterisk
+							size="md"
+							{...form.getInputProps("email")}
+						/>
+						<PasswordInput
+							label="Password"
+							name="password"
+							key={form.key("password")}
+							withAsterisk
+							size="md"
+							{...form.getInputProps("password")}
+						/>
+					</Stack>
+					<Group justify="space-between" mt="xl">
+						<Button
+							component={Link}
+							href="/reset-password"
+							variant="transparent"
+							px={0}
+						>
+							Mot de passe oublié ?
+						</Button>
+						<Button variant="filled" type="submit" size="md">
+							Se connecter
+						</Button>
+					</Group>
 				</form>
-			</div>
-		</div>
+			</Paper>
+		</Container>
 	);
 };
 

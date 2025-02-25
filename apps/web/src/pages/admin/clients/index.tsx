@@ -1,45 +1,89 @@
+import { Button, Group } from "@mantine/core";
 import dayjs from "dayjs";
-import { Layout } from "~/components/layout";
-import { useAuth } from "~/context/AuthContext";
+import Link from "next/link";
+import { type NextRouter, useRouter } from "next/router";
+
+import type { Column } from "~/components/DataTable";
+import { deleteModal } from "~/components/DeleteModal";
+import { Resources } from "~/components/Resources";
 import type { Client } from "~/lib/client";
-import { getClients } from "~/services/clients";
+import { deleteClientById, getClients } from "~/services/clients";
+
+export const columns: (routes: NextRouter) => Column<Client>[] = (router) => [
+	{
+		accessor: "id",
+		Header: "ID",
+	},
+	{
+		accessor: "email",
+		Header: "Email",
+	},
+	{
+		accessor: "name",
+		Header: "Name",
+	},
+	{
+		accessor: "phone",
+		Header: "Name",
+	},
+	{
+		accessor: "created_at",
+		Header: "Created at",
+		Row: ({ created_at }) => dayjs(created_at as string).format("DD-MM-YYYY"),
+	},
+	{
+		accessor: "updated_at",
+		Header: "Updated at",
+		Row: ({ updated_at }) => {
+			return updated_at
+				? dayjs(updated_at as string).format("DD-MM-YYYY")
+				: null;
+		},
+	},
+	{
+		accessor: "actions",
+		Header: "Actions",
+		Row: (data) => (
+			<Group>
+				<Button
+					variant="transparent"
+					component={Link}
+					href={`/admin/clients/${data.id}`}
+				>
+					Edit
+				</Button>
+				<Button
+					variant="filled"
+					color="red"
+					onClick={() =>
+						deleteModal({
+							title: `Delete client ${data.name}`,
+							onConfirm: async () => {
+								await deleteClientById(data.id);
+								await router.push("/admin/clients");
+							},
+						})
+					}
+				>
+					Delete
+				</Button>
+			</Group>
+		),
+	},
+];
 
 export default function Clients({ clients }: { clients: Client[] }) {
-	const auth = useAuth();
-	console.log(auth?.user);
+	const router = useRouter();
+	const data = clients?.map((client) => ({
+		id: client?.id as string,
+		name: client?.name,
+		email: client?.email,
+		phone: client?.phone,
+		created_at: client?.created_at,
+		updated_at: client?.updated_at,
+	}));
 
-	return (
-		<Layout>
-			<h1>Clients</h1>
-			<table>
-				<thead>
-					<tr>
-						<th width={"260px"}>Id</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Phone</th>
-						<th>Created at</th>
-						<th>Updated at</th>
-					</tr>
-				</thead>
-				<tbody>
-					{clients?.map((client) => (
-						<tr key={client?.id}>
-							<td>{client?.id}</td>
-							<td>{client?.name}</td>
-							<td>{client?.email}</td>
-							<td>{client?.phone}</td>
-							<td>{dayjs(client.created_at).format("DD-MM-YYYY")}</td>
-							<td>
-								{client.updated_at &&
-									dayjs(client.updated_at).format("DD-MM-YYYY")}
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</Layout>
-	);
+	return <Resources title="Clients" columns={columns(router)} data={data} />;
 }
 
 export async function getServerSideProps() {

@@ -16,3 +16,14 @@ export const getFreelanceById = async (id: string) => {
 
 	return data?.freelances_by_pk as Freelance;
 };
+
+export const deleteFreelanceById = async (id: string) => {
+	const { data } = await client.DELETE("/api/rest/freelances/{id}", {
+		params: {
+			path: {
+				id,
+			},
+		},
+	});
+	return data?.delete_freelances_by_pk as Freelance;
+};

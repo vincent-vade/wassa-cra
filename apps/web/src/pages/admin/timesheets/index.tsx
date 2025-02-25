@@ -1,23 +1,24 @@
 import { getCookie } from 'cookies-next/server';
+
+import { notifications } from "@mantine/notifications";
+import {FetchResponse} from "openapi-fetch";
+import {GetServerSidePropsContext} from "next";
+import {useEffect, useRef, useState} from "react";
+import dayjs from "dayjs";
+
 import {
 	createTimesheet,
 	getTimesheetsByPeriod,
 	getTimesheetsByProjectTaskIdAndPeriod,
-	updateTimesheetByPeriod
+	updateTimesheetByPeriod,
 } from "~/services/timesheets";
-
 import { Layout } from "~/components/layout";
 import {TimesheetHeader} from "~/components/TimesheetHeader";
 import {Timesheet} from "~/components/Timesheet";
 import {getProjects} from "~/services/projects";
-import {useEffect, useRef, useState} from "react";
-import dayjs from "dayjs";
 import {getAllDaysInCurrentMonth} from "~/lib/date";
-import type {CreateTimesheet, Project, ProjectTasks, Timesheets, TimesheetsByPeriod} from "~/lib/client";
-import {useToaster} from "~/context/ToastContext";
+import type {CreateTimesheet, Project, ProjectTasks, TimesheetsByPeriod} from "~/lib/client";
 import {getProjectTasksByProjectId} from "~/services/projectTasks";
-import {FetchResponse} from "openapi-fetch";
-import {GetServerSidePropsContext} from "next";
 
 export type Task = {
 	projectName: string;
@@ -40,8 +41,7 @@ const buildTimesheetDate = (month: number) => {
 const isStatusFullfilled = ({ status }: { status: string }) =>
 	status === "fulfilled";
 
-const isResponseOk = ({ value }: FetchResponse) =>
-	value.response.ok;
+const isResponseOk = ({ value }: FetchResponse) => value.response.ok;
 
 const isAllPromiseFullfilled = (promises: PromiseSettledResult<unknown>[]) => {
 	return promises.every(isStatusFullfilled);
@@ -103,7 +103,7 @@ const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
 		.map(buildErrorMessage);
 
 	return errors.join(" - ");
-}
+};
 
 const buildTasks = (timesheets: TimesheetsByPeriod): Tasks => {
 	if (!Array.isArray(timesheets) || timesheets.length === 0) return []
@@ -133,7 +133,6 @@ export default function Timesheets({
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(undefined);
 	const [project, setProject] = useState<ProjectSelection>(undefined);
 
-	const toaster = useToaster();
 
 	const selectProjectRef = useRef<HTMLSelectElement>(undefined);
 	const selectTaskRef = useRef<HTMLSelectElement>(undefined);
@@ -223,15 +222,30 @@ export default function Timesheets({
 		const results = await Promise.allSettled(promises);
 
 		if (isAllPromiseFullfilled(results)) {
-			console.log('results', results)
+			console.log("results", results);
 			if (isAllPromiseSucceeded(results)) {
-				toaster.addToast("Timesheet created successfully!", "success");
+				notifications.show({
+					title: "Success",
+					message: "Timesheet created successfully!",
+					color: "green",
+					position: "bottom-center",
+				});
 			} else {
-				const errorMessage = buildErrorMessages(results)
-				toaster.addToast(errorMessage, "error");
+				const errorMessage = buildErrorMessages(results);
+				notifications.show({
+					title: "Error",
+					message: errorMessage,
+					color: "red",
+					position: "bottom-center",
+				});
 			}
 		} else {
-			toaster.addToast("An error occurred while creating the timesheet!", "error");
+			notifications.show({
+				title: "Error",
+				message: "An error occurred while creating the timesheet!",
+				color: "blue",
+				position: "bottom-center",
+			});
 		}
 	};
 
@@ -312,7 +326,6 @@ export default function Timesheets({
 
 	return (
 		<Layout>
-
 			<h1>Timesheets</h1>
 
 			<TimesheetHeader

@@ -1,3 +1,4 @@
+import { notifications } from "@mantine/notifications";
 import { deleteCookie, hasCookie, useGetCookies } from "cookies-next/client";
 import { useRouter } from "next/router";
 import {
@@ -9,7 +10,6 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { useToaster } from "~/context/ToastContext";
 import type { Freelance } from "~/lib/client";
 import { auth } from "~/services/auth";
 import { getFreelanceById } from "~/services/freelances";
@@ -27,10 +27,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
 	const router = useRouter();
 	const getCookies = useGetCookies();
-	const toaster = useToaster();
+	const cookies = getCookies();
 
 	useEffect(() => {
-		const cookies = getCookies();
 		if (cookies?.token) {
 			getFreelanceById(cookies?.token).then((freelance) => {
 				if (freelance?.id) {
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 				}
 			});
 		}
-	}, [getCookies]);
+	}, [cookies?.token]);
 
 	const logout = useCallback(() => {
 		if (hasCookie("token")) {
@@ -52,13 +51,23 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 	const login = useCallback(async (email: string, password: string) => {
 		const response = await auth.login(email, password);
 		if (response.ok) {
-			toaster.addToast("Logged. You will be redirected soon...", "success");
+			notifications.show({
+				title: "Success",
+				message: "Logged. You will be redirected soon...",
+				color: "green",
+				position: "bottom-center",
+			});
 
 			setTimeout(() => {
 				router.push("/admin");
 			}, 3000);
 		} else {
-			toaster.addToast("Invalid credentials", "error");
+			notifications.show({
+				title: "Error",
+				message: "Invalid credentials",
+				color: "red",
+				position: "bottom-center",
+			});
 		}
 	}, []);
 

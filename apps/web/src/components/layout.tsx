@@ -1,42 +1,66 @@
+import { AppShell, Box, Button, Group, NavLink } from "@mantine/core";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
-import './layout.css'
-
+import { useRouter } from "next/router";
 import { useAuth } from "~/context/AuthContext";
+
+const navLinks = [
+	{ label: "Projects", href: "/admin/projects" },
+	{ label: "Clients", href: "/admin/clients" },
+	{ label: "Freelances", href: "/admin/freelances" },
+	{ label: "Timesheets", href: "/admin/timesheets" },
+];
 
 export const Layout = ({ children }: PropsWithChildren) => {
 	const auth = useAuth();
+	const { pathname } = useRouter();
 
 	return (
-		<div className="flex">
-			<aside>
-				<nav>
-					<ul>
-						<li>
-							<Link href="/admin/projects">Projects</Link>
-						</li>
-						<li>
-							<Link href="/admin/clients">Clients</Link>
-						</li>
-						<li>
-							<Link href="/admin/freelances">Freelances</Link>
-						</li>
-						<li>
-							<Link href="/admin/timesheets">Timesheets</Link>
-						</li>
-						<hr style={{marginTop: '1rem', marginBottom: '1rem'}} />
-						<li>
-							<button type="button" onClick={() => auth?.logout()}>
-								Logout
-							</button>
-						</li>
-					</ul>
-				</nav>
-			</aside>
-			<div className={'main'}>
-				{children}
-			</div>
-		</div>
+		<AppShell
+			header={{ height: 60 }}
+			navbar={{
+				width: 250,
+				breakpoint: "sm",
+			}}
+			padding="md"
+		>
+			<AppShell.Header>
+				<Group
+					mih={50}
+					gap="lg"
+					justify="space-between"
+					align="center"
+					wrap="nowrap"
+					p="md"
+				>
+					<div>Logo</div>
+					<Box>
+						{auth?.user?.email}
+						<Button
+							type="button"
+							onClick={() => auth?.logout()}
+							variant="transparent"
+						>
+							Logout
+						</Button>
+					</Box>
+				</Group>
+			</AppShell.Header>
+
+			<AppShell.Navbar p="md">
+				{navLinks.map((link) => (
+					<NavLink
+						key={link.href}
+						component={Link}
+						href={link.href}
+						label={link.label}
+						active={pathname === link.href}
+					/>
+				))}
+			</AppShell.Navbar>
+
+			<AppShell.Main>{children}</AppShell.Main>
+		</AppShell>
 	);
 };
