@@ -11,6 +11,12 @@ async function addProjects() {
 
 	await prisma.$connect();
 
+	console.log("cleaning database...");
+	await prisma.timesheets.deleteMany();
+	await prisma.projects_tasks.deleteMany();
+	await prisma.projects.deleteMany();
+	await prisma.clients.deleteMany();
+
 	try {
 		const client1 = await prisma.clients.create({
 			data: {
