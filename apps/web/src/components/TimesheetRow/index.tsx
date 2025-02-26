@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
+import { Table, NumberInput, useMantineTheme } from "@mantine/core";
+
 import { Days, isWeekendDay } from "~/lib/date";
-import { NumberInput } from "~/components/InputNumber";
 
 export const TimesheetRow = ({
      task,
@@ -14,11 +15,13 @@ export const TimesheetRow = ({
     const [totalDaysWorked, setTotalDaysWorked] = useState<number>(0);
     const [daysInput, setDaysInput] = useState<number[]>(task.row || []);
 
+    const theme = useMantineTheme();
+
     useEffect(() => {
         const totalDays = daysInput.reduce((acc, curr) => {
             return acc + curr
         }, 0);
-        console.log('totalDays', totalDays)
+
         setTotalDaysWorked(totalDays);
     }, [daysInput])
 
@@ -33,25 +36,31 @@ export const TimesheetRow = ({
     }
 
     return (
-        <tr>
-            <td><p className="p-2">{task.projectName} / {task.taskTitle}</p></td>
+        <Table.Tr>
+            <Table.Td><p className="p-2">{task.projectName} / {task.taskTitle}</p></Table.Td>
             {
                 days.map((day, idx) => {
                     const defaultValue = daysInput[idx] || 0;
                     return (
-                        <td key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""}>
+                        <Table.Td key={day.currDate}
+                            style={isWeekendDay(day.dayOfWeek) ? {
+                                backgroundColor: theme.colors.gray[6],
+                            } : {}}
+                        >
                             <NumberInput
-                                idx={idx}
-                                taskId={task.projectTaskId}
-                                disabled={isWeekendDay(day.dayOfWeek)}
-                                handleChange={updateRow}
+                                min={0}
+                                max={1}
+                                step={0.5}
+                                style={{ minWidth: 70 }}
                                 defaultValue={defaultValue}
+                                disabled={isWeekendDay(day.dayOfWeek)}
+                                onChange={(value) => updateRow(value, task.projectTaskId, idx)}
                             />
-                        </td>
+                        </Table.Td>
                     );
                 })
             }
-            <td><p style={{ "textAlign": "center", "fontWeight": "bold" }}>{totalDaysWorked}</p></td>
-        </tr>
+            <Table.Td><p style={{ "textAlign": "center", "fontWeight": "bold" }}>{totalDaysWorked}</p></Table.Td>
+        </Table.Tr>
     );
 }

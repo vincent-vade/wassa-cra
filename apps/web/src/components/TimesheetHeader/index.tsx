@@ -1,5 +1,5 @@
 import { Days, getAllDaysInCurrentMonth, getCurrentMonth, isWeekendDay } from "~/lib/date";
-import {NumberInput, NativeSelect, Group, Button} from "@mantine/core"
+import {NativeSelect, Group, Text, Button} from "@mantine/core"
 import {ChangeEvent, useState} from "react";
 import {Projects, ProjectTasks} from "~/lib/client";
 
@@ -50,10 +50,6 @@ const emptyOptionItem = {
 }
 export const TimesheetHeader = (options: Options) => {
     const [projects] = useState<OptionItem[]>([emptyOptionItem, ...buildProjects(options.projects)]);
-    // const [projectTasks, setProjectTasks] = useState<OptionItem[]>([emptyOptionItem, ...buildProjectTasks(options.projectTasks)]);
-
-    console.log('projectTasks', options.projectTasks)
-
     const days = getAllDaysInCurrentMonth(options.month);
 
     const getNbWorkingDays = (days: Days) => days.reduce(
@@ -64,14 +60,14 @@ export const TimesheetHeader = (options: Options) => {
     return (
         <>
             <div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
-                <button onClick={options.handleClickPrevious}>&lt;</button>
+                <Button onClick={options.handleClickPrevious} >&lt;</Button>
 
                 <span  style={{'textAlign': 'center'}}>
-                        <span className="text-4xl font-bold">{getCurrentMonth(options.month)}</span>
-                        <span style={{fontStyle: "italic"}}>(working days: <strong>{getNbWorkingDays(days)}</strong>)</span>
+                        <Text size={'xl'} fw="bold" tt="uppercase">{getCurrentMonth(options.month)}</Text>
+                        <Text fs="italic">(working days: <strong>{getNbWorkingDays(days)}</strong>)</Text>
                     </span>
 
-                <button  onClick={options.handleClickNext}>&gt;</button>
+                <Button  onClick={options.handleClickNext}>&gt;</Button>
             </div>
             <hr  className="mb-3" />
 
