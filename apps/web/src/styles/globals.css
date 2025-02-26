@@ -1,0 +1,17 @@
+/*:root {*/
+/*	@mixin light-root {*/
+/*		--mantine-color-body: var(--gray-300);*/
+/*	}*/
+
+/*	@mixin dark-root {*/
+/*		--mantine-color-body: #333;*/
+/*	}*/
+/*}*/
+
+body {
+	@mixin dark {
+		background-color: var(--mantine-color-gray-9);
+	}
+
+	background-color: var(--mantine-color-gray-0);
+}

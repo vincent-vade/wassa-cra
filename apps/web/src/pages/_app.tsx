@@ -15,18 +15,17 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 
 const base: MantineColorsTuple = [
-	"#eeedff",
-	"#d9d7fc",
-	"#afacf1",
-	"#837ee6",
-	"#5e57dd",
-	"#463ed8",
-	"#3932d7",
-	"#2b25bf",
-	"#2420ac",
-	"#1a1a98",
+	"#f6eeff",
+	"#e7d9f7",
+	"#cab1ea",
+	"#ad86dd",
+	"#9462d2",
+	"#854bcb",
+	"#7d3fc9",
+	"#6b31b2",
+	"#5f2ba0",
+	"#52238d",
 ];
-
 const theme = createTheme({
 	colors: {
 		base,
