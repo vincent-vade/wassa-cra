@@ -48,7 +48,7 @@ export const columns: (routes: NextRouter) => Column<Client>[] = (router) => [
 				<Button
 					variant="transparent"
 					component={Link}
-					href={`/admin/clients/${data.id}`}
+					href={`/admin/clients/edit/${data.id}`}
 				>
 					Edit
 				</Button>
@@ -83,7 +83,14 @@ export default function Clients({ clients }: { clients: Client[] }) {
 		updated_at: client?.updated_at,
 	}));
 
-	return <Resources title="Clients" columns={columns(router)} data={data} />;
+	return (
+		<Resources
+			resourceName="clients"
+			title="Clients"
+			columns={columns(router)}
+			data={data}
+		/>
+	);
 }
 
 export async function getServerSideProps() {

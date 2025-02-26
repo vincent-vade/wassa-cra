@@ -87,7 +87,14 @@ export default function Freelances({
 		updated_at: freelance?.updated_at,
 	}));
 
-	return <Resources title="Freelances" columns={columns(router)} data={data} />;
+	return (
+		<Resources
+			resourceName="freelances"
+			title="Freelances"
+			columns={columns(router)}
+			data={data}
+		/>
+	);
 }
 
 export async function getServerSideProps() {
