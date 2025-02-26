@@ -89,7 +89,14 @@ export default function Projects({ projects }: { projects: Project[] }) {
 		is_active: project?.is_active,
 	}));
 
-	return <Resources title="Projects" columns={columns(router)} data={data} />;
+	return (
+		<Resources
+			resourceName="Projects"
+			title="Projects"
+			columns={columns(router)}
+			data={data}
+		/>
+	);
 }
 
 export async function getServerSideProps() {

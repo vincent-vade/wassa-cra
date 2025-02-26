@@ -1,8 +1,8 @@
 import { AppShell, Box, Button, Group, NavLink } from "@mantine/core";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { PropsWithChildren } from "react";
 
-import { useRouter } from "next/router";
 import { useAuth } from "~/context/AuthContext";
 
 const navLinks = [
@@ -32,9 +32,10 @@ export const Layout = ({ children }: PropsWithChildren) => {
 					justify="space-between"
 					align="center"
 					wrap="nowrap"
-					p="md"
+					p="xs"
 				>
-					<div>Logo</div>
+					<div>logo</div>
+
 					<Box>
 						{auth?.user?.email}
 						<Button

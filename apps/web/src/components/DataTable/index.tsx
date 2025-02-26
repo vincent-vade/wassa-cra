@@ -30,11 +30,11 @@ export const DataTable = <T extends Record<keyof T, unknown>>({
 
 	return (
 		<ScrollArea
-			h={300}
+			h={600}
 			onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
 		>
 			<Table
-				miw={700}
+				miw={800}
 				verticalSpacing="sm"
 				striped
 				highlightOnHover
