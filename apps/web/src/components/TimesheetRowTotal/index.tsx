@@ -1,22 +1,35 @@
 import {Days, isWeekendDay} from "~/lib/date";
+import {Table, useMantineTheme} from "@mantine/core";
 
 export const TimesheetRowTotal = ({days, timesheetTotalDays, timesheetTotalRow}: {days: Days, timesheetTotalDays: number, timesheetTotalRow: number[]}) => {
-    console.log('[Component][TimesheetRowTotal] timesheetTotalRow =>', timesheetTotalRow)
+    const theme = useMantineTheme();
+
     return (
-        <tr>
-            <td><p className="p-2" style={{'fontWeight': 'bold', textAlign: 'right'}}>Total</p></td>
+        <Table.Tr>
+            <Table.Td><p className="p-2" style={{'fontWeight': 'bold', textAlign: 'right'}}>Total</p></Table.Td>
             {
                 days.map((day, idx) => {
                     return (
-                        <td key={`total-${idx}`} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold" }}>
+                        <Table.Td key={`total-${idx}`}
+                            style={isWeekendDay(day.dayOfWeek) ? {
+                                backgroundColor: theme.colors.gray[6],
+                                textAlign: "center",
+                                fontWeight: "normal",
+                                color: theme.colors.gray[5]
+                            } : {
+                                textAlign: "center",
+                                fontWeight: "bold"
+
+                            }}
+                        >
                             <p className="p-2" style={{'fontWeight': 'bold', textAlign: 'center'}}>{timesheetTotalRow[idx]}</p>
-                        </td>
+                        </Table.Td>
                     );
                 })
             }
-            <td style={{ "textAlign": "center", "fontWeight": "bold" }}>
+            <Table.Td style={{ "textAlign": "center", "fontWeight": "bold" }}>
                 <p className="p-2">{timesheetTotalDays}</p>
-            </td>
-        </tr>
+            </Table.Td>
+        </Table.Tr>
     )
 }

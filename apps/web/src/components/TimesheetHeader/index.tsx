@@ -1,10 +1,13 @@
 import { Days, getAllDaysInCurrentMonth, getCurrentMonth, isWeekendDay } from "~/lib/date";
-import {Select} from "~/components/Select";
+import {NativeSelect, Group, Text, Button} from "@mantine/core"
+import {ChangeEvent, useState} from "react";
+import {Projects, ProjectTasks} from "~/lib/client";
 
 type Options = {
     handleClickPrevious: () => void
     handleClickNext: () => void
-    handleChangeProject: (value: string) => void
+    handleChangeProject: (e: ChangeEvent<HTMLSelectElement>) => void
+    handleChangeProjectTasks: (e: ChangeEvent<HTMLSelectElement>) => void
     handleClickTaskAdd: () => void
     refProjectDropdown: React.RefObject<HTMLSelectElement>
     refTaskDropdown: React.RefObject<HTMLSelectElement>
@@ -13,7 +16,40 @@ type Options = {
     projectTasks: any[]
 }
 
+type OptionItem = {
+    label: string
+    value: string
+}
+
+const buildProjects = (projects: Projects): OptionItem[] => {
+    if (!projects) return []
+
+    return projects.map((project) => {
+        return {
+            label: project?.name,
+            value: project?.id
+        }
+    })
+}
+
+const buildProjectTasks = (projectTasks: ProjectTasks): OptionItem[] => {
+    if (!projectTasks) return []
+
+    return projectTasks.map((task) => {
+        console.log("task", task)
+        return {
+            label: task?.task_description,
+            value: task?.id
+        }
+    })
+}
+
+const emptyOptionItem = {
+    label: 'Please select an item',
+    value: ''
+}
 export const TimesheetHeader = (options: Options) => {
+    const [projects] = useState<OptionItem[]>([emptyOptionItem, ...buildProjects(options.projects)]);
     const days = getAllDaysInCurrentMonth(options.month);
 
     const getNbWorkingDays = (days: Days) => days.reduce(
@@ -24,45 +60,41 @@ export const TimesheetHeader = (options: Options) => {
     return (
         <>
             <div className="mb-3" style={{'display': 'flex', 'justifyContent': 'space-between'}}>
-                <button onClick={options.handleClickPrevious}>&lt;</button>
+                <Button onClick={options.handleClickPrevious} >&lt;</Button>
 
                 <span  style={{'textAlign': 'center'}}>
-                        <span className="text-4xl font-bold">{getCurrentMonth(options.month)}</span>
-                        <span style={{fontStyle: "italic"}}>(working days: <strong>{getNbWorkingDays(days)}</strong>)</span>
+                        <Text size={'xl'} fw="bold" tt="uppercase">{getCurrentMonth(options.month)}</Text>
+                        <Text fs="italic">(working days: <strong>{getNbWorkingDays(days)}</strong>)</Text>
                     </span>
 
-                <button  onClick={options.handleClickNext}>&gt;</button>
+                <Button  onClick={options.handleClickNext}>&gt;</Button>
             </div>
             <hr  className="mb-3" />
 
-            <div className={"mb-3"}>
-                <span style={{display: "inline-block", minWidth: '100px', fontWeight: 'bold'}}>Projects</span>
-                <Select
-                    ref={options.refProjectDropdown}
-                    options={options.projects}
-                    getOptionLabel={(project) => project.name}
-                    getOptionValue={(project) => project.id}
+            <Group>
+                <NativeSelect
+                    data={projects}
+                    label="Select project"
                     onChange={options.handleChangeProject}
-                    defaultValue={''}
+                    defaultValue={'Select project'}
                 />
-            </div>
+                {
+                    options.projectTasks && (
+                        <Group align={'flex-end'}>
+                                <NativeSelect
+                                    data={[emptyOptionItem, ...buildProjectTasks(options.projectTasks)]}
+                                    label="Select task"
+                                    onChange={options.handleChangeProjectTasks}
+                                    defaultValue={'Please select an item'}
+                                />
 
-            {
-                options.projectTasks && (
-                    <div className={"mb-3"}>
-                        <span style={{display: "inline-block", minWidth: '100px', fontWeight: 'bold'}}>Tasks</span>
-                        <Select
-                            ref={options.refTaskDropdown}
-                            options={options.projectTasks}
-                            getOptionLabel={(project) => project.task_description}
-                            getOptionValue={(project) => project.id}
-                            onChange={options.handleChangeProject}
-                            defaultValue={''}
-                        />&nbsp;
-                        <button className="button" onClick={options.handleClickTaskAdd}>ADD</button>
-                    </div>
-                )
-            }
+                                <Button onClick={options.handleClickTaskAdd}>ADD</Button>
+                        </Group>
+                    )
+                }
+            </Group>
+
+
 
             <hr  className="mb-3" />
         </>

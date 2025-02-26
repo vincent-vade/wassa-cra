@@ -1,8 +1,11 @@
+import {useEffect, useState} from "react";
+import {Button, Table, useMantineTheme} from "@mantine/core";
+
 import {getAllDaysInCurrentMonth, isWeekendDay} from "~/lib/date";
 import {TimesheetRow} from "~/components/TimesheetRow";
 import {TimesheetRowTotal} from "~/components/TimesheetRowTotal";
-import {useEffect, useState} from "react";
-import {Tasks, Task} from "~/pages/timesheets/create";
+import {Task, Tasks} from "~/pages/admin/timesheets";
+
 
 const EmptyRow = () => {
     return (<tr>
@@ -44,6 +47,7 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
     const [timesheets, setTimesheets] = useState<Timesheets>({});
     const [timesheetTotalDays, setTimesheetTotalDays] = useState<number>(0);
     const [timesheetTotalRow, setTimesheetTotalRow] = useState<number[]>(calculateRowTotalV2(month, tasks));
+    const theme = useMantineTheme();
 
     const days = getAllDaysInCurrentMonth(month);
 
@@ -75,24 +79,33 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
 
     return(
         <>
-            <div style={{ "overflowX": "auto" }}>
-                <table>
-                <thead>
-                <tr>
-                    <td style={{minWidth: '110px'}}></td>
+            <Table.ScrollContainer minWidth={500}>
+                <Table highlightOnHover >
+                <Table.Thead>
+                <Table.Tr>
+                    <Table.Tr style={{minWidth: '110px'}}></Table.Tr>
                     {
                         days.map((day) => {
                             return (
-                                <td  key={day.currDate} className={isWeekendDay(day.dayOfWeek) ? "bg-gray-200" : ""} style={{ "textAlign": "center", "fontWeight": "bold", "minWidth": "58px" }}>
+                                <Table.Th  key={day.currDate} style={isWeekendDay(day.dayOfWeek) ? {
+                                    backgroundColor: theme.colors.gray[6],
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    color: theme.colors.gray[5]
+                                } : {
+                                    textAlign: "center",
+                                    fontWeight: "bold"
+                                }}
+                                >
                                     <p>{day.currDate}</p>
-                                </td>
+                                </Table.Th>
                             );
                         })
                     }
-                    <td style={{ "textAlign": "center", "fontWeight": "bold", "minWidth": "110px" }}>Total</td>
-                </tr>
-                </thead>
-                <tbody>
+                    <Table.Td style={{ "textAlign": "center", "fontWeight": "bold", "minWidth": "110px" }}>Total</Table.Td>
+                </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                 {
                     tasks.length === 0 ? <EmptyRow />  : tasks.map((task) => {
                         return (<TimesheetRow key={`${task.projectTaskId}`} task={task} days={days} handleUpdateTimesheet={handleUpdateTimesheet} />)
@@ -107,11 +120,11 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
                     />
                 }
 
-                </tbody>
-            </table>
-            </div>
+                </Table.Tbody>
+            </Table>
+            </Table.ScrollContainer>
             <div>
-                <button onClick={handleClickSave}>Save timesheet</button>
+                <Button onClick={handleClickSave}>Save timesheet</Button>
             </div>
         </>
     )
