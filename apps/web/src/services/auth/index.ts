@@ -1,8 +1,8 @@
 const login = (email: string, password: string) => {
-	return fetch("/api/login", {
-		method: "POST",
+	return fetch('/api/login', {
+		method: 'POST',
 		headers: {
-			"Content-Type": "application/json",
+			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
 			email,

@@ -1,13 +1,13 @@
-import { modals } from "@mantine/modals";
+import { modals } from '@mantine/modals'
 
 export const deleteModal = ({
-	title = "Delete Modal",
+	title = 'Delete Modal',
 	onConfirm,
 	onCancel,
 }: {
-	title?: string;
-	onConfirm?: () => void;
-	onCancel?: () => void;
+	title?: string
+	onConfirm?: () => void
+	onCancel?: () => void
 }) =>
 	modals.openConfirmModal({
 		title,
@@ -18,8 +18,8 @@ export const deleteModal = ({
 				and you will have to contact support to restore your data.
 			</div>
 		),
-		labels: { confirm: "Delete", cancel: "No don't delete it" },
-		confirmProps: { color: "red" },
+		labels: { confirm: 'Delete', cancel: "No don't delete it" },
+		confirmProps: { color: 'red' },
 		onCancel,
 		onConfirm,
-	});
+	})

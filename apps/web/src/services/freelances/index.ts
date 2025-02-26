@@ -1,12 +1,12 @@
-import { type Freelance, client } from "~/lib/client";
+import { type Freelance, client } from '~/lib/client';
 
 export const getFreelances = async () => {
-	const { data } = await client.GET("/api/rest/freelances");
+	const { data } = await client.GET('/api/rest/freelances');
 	return data?.freelances as Freelance[];
 };
 
 export const getFreelanceById = async (id: string) => {
-	const { data } = await client.GET("/api/rest/freelances/{id}", {
+	const { data } = await client.GET('/api/rest/freelances/{id}', {
 		params: {
 			path: {
 				id,
@@ -18,7 +18,7 @@ export const getFreelanceById = async (id: string) => {
 };
 
 export const deleteFreelanceById = async (id: string) => {
-	const { data } = await client.DELETE("/api/rest/freelances/{id}", {
+	const { data } = await client.DELETE('/api/rest/freelances/{id}', {
 		params: {
 			path: {
 				id,

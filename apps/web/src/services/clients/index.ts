@@ -1,12 +1,12 @@
-import { type Client, client } from "~/lib/client";
+import { type Client, client } from '~/lib/client';
 
 export const getClients = async () => {
-	const { data } = await client.GET("/api/rest/clients");
+	const { data } = await client.GET('/api/rest/clients');
 	return data?.clients as Client[];
 };
 
 export const getClientById = async (id: string) => {
-	const { data } = await client.GET("/api/rest/clients/{id}", {
+	const { data } = await client.GET('/api/rest/clients/{id}', {
 		params: {
 			path: {
 				id,
@@ -18,7 +18,7 @@ export const getClientById = async (id: string) => {
 };
 
 export const deleteClientById = async (id: string) => {
-	const { data } = await client.DELETE("/api/rest/clients/{id}", {
+	const { data } = await client.DELETE('/api/rest/clients/{id}', {
 		params: {
 			path: {
 				id,

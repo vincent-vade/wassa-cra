@@ -32,7 +32,6 @@
 		"react-dom": "^19.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
 		"@eslint/eslintrc": "^3",
 		"@types/node": "^20",
 		"@types/react": "^19",
@@ -42,6 +41,7 @@
 		"postcss": "^8.5.3",
 		"postcss-preset-mantine": "^1.17.0",
 		"postcss-simple-vars": "^7.0.1",
+		"prettier": "^3.5.2",
 		"prisma": "^6.3.0",
 		"tsx": "^3.12.10",
 		"typescript": "^5"
