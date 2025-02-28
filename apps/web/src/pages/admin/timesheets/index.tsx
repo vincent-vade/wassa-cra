@@ -1,24 +1,34 @@
 import { getCookie } from 'cookies-next/server';
 
-import { notifications } from "@mantine/notifications";
-import {FetchResponse} from "openapi-fetch";
-import {GetServerSidePropsContext} from "next";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
-import dayjs from "dayjs";
+import { notifications } from '@mantine/notifications';
+import { FetchResponse } from 'openapi-fetch';
+import { GetServerSidePropsContext } from 'next';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import dayjs from 'dayjs';
 
 import {
 	createTimesheet,
 	getTimesheetsByPeriod,
 	getTimesheetsByProjectTaskIdAndPeriod,
 	updateTimesheetByPeriod,
-} from "~/services/timesheets";
-import { Layout } from "~/components/layout";
-import {TimesheetHeader} from "~/components/TimesheetHeader";
-import {Timesheet} from "~/components/Timesheet";
-import {getProjectById, getProjects} from "~/services/projects";
-import {getAllDaysInCurrentMonth} from "~/lib/date";
-import {CreateTimesheet, Project, Projects, ProjectTasks, ProjetTask, TimesheetsByPeriod} from "~/lib/client";
-import {getProjectTasksById, getProjectTasksByProjectId} from "~/services/projectTasks";
+} from '~/services/timesheets';
+import { Layout } from '~/components/layout';
+import { TimesheetHeader } from '~/components/TimesheetHeader';
+import { Timesheet } from '~/components/Timesheet';
+import { getProjectById, getProjects } from '~/services/projects';
+import { getAllDaysInCurrentMonth } from '~/lib/date';
+import {
+	CreateTimesheet,
+	Project,
+	Projects,
+	ProjectTasks,
+	ProjetTask,
+	TimesheetsByPeriod,
+} from '~/lib/client';
+import {
+	getProjectTasksById,
+	getProjectTasksByProjectId,
+} from '~/services/projectTasks';
 
 export type Task = {
 	projectName: string;
@@ -31,15 +41,15 @@ export type Tasks = Task[];
 export type ProjectSelection = { projectId: string; projectName?: string };
 
 const buildTimesheetDate = (month: number) => {
-	console.log('[buildTimesheetDate] month =>', month)
+	console.log('[buildTimesheetDate] month =>', month);
 
 	return dayjs()
 		.month(month - 1)
-		.format("YYYY-MM");
+		.format('YYYY-MM');
 };
 
 const isStatusFullfilled = ({ status }: { status: string }) =>
-	status === "fulfilled";
+	status === 'fulfilled';
 
 const isResponseOk = ({ value }: FetchResponse) => value.response.ok;
 
@@ -53,7 +63,7 @@ const isAllPromiseSucceeded = (promises: PromiseSettledResult<unknown>[]) => {
 
 const overrideRowPropByTaskId = (
 	currTaskProjectTaskId: string,
-	newTask: Task,
+	newTask: Task
 ) => {
 	if (currTaskProjectTaskId !== newTask.projectTaskId) return {};
 
@@ -72,7 +82,7 @@ const updateTasks = (tasks: Tasks, task: Task) =>
 
 const saveTasksToLocalStorage = (date: string, tasks: Tasks) => {
 	if (!/^\d{4}-\d{2}$/.test(date)) {
-		console.error("La date doit être au format YYYY-MM");
+		console.error('La date doit être au format YYYY-MM');
 		return;
 	}
 
@@ -82,7 +92,7 @@ const saveTasksToLocalStorage = (date: string, tasks: Tasks) => {
 };
 const loadTasksFromLocalStorage = (date: string) => {
 	if (!/^\d{4}-\d{2}$/.test(date)) {
-		console.error("La date doit être au format YYYY-MM");
+		console.error('La date doit être au format YYYY-MM');
 		return;
 	}
 
@@ -93,20 +103,19 @@ const loadTasksFromLocalStorage = (date: string) => {
 	return tasks ?? [];
 };
 
-const fullFilledErrorFilter = (result: PromiseSettledResult<unknown>) => result.status === "fulfilled" && result.value?.error;
+const fullFilledErrorFilter = (result: PromiseSettledResult<unknown>) =>
+	result.status === 'fulfilled' && result.value?.error;
 const buildErrorMessage = (result: PromiseSettledResult<unknown>) => {
-	return `${result.value?.error?.code}: ${result.value?.error?.error}`
-}
+	return `${result.value?.error?.code}: ${result.value?.error?.error}`;
+};
 const buildErrorMessages = (results: PromiseSettledResult<unknown>[]) => {
-	const errors = results
-		.filter(fullFilledErrorFilter)
-		.map(buildErrorMessage);
+	const errors = results.filter(fullFilledErrorFilter).map(buildErrorMessage);
 
-	return errors.join(" - ");
+	return errors.join(' - ');
 };
 
 const buildTasks = (timesheets: TimesheetsByPeriod): Tasks => {
-	if (!Array.isArray(timesheets) || timesheets.length === 0) return []
+	if (!Array.isArray(timesheets) || timesheets.length === 0) return [];
 
 	return timesheets.map((timesheet) => {
 		return {
@@ -115,19 +124,24 @@ const buildTasks = (timesheets: TimesheetsByPeriod): Tasks => {
 			taskTitle: timesheet.projects_task?.task_description,
 			row: timesheet.working_durations,
 		} as Task;
-	})
-}
+	});
+};
 
 export default function Timesheets({
 	freelance_id,
 	_timesheetDate,
 	_month,
 	_projects,
-}: { freelance_id: string, _timesheetDate: string, _month: number, _projects: Projects }) {
+}: {
+	freelance_id: string;
+	_timesheetDate: string;
+	_month: number;
+	_projects: Projects;
+}) {
 	const [month, setMonth] = useState<number>(_month);
 	const [timesheetDate, setTimesheetDate] = useState<string>(_timesheetDate);
 	const [nbDays, setNbDays] = useState<number>(
-		getAllDaysInCurrentMonth(dayjs().get("month") + 1).length,
+		getAllDaysInCurrentMonth(dayjs().get('month') + 1).length
 	);
 	const [tasks, setTasks] = useState<Tasks>([]);
 	const [projectTasks, setProjectTasks] = useState<ProjectTasks>(undefined);
@@ -135,28 +149,29 @@ export default function Timesheets({
 	const [project, setProject] = useState<ProjectSelection>(undefined);
 	const [projectTask, setProjectTask] = useState<ProjetTask>(undefined);
 
-
 	const selectProjectRef = useRef<HTMLSelectElement>(undefined);
 	const selectTaskRef = useRef<HTMLSelectElement>(undefined);
 	const tasksRef = useRef<Tasks>(tasks);
 	const timesheetDateRef = useRef<string>(timesheetDate);
 
-	const handleChangeProjectTasks = async (e: ChangeEvent<HTMLSelectElement>) => {
-		const projectTaskId = e.target.value
+	const handleChangeProjectTasks = async (
+		e: ChangeEvent<HTMLSelectElement>
+	) => {
+		const projectTaskId = e.target.value;
 
-		const projectTask = await getProjectTasksById(projectTaskId)
+		const projectTask = await getProjectTasksById(projectTaskId);
 
 		setProjectTask(projectTask);
-	}
+	};
 	const handleChangeProject = async (e: ChangeEvent<HTMLSelectElement>) => {
-		const projectId = e.target.value
+		const projectId = e.target.value;
 
 		if (!projectId) {
 			setProjectTasks(undefined);
 			return;
 		}
 
-		const project = await getProjectById(projectId)
+		const project = await getProjectById(projectId);
 
 		setProject({
 			projectId,
@@ -179,7 +194,7 @@ export default function Timesheets({
 				},
 			]);
 		} else {
-			alert("Please select a task");
+			alert('Please select a task');
 		}
 	};
 	const handleClickPrevious = () => {
@@ -202,18 +217,21 @@ export default function Timesheets({
 	};
 	const handleClickSave = async () => {
 		if (tasks.length === 0) {
-			alert("Please select a project/task and add it to the current timesheet");
+			alert('Please select a project/task and add it to the current timesheet');
 			return;
 		}
 
 		// const response = await getTimesheetsByPeriod(auth?.user?.id, timesheetDate)
 
 		const promises = tasks.map(async (task: Task) => {
-
-			const response = await getTimesheetsByProjectTaskIdAndPeriod(freelance_id, timesheetDate, task.projectTaskId)
+			const response = await getTimesheetsByProjectTaskIdAndPeriod(
+				freelance_id,
+				timesheetDate,
+				task.projectTaskId
+			);
 
 			if (response.length === 0) {
-				console.log('no timesheet found for this projectTaskId and period')
+				console.log('no timesheet found for this projectTaskId and period');
 
 				return await createTimesheet({
 					object: {
@@ -224,36 +242,41 @@ export default function Timesheets({
 					},
 				} as CreateTimesheet);
 			} else {
-				return await updateTimesheetByPeriod(freelance_id, timesheetDate, task.projectTaskId, task.row)
+				return await updateTimesheetByPeriod(
+					freelance_id,
+					timesheetDate,
+					task.projectTaskId,
+					task.row
+				);
 			}
 		});
 
 		const results = await Promise.allSettled(promises);
 
 		if (isAllPromiseFullfilled(results)) {
-			console.log("results", results);
+			console.log('results', results);
 			if (isAllPromiseSucceeded(results)) {
 				notifications.show({
-					title: "Success",
-					message: "Timesheet created successfully!",
-					color: "green",
-					position: "bottom-center",
+					title: 'Success',
+					message: 'Timesheet created successfully!',
+					color: 'green',
+					position: 'bottom-center',
 				});
 			} else {
 				const errorMessage = buildErrorMessages(results);
 				notifications.show({
-					title: "Error",
+					title: 'Error',
 					message: errorMessage,
-					color: "red",
-					position: "bottom-center",
+					color: 'red',
+					position: 'bottom-center',
 				});
 			}
 		} else {
 			notifications.show({
-				title: "Error",
-				message: "An error occurred while creating the timesheet!",
-				color: "blue",
-				position: "bottom-center",
+				title: 'Error',
+				message: 'An error occurred while creating the timesheet!',
+				color: 'blue',
+				position: 'bottom-center',
 			});
 		}
 	};
@@ -268,9 +291,9 @@ export default function Timesheets({
 	};
 
 	useEffect(() => {
-		console.log('***** INIT *****')
-		console.log('tasks.length', tasks.length)
-		console.log('timesheetDate', timesheetDate)
+		console.log('***** INIT *****');
+		console.log('tasks.length', tasks.length);
+		console.log('timesheetDate', timesheetDate);
 
 		// if (tasks.length === 0) {
 		// 	const tasksFromLocalStorage = loadTasksFromLocalStorage(timesheetDate);
@@ -303,33 +326,43 @@ export default function Timesheets({
 	// }, [month]);
 
 	const fetchTasks = async () => {
-		console.log('%c fetchTasks ', 'background-color: #006600')
-		console.log('freelance_id =>', freelance_id)
-		console.log('timesheetDate =>', timesheetDate)
-		const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate)
-		console.log('[DB] timesheets', timesheets)
-		setTasks(buildTasks(timesheets))
-	}
+		console.log('%c fetchTasks ', 'background-color: #006600');
+		console.log('freelance_id =>', freelance_id);
+		console.log('timesheetDate =>', timesheetDate);
+		const timesheets = await getTimesheetsByPeriod(freelance_id, timesheetDate);
+		console.log('[DB] timesheets', timesheets);
+		setTasks(buildTasks(timesheets));
+	};
 
 	useEffect(() => {
-		console.log(`%c [useEffect] %c month has been updated => %c ${month} `, 'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
+		console.log(
+			`%c [useEffect] %c month has been updated => %c ${month} `,
+			'background-color: #660000',
+			'background-color: #333',
+			'background-color: yellow; color: black; font-weight: bold;'
+		);
 
-		fetchTasks()
+		fetchTasks();
 
 		return () => {
-			console.log('***** CLEANUP *****')
-			console.log('month =>', month)
-			setTasks([])
-		}
-	}, [month])
+			console.log('***** CLEANUP *****');
+			console.log('month =>', month);
+			setTasks([]);
+		};
+	}, [month]);
 
 	useEffect(() => {
-		console.log(`%c [useEffect] %c tasks have been updated - nb task(s) => %c ${tasks.length} `,'background-color: #660000', 'background-color: #333', 'background-color: yellow; color: black; font-weight: bold;');
+		console.log(
+			`%c [useEffect] %c tasks have been updated - nb task(s) => %c ${tasks.length} `,
+			'background-color: #660000',
+			'background-color: #333',
+			'background-color: yellow; color: black; font-weight: bold;'
+		);
 		tasksRef.current = tasks;
 	}, [tasks]);
 
 	useEffect(() => {
-		console.log("[useEffect] timesheetDate has been updated", timesheetDate);
+		console.log('[useEffect] timesheetDate has been updated', timesheetDate);
 		timesheetDateRef.current = timesheetDate;
 	}, [timesheetDate]);
 
@@ -361,17 +394,17 @@ export default function Timesheets({
 }
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-	const currentDate = dayjs().format("YYYY-MM");
+	const currentDate = dayjs().format('YYYY-MM');
 	const freelance_id = await getCookie('token', {
 		req: ctx.req,
-		res: ctx.res
-	})
+		res: ctx.res,
+	});
 
 	return {
 		props: {
 			freelance_id,
 			_timesheetDate: currentDate,
-			_month: dayjs().get("month") + 1,
+			_month: dayjs().get('month') + 1,
 			_projects: await getProjects(),
 		},
 	};

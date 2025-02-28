@@ -1,15 +1,15 @@
-import { AppShell, Box, Button, Group, NavLink } from "@mantine/core";
-import Link from "next/link";
-import type { PropsWithChildren } from "react";
+import { AppShell, Box, Button, Group, NavLink } from '@mantine/core';
+import Link from 'next/link';
+import type { PropsWithChildren } from 'react';
 
-import { useRouter } from "next/router";
-import { useAuth } from "~/context/AuthContext";
+import { useRouter } from 'next/router';
+import { useAuth } from '~/context/AuthContext';
 
 const navLinks = [
-	{ label: "Projects", href: "/admin/projects" },
-	{ label: "Clients", href: "/admin/clients" },
-	{ label: "Freelances", href: "/admin/freelances" },
-	{ label: "Timesheets", href: "/admin/timesheets" },
+	{ label: 'Projects', href: '/admin/projects' },
+	{ label: 'Clients', href: '/admin/clients' },
+	{ label: 'Freelances', href: '/admin/freelances' },
+	{ label: 'Timesheets', href: '/admin/timesheets' },
 ];
 
 export const Layout = ({ children }: PropsWithChildren) => {
@@ -21,7 +21,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
 			header={{ height: 60 }}
 			navbar={{
 				width: 250,
-				breakpoint: "sm",
+				breakpoint: 'sm',
 			}}
 			padding="md"
 		>

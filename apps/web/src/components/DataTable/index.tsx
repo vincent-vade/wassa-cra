@@ -1,7 +1,7 @@
-import classes from "./DataTable.module.css";
+import classes from './DataTable.module.css';
 
-import { ScrollArea, Table } from "@mantine/core";
-import { type ReactNode, useState } from "react";
+import { ScrollArea, Table } from '@mantine/core';
+import { type ReactNode, useState } from 'react';
 
 export type ColumnRequireProps<T> = {
 	id: string;
@@ -44,7 +44,7 @@ export const DataTable = <T extends Record<keyof T, unknown>>({
 					<Table.Tr>
 						{columns.map((column) => (
 							<Table.Th key={column.accessor as string}>
-								{typeof column.Header === "function"
+								{typeof column.Header === 'function'
 									? column.Header(column)
 									: column.Header}
 							</Table.Th>
@@ -59,8 +59,8 @@ export const DataTable = <T extends Record<keyof T, unknown>>({
 									{findColumn(key)?.Row?.(row) ?? value}
 								</Table.Td>
 							))}
-							{findColumn("actions") && (
-								<Table.Td>{findColumn("actions")?.Row?.(row)}</Table.Td>
+							{findColumn('actions') && (
+								<Table.Td>{findColumn('actions')?.Row?.(row)}</Table.Td>
 							)}
 						</Table.Tr>
 					))}

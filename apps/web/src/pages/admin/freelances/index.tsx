@@ -1,28 +1,28 @@
-import { Button, Group, NumberFormatter } from "@mantine/core";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { type NextRouter, useRouter } from "next/router";
+import { Button, Group, NumberFormatter } from '@mantine/core';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import { type NextRouter, useRouter } from 'next/router';
 
-import type { Column } from "~/components/DataTable";
-import { deleteModal } from "~/components/DeleteModal";
-import { Resources } from "~/components/Resources";
-import type { Freelance } from "~/lib/client";
-import { deleteFreelanceById, getFreelances } from "~/services/freelances";
+import type { Column } from '~/components/DataTable';
+import { deleteModal } from '~/components/DeleteModal';
+import { Resources } from '~/components/Resources';
+import type { Freelance } from '~/lib/client';
+import { deleteFreelanceById, getFreelances } from '~/services/freelances';
 
 export const columns: (router: NextRouter) => Column<Freelance>[] = (
-	router,
+	router
 ) => [
 	{
-		accessor: "id",
-		Header: "Id",
+		accessor: 'id',
+		Header: 'Id',
 	},
 	{
-		accessor: "email",
-		Header: "Email",
+		accessor: 'email',
+		Header: 'Email',
 	},
 	{
-		accessor: "daily_rate",
-		Header: "Daily rate",
+		accessor: 'daily_rate',
+		Header: 'Daily rate',
 		Row: ({ daily_rate }) => (
 			<NumberFormatter
 				prefix="€ "
@@ -32,19 +32,19 @@ export const columns: (router: NextRouter) => Column<Freelance>[] = (
 		),
 	},
 	{
-		accessor: "created_at",
-		Header: "Created at",
-		Row: ({ created_at }) => dayjs(created_at as string).format("DD-MM-YYYY"),
+		accessor: 'created_at',
+		Header: 'Created at',
+		Row: ({ created_at }) => dayjs(created_at as string).format('DD-MM-YYYY'),
 	},
 	{
-		accessor: "updated_at",
-		Header: "Updated at",
+		accessor: 'updated_at',
+		Header: 'Updated at',
 		Row: ({ updated_at }) =>
-			updated_at ? dayjs(updated_at as string).format("DD-MM-YYYY") : null,
+			updated_at ? dayjs(updated_at as string).format('DD-MM-YYYY') : null,
 	},
 	{
-		accessor: "actions",
-		Header: "Actions",
+		accessor: 'actions',
+		Header: 'Actions',
 		Row: (data) => (
 			<Group>
 				<Button
@@ -62,7 +62,7 @@ export const columns: (router: NextRouter) => Column<Freelance>[] = (
 							title: `Delete freelance ${data.email}`,
 							onConfirm: async () => {
 								await deleteFreelanceById(data.id);
-								await router.push("/admin/freelances");
+								await router.push('/admin/freelances');
 							},
 						})
 					}
@@ -76,7 +76,9 @@ export const columns: (router: NextRouter) => Column<Freelance>[] = (
 
 export default function Freelances({
 	freelances,
-}: { freelances: Freelance[] }) {
+}: {
+	freelances: Freelance[];
+}) {
 	const router = useRouter();
 
 	const data = freelances?.map((freelance) => ({

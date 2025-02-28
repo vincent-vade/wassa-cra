@@ -1,6 +1,6 @@
-import { notifications } from "@mantine/notifications";
-import { deleteCookie, hasCookie, useGetCookies } from "cookies-next/client";
-import { useRouter } from "next/router";
+import { notifications } from '@mantine/notifications';
+import { deleteCookie, hasCookie, useGetCookies } from 'cookies-next/client';
+import { useRouter } from 'next/router';
 import {
 	type PropsWithChildren,
 	createContext,
@@ -9,10 +9,10 @@ import {
 	useEffect,
 	useMemo,
 	useState,
-} from "react";
-import type { Freelance } from "~/lib/client";
-import { auth } from "~/services/auth";
-import { getFreelanceById } from "~/services/freelances";
+} from 'react';
+import type { Freelance } from '~/lib/client';
+import { auth } from '~/services/auth';
+import { getFreelanceById } from '~/services/freelances';
 
 type AuthContext = {
 	user: Freelance | null;
@@ -40,11 +40,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 	}, [cookies?.token]);
 
 	const logout = useCallback(() => {
-		if (hasCookie("token")) {
-			deleteCookie("token");
+		if (hasCookie('token')) {
+			deleteCookie('token');
 		}
 		setUser(null);
-		router.push("/login");
+		router.push('/login');
 	}, [router]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -52,21 +52,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 		const response = await auth.login(email, password);
 		if (response.ok) {
 			notifications.show({
-				title: "Success",
-				message: "Logged. You will be redirected soon...",
-				color: "green",
-				position: "bottom-center",
+				title: 'Success',
+				message: 'Logged. You will be redirected soon...',
+				color: 'green',
+				position: 'bottom-center',
 			});
 
 			setTimeout(() => {
-				router.push("/admin");
+				router.push('/admin');
 			}, 3000);
 		} else {
 			notifications.show({
-				title: "Error",
-				message: "Invalid credentials",
-				color: "red",
-				position: "bottom-center",
+				title: 'Error',
+				message: 'Invalid credentials',
+				color: 'red',
+				position: 'bottom-center',
 			});
 		}
 	}, []);
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
 export const useAuth = () => {
 	if (!AuthContext) {
-		throw new Error("useAuth must be used within a AuthProvider");
+		throw new Error('useAuth must be used within a AuthProvider');
 	}
 
 	return useContext(AuthContext);

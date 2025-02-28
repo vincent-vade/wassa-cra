@@ -7,25 +7,25 @@ import {
 	Stack,
 	TextInput,
 	Title,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import Link from "next/link";
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import Link from 'next/link';
 
-import { useAuth } from "~/context/AuthContext";
+import { useAuth } from '~/context/AuthContext';
 
 const LoginPage = () => {
 	const form = useForm({
 		initialValues: {
-			email: "",
-			password: "",
+			email: '',
+			password: '',
 		},
 		validateInputOnBlur: true,
 		validate: {
 			email: (value: string) =>
-				!/^\S+@\S+$/.test(value) ? "Invalid email" : null,
+				!/^\S+@\S+$/.test(value) ? 'Invalid email' : null,
 			password: (val: string) =>
 				!/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(val)
-					? "Password should include at least 6 characters"
+					? 'Password should include at least 6 characters'
 					: null,
 		},
 	});
@@ -48,18 +48,18 @@ const LoginPage = () => {
 						<TextInput
 							label="Email"
 							name="email"
-							key={form.key("email")}
+							key={form.key('email')}
 							withAsterisk
 							size="md"
-							{...form.getInputProps("email")}
+							{...form.getInputProps('email')}
 						/>
 						<PasswordInput
 							label="Password"
 							name="password"
-							key={form.key("password")}
+							key={form.key('password')}
 							withAsterisk
 							size="md"
-							{...form.getInputProps("password")}
+							{...form.getInputProps('password')}
 						/>
 					</Stack>
 					<Group justify="space-between" mt="xl">

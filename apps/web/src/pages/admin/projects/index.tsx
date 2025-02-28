@@ -1,54 +1,54 @@
-import { Button, Chip, Group } from "@mantine/core";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { type NextRouter, useRouter } from "next/router";
+import { Button, Chip, Group } from '@mantine/core';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import { type NextRouter, useRouter } from 'next/router';
 
-import { Resources } from "~/components/Resources";
-import type { Project } from "~/lib/client";
-import { deleteProjectById, getProjects } from "~/services/projects";
+import { Resources } from '~/components/Resources';
+import type { Project } from '~/lib/client';
+import { deleteProjectById, getProjects } from '~/services/projects';
 
-import type { Column } from "~/components/DataTable";
-import { deleteModal } from "~/components/DeleteModal";
+import type { Column } from '~/components/DataTable';
+import { deleteModal } from '~/components/DeleteModal';
 
 const columns: (router: NextRouter) => Column<Project>[] = (router) => [
 	{
-		accessor: "id",
-		Header: () => "Id",
+		accessor: 'id',
+		Header: () => 'Id',
 	},
 	{
-		accessor: "name",
-		Header: "Project name",
+		accessor: 'name',
+		Header: 'Project name',
 	},
 	{
-		accessor: "created_at",
-		Header: "Created at",
+		accessor: 'created_at',
+		Header: 'Created at',
 		Row: ({ created_at }) => {
-			return dayjs(created_at as string).format("DD-MM-YYYY");
+			return dayjs(created_at as string).format('DD-MM-YYYY');
 		},
 	},
 	{
-		accessor: "updated_at",
-		Header: "Updated at",
+		accessor: 'updated_at',
+		Header: 'Updated at',
 		Row: ({ updated_at }) => {
 			return updated_at
-				? dayjs(updated_at as string).format("DD-MM-YYYY")
+				? dayjs(updated_at as string).format('DD-MM-YYYY')
 				: null;
 		},
 	},
 	{
-		accessor: "is_active",
-		Header: "Is active",
+		accessor: 'is_active',
+		Header: 'Is active',
 		Row: (data) => {
 			return (
-				<Chip checked={data.is_active} color={data.is_active ? "green" : "red"}>
+				<Chip checked={data.is_active} color={data.is_active ? 'green' : 'red'}>
 					OK
 				</Chip>
 			);
 		},
 	},
 	{
-		accessor: "actions",
-		Header: "Actions",
+		accessor: 'actions',
+		Header: 'Actions',
 		Row: (data) => (
 			<Group>
 				<Button
@@ -66,7 +66,7 @@ const columns: (router: NextRouter) => Column<Project>[] = (router) => [
 							title: `Delete project ${data.name}`,
 							onConfirm: async () => {
 								await deleteProjectById(data.id);
-								await router.push("/admin/projects");
+								await router.push('/admin/projects');
 							},
 						})
 					}

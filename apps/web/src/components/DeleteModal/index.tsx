@@ -1,13 +1,13 @@
-import { modals } from '@mantine/modals'
+import { modals } from '@mantine/modals';
 
 export const deleteModal = ({
 	title = 'Delete Modal',
 	onConfirm,
 	onCancel,
 }: {
-	title?: string
-	onConfirm?: () => void
-	onCancel?: () => void
+	title?: string;
+	onConfirm?: () => void;
+	onCancel?: () => void;
 }) =>
 	modals.openConfirmModal({
 		title,
@@ -22,4 +22,4 @@ export const deleteModal = ({
 		confirmProps: { color: 'red' },
 		onCancel,
 		onConfirm,
-	})
+	});

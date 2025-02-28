@@ -1,20 +1,20 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 type InputNumberProps = {
-	taskId: string
-	idx: number
-	disabled?: boolean
-	handleChange: (val: number, taskId: string, idx: number) => void
-	val: number
-	defaultValue: number
-}
+	taskId: string;
+	idx: number;
+	disabled?: boolean;
+	handleChange: (val: number, taskId: string, idx: number) => void;
+	val: number;
+	defaultValue: number;
+};
 
-const MIN_VALUE = 0
-const MAX_VALUE = 1
-const STEP = 0.5
+const MIN_VALUE = 0;
+const MAX_VALUE = 1;
+const STEP = 0.5;
 
-const increment = (val: number) => (val < MAX_VALUE ? val + STEP : MAX_VALUE)
-const decrement = (val: number) => (val > MIN_VALUE ? val - STEP : MIN_VALUE)
+const increment = (val: number) => (val < MAX_VALUE ? val + STEP : MAX_VALUE);
+const decrement = (val: number) => (val > MIN_VALUE ? val - STEP : MIN_VALUE);
 
 export function NumberInput({
 	taskId,
@@ -23,26 +23,26 @@ export function NumberInput({
 	handleChange,
 	defaultValue,
 }: InputNumberProps) {
-	const [value, setValue] = useState(defaultValue ?? 0)
+	const [value, setValue] = useState<number>(defaultValue ?? 0);
 
-	const handleAdd = (taskId, idx) => () => {
-		const newValue = increment(value)
+	const handleAdd = (taskId: string, idx: number) => () => {
+		const newValue = increment(value);
 
-		setValue(newValue)
-
-		if (handleChange) {
-			handleChange(newValue, taskId, idx)
-		}
-	}
-	const handleSubtract = (taskId, idx) => () => {
-		const newValue = decrement(value)
-
-		setValue(newValue)
+		setValue(newValue);
 
 		if (handleChange) {
-			handleChange(newValue, taskId, idx)
+			handleChange(newValue, taskId, idx);
 		}
-	}
+	};
+	const handleSubtract = (taskId: string, idx: number) => () => {
+		const newValue = decrement(value);
+
+		setValue(newValue);
+
+		if (handleChange) {
+			handleChange(newValue, taskId, idx);
+		}
+	};
 
 	return (
 		<div className="p-1 mr-2" style={{ display: 'flex', minWidth: '50px' }}>
@@ -90,5 +90,5 @@ export function NumberInput({
 				</button>
 			</div>
 		</div>
-	)
+	);
 }
