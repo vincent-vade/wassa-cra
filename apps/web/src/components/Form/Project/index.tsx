@@ -32,7 +32,7 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
     validateInputOnChange: true,
     initialValues,
     validate: {
-      name: (value?: string) => value!.length < 4 ? "Name must have at least 4 letters" : null,
+      name: (value?: string | null) => value!.length < 4 ? "Name must have at least 4 letters" : null,
     },
   });
 
@@ -73,7 +73,6 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
         position: "bottom-center",
       });
     } else {
-      console.log(values)
       await createProject(values as Project);
       notifications.show({
         title: "Success",
