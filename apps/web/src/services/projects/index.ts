@@ -41,6 +41,7 @@ export const createProject = async (body: Project) => {
 };
 
 export const updateProject = async (body: Project) => {
+  
   const {data} = await client.POST("/api/rest/projects/{id}", {
     body: {
       object: {

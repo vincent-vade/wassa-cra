@@ -29,7 +29,7 @@ export const deleteFreelanceById = async (id: string) => {
 };
 
 export const createFreelance = async (body: Freelance) => {
-  const {data} = await client.POST("/api/rest/freelances", {
+  return client.POST("/api/rest/freelances", {
     body: {
       object: {
         ...body,
@@ -37,7 +37,6 @@ export const createFreelance = async (body: Freelance) => {
       },
     },
   });
-  return data?.insert_freelances_one as Freelance;
 };
 
 export const updateFreelance = async (body: Client) => {

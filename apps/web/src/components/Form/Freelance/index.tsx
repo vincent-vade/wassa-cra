@@ -4,7 +4,8 @@ import {notifications} from "@mantine/notifications";
 import {useEffect} from "react";
 
 import {CreateFreelance, Freelance} from "~/lib/client";
-import {createFreelance, updateProject} from "~/services";
+import {createFreelance, updateFreelance} from "~/services";
+import {validateEmail} from "~/lib/valiator/email";
 
 type FormProjectProps = {
   freelance?: Freelance;
@@ -12,35 +13,36 @@ type FormProjectProps = {
 };
 
 const initialValues: CreateFreelance['object'] = {
-  email: null,
-  daily_rate: null,
-};
+  email: '',
+  daily_rate: 0
+}
 
 export const FormFreelance = ({freelance, onSubmitted}: FormProjectProps) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues,
+    validateInputOnChange: true,
     validate: {
-      daily_rate: (value: string) => value && value.length < 2 ? "Name must have at least 2 letters" : undefined
+      email: (value?: string | null) => value && validateEmail(value) ? null : 'Invalid email',
+      daily_rate: (value: number) => value < 100 ? 'Invalid daily rate' : null
     },
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    form.setValues({
-      email: freelance?.email,
-      daily_rate: freelance?.daily_rate,
-    });
+    if (freelance) {
+      form.setValues({
+        email: freelance?.email ?? 'dede',
+        daily_rate: freelance?.daily_rate ?? 0,
+      });
+    }
   }, [freelance]);
-
-  console.log(form.errors)
 
   const handleSubmit = form.onSubmit(async (values) => {
     if (freelance) {
-      await updateProject({
+      await updateFreelance({
         ...values,
         id: freelance.id,
-      });
+      } as Freelance);
       notifications.show({
         title: "Success",
         message: "Freelance updated successfully",
@@ -48,21 +50,18 @@ export const FormFreelance = ({freelance, onSubmitted}: FormProjectProps) => {
         position: "bottom-center",
       });
     } else {
-      await createFreelance(values as Freelance);
-      notifications.show({
-        title: "Success",
-        message: "Freelance created successfully",
-        color: "green",
-        position: "bottom-center",
-      });
+      const {data} = await createFreelance(values as Freelance);
+      if (data) {
+        notifications.show({
+          title: "Success",
+          message: "Freelance created successfully",
+          color: "green",
+          position: "bottom-center",
+        });
+      }
     }
     onSubmitted?.()
-  }, (errors) => {
-    const firstErrorPath = Object.keys(errors)[0];
-    form.getInputNode(firstErrorPath)?.focus();
   });
-
-  console.log(form.isValid())
 
   return (
     <form onSubmit={handleSubmit}>
@@ -71,7 +70,6 @@ export const FormFreelance = ({freelance, onSubmitted}: FormProjectProps) => {
         mb="sm"
         withAsterisk
         key={form.key("email")}
-        type="email"
         {...form.getInputProps("email")}
       />
       <NumberInput
