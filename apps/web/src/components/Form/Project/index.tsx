@@ -123,7 +123,7 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
         key={form.key("is_active")}
         {...form.getInputProps("is_active")}
       />
-      <Button type="submit">Submit</Button>
+      <Button type="submit" disabled={!form.isValid()}>Submit</Button>
     </form>
   );
 };
