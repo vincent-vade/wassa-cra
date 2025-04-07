@@ -1,11 +1,10 @@
 import {Button, NumberInput, TextInput} from "@mantine/core";
-import {useForm} from "@mantine/form";
+import {isEmail, useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 import {useEffect} from "react";
 
 import {CreateFreelance, Freelance} from "~/lib/client";
 import {createFreelance, updateFreelance} from "~/services";
-import {validateEmail} from "~/lib/valiator/email";
 
 type FormProjectProps = {
   freelance?: Freelance;
@@ -23,7 +22,7 @@ export const FormFreelance = ({freelance, onSubmitted}: FormProjectProps) => {
     initialValues,
     validateInputOnChange: true,
     validate: {
-      email: (value?: string | null) => value && validateEmail(value) ? null : 'Invalid email',
+      email: isEmail('Invalid email'),
       daily_rate: (value: number) => value < 100 ? 'Invalid daily rate' : null
     },
   });

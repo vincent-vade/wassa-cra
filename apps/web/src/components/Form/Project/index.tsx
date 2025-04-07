@@ -1,11 +1,11 @@
 import {Button, Select, Switch, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 import {useEffect, useState} from "react";
 
 import {CreateProject, Project} from "~/lib/client";
-import {createProject, updateProject} from "~/services/projects";
 import {getClients} from "~/services/clients";
+import {createProject, updateProject} from "~/services";
+import {notifications} from "@mantine/notifications";
 
 type FormProjectProps = {
   project?: Project;
@@ -20,26 +20,36 @@ type SelectValue = {
 const initialValues: CreateProject['object'] = {
   name: "",
   description: "",
-  start_date: "",
-  end_date: "",
+  start_date: undefined,
+  end_date: undefined,
   client_id: "",
-  is_active: true
+  is_active: false
 };
-
 
 export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
   const form = useForm({
     mode: "uncontrolled",
+    validateInputOnChange: true,
     initialValues,
     validate: {
-      name: (value?: string) =>
-        value && value.length < 2 ? "Name must have at least 2 letters" : undefined,
+      name: (value?: string) => value!.length < 4 ? "Name must have at least 4 letters" : null,
     },
   });
 
   const [clients, setClients] = useState<SelectValue[]>([]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (project) {
+      form.setValues({
+        name: project?.name,
+        description: project?.description,
+        start_date: project?.start_date,
+        end_date: project?.end_date,
+        is_active: project?.is_active
+      });
+    }
+  }, [project]);
+
   useEffect(() => {
     getClients().then((clients) => {
       const mappedClients: SelectValue[] = clients?.map((client) => ({
@@ -48,20 +58,14 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
       }))
       setClients(mappedClients ?? []);
     })
-    form.setValues({
-      name: project?.name,
-      description: project?.description,
-      start_date: project?.start_date,
-      end_date: project?.end_date,
-    });
-  }, [project]);
+  }, [])
 
   const handleSubmit = form.onSubmit(async (values) => {
     if (project) {
       await updateProject({
         ...values,
         id: project.id,
-      });
+      } as Project);
       notifications.show({
         title: "Success",
         message: "Project updated successfully",
@@ -70,7 +74,7 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
       });
     } else {
       console.log(values)
-      await createProject(values);
+      await createProject(values as Project);
       notifications.show({
         title: "Success",
         message: "Project created successfully",
