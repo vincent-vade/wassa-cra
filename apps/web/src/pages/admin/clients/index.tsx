@@ -1,4 +1,4 @@
-import {Button, Drawer, Group} from "@mantine/core";
+import {Button, Drawer, Group, Stack} from "@mantine/core";
 import dayjs from "dayjs";
 import Link from "next/link";
 import {type NextRouter, useRouter} from "next/router";
@@ -118,9 +118,12 @@ export default function Clients({clients}: { clients: Client[] }) {
         onClose={handleClose}
         title="Create a Client"
         position="right"
+        size="lg"
         overlayProps={{backgroundOpacity: 0.5, blur: 3}}
       >
-        <FormClient onSubmitted={handleClose}/>
+        <Stack p="md">
+          <FormClient onSubmitted={handleClose}/>
+        </Stack>
       </Drawer>
     </>
 
