@@ -1,4 +1,4 @@
-import {Button, Chip, Drawer, Group, Stack} from "@mantine/core";
+import {Button, Chip, Drawer, Group, Stack, Title} from "@mantine/core";
 import dayjs from "dayjs";
 import Link from "next/link";
 import {type NextRouter, useRouter} from "next/router";
@@ -121,9 +121,9 @@ export default function Projects({projects}: { projects: Project[] }) {
       <Drawer
         opened={opened}
         onClose={handleClose}
-        title="Create a project"
+        title={<Title order={3}>Create a Project</Title>}
         position="right"
-        size="lg"
+        size="md"
         overlayProps={{backgroundOpacity: 0.5, blur: 3}}
       >
         <Stack p="md">

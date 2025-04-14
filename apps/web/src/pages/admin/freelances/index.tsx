@@ -1,4 +1,4 @@
-import {Button, Drawer, Group, NumberFormatter, Stack} from "@mantine/core";
+import {Button, Drawer, Group, NumberFormatter, Stack, Title} from "@mantine/core";
 import dayjs from "dayjs";
 import Link from "next/link";
 import {type NextRouter, useRouter} from "next/router";
@@ -119,9 +119,9 @@ export default function Freelances({
       <Drawer
         opened={opened}
         onClose={handleClose}
-        title="Create a freelance"
+        title={<Title order={3}>Create a Freelance</Title>}
         position="right"
-        size="lg"
+        size="md"
         overlayProps={{backgroundOpacity: 0.5, blur: 3}}
       >
         <Stack p="md">

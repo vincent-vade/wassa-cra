@@ -1,4 +1,4 @@
-import {Button, Select, Switch, TextInput} from "@mantine/core";
+import {Button, Select, Switch, Textarea, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useEffect, useState} from "react";
 
@@ -33,6 +33,7 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
     initialValues,
     validate: {
       name: (value?: string | null) => value!.length < 4 ? "Name must have at least 4 letters" : null,
+      client_id: (value?: string | null) => !value ? "Client must have at least 4 letters" : null
     },
   });
 
@@ -98,9 +99,10 @@ export const FormProject = ({project, onSubmitted}: FormProjectProps) => {
         mb="sm"
         key={form.key("client_id")}
         data={clients}
+        withAsterisk
         {...form.getInputProps("client_id")}
       />
-      <TextInput
+      <Textarea
         label="Description"
         mb="sm"
         key={form.key("description")}
