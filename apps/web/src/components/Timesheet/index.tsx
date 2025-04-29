@@ -83,7 +83,7 @@ export const Timesheet = ({ month, tasks, handleClickSave, handleUpdateTasks }: 
                 <Table highlightOnHover >
                 <Table.Thead>
                 <Table.Tr>
-                    <Table.Tr style={{minWidth: '110px'}}></Table.Tr>
+                    <Table.Td style={{minWidth: '110px'}}></Table.Td>
                     {
                         days.map((day) => {
                             return (

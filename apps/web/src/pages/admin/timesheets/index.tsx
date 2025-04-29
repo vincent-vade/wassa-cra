@@ -169,15 +169,29 @@ export default function Timesheets({
 	};
 	const handleClickTaskAdd = () => {
 		if (projectTask && project) {
-			setTasks([
-				...tasks,
-				{
-					projectName: project.projectName,
-					projectTaskId: projectTask?.id,
-					taskTitle: projectTask?.task_description,
-					row: Array.from({ length: nbDays }, () => 0),
-				},
-			]);
+			console.log('tasks', tasks)
+
+			const found = tasks.find((task) => task.projectTaskId === projectTask.id);
+
+			if (!found) {
+				setTasks([
+					...tasks,
+					{
+						projectName: project.projectName,
+						projectTaskId: projectTask?.id,
+						taskTitle: projectTask?.task_description,
+						row: Array.from({ length: nbDays }, () => 0),
+					},
+				]);
+			} else {
+				notifications.show({
+					title: "Error",
+					message: "This task already exists in the current timesheet",
+					color: "red",
+					position: "bottom-center",
+				})
+			}
+
 		} else {
 			alert("Please select a task");
 		}
